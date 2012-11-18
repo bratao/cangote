@@ -1,0 +1,10 @@
+prefix=/home/tadej/workspace/tanoprojects/install/windows-stable-32bit/vlc-qt
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libvlc-qt
+Description: Qt and libvlc connector library
+Version: 0.7.0
+Libs: -L${libdir} -lvlc-qt
+Cflags: -I${includedir}

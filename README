@@ -1,0 +1,7 @@
+This is a new interface written for GNUnet using the Qt framework.
+For now is written using QWidgets and the Qt 4.8, but I often check and compile using the Qt 5.0 Beta.
+
+One guideline of this project is to not couple The GNUnet communication core with the Graphical interface, using signals as the only communication way.
+In the future I plan creating a Mobile version, and this is fundamental for accomplishing this task.
+
+Anyone is welcome to participate, we need developers, this is without a doubt the future of File Sharing ! Let's help us build the future!

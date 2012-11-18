@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/toolbar/logs.png</file>
+        <file>res/toolbar/network.png</file>
+        <file>res/toolbar/search.png</file>
+        <file>res/toolbar/settings.png</file>
+        <file>res/toolbar/shared.png</file>
+        <file>res/toolbar/transfers.png</file>
+        <file>res/statusbar/grayled.png</file>
+        <file>res/statusbar/greenled.png</file>
+        <file>res/statusbar/identity16.png</file>
+        <file>res/statusbar/identitygray16.png</file>
+        <file>res/statusbar/redled.png</file>
+        <file>res/statusbar/up0down0.png</file>
+        <file>res/statusbar/up0down1.png</file>
+        <file>res/statusbar/up1down0.png</file>
+        <file>res/statusbar/up1down1.png</file>
+        <file>res/statusbar/yellowled.png</file>
+        <file>res/statusbar/network16.png</file>
+    </qresource>
+</RCC>
