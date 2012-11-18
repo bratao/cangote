@@ -49,7 +49,6 @@ CangoteDlg::CangoteDlg(QWidget *parent) :
     ui(new Ui::CangoteDlg)
 {
     ui->setupUi(this);
-
     createTrayIcon();
 
     InitDialogs();
@@ -212,8 +211,6 @@ void CangoteDlg::on_actionNetwork_triggered()
     ui->stackedWidget->setCurrentIndex(NETWORK_WND);
 }
 
-
-
 void CangoteDlg::on_actionSearch_triggered()
 {
     ui->stackedWidget->setCurrentIndex(SEARCH_WND);
@@ -228,8 +225,6 @@ void CangoteDlg::on_actionLogs_triggered()
 {
     ui->stackedWidget->setCurrentIndex(LOG_WND);
 }
-
-
 
 void CangoteDlg::on_actionShared_Files_triggered()
 {
