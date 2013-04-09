@@ -12,7 +12,7 @@
 #include "models/SearchResultModel.h"
 #include "core/gnunet/filesharing/search/search.h"
 #include "models/DownloadsModel.h"
-#include "models/sharedfilesmodel.h"
+#include "models/SharedFilesModel.h"
 
 
 #define URI "Cangote"

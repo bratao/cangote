@@ -4,8 +4,16 @@ TARGET = application
 
 QMAKE_CXXFLAGS+=-ggdb -O1 -Wall -Wextra #-Werror
 
+!win32 {
+   LIBS += -L/home/bratao/gnunet/gnunet-bin/lib -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lextractor
 
-LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lws2_32 -lintl -lextractor
+ INCLUDEPATH += /home/bratao/gnunet/gnunet-bin/lib
+ DEPENDPATH += /home/bratao/gnunet/gnunet-bin/lib
+
+}
+win32 {
+   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lws2_32 -lintl -lextractor
+}
 
 
 SOURCES += \
@@ -31,8 +39,8 @@ SOURCES += \
     models/SearchResultModel.cpp \
     core/gnunet/filesharing/shared/sharedfile.cpp \
     models/DownloadsModel.cpp \
-    models/SharedFilesModel.cpp \
-    models/models.cpp
+    models/models.cpp \
+    models/SharedFilesModel.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -94,5 +102,5 @@ HEADERS += \
     models/SearchResultModel.h \
     core/gnunet/filesharing/shared/sharedfile.h \
     models/DownloadsModel.h \
-    models/SharedFilesModel.h \
-    models/models.h
+    models/models.h \
+    models/SharedFilesModel.h

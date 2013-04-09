@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
 
     QQmlComponent component(&engine);
-    component.loadUrl(QUrl::fromLocalFile(QMLPATH + "qml/main.qml"));
+    component.loadUrl(QUrl::fromLocalFile("../cangote/qml/main.qml"));
     if ( !component.isReady() ) {
         qWarning("%s", qPrintable(component.errorString()));
         return -1;

@@ -23,7 +23,7 @@
 #include "core/cangotecore.h"
 #include "models/models.h"
 #include "core/gnunet/gnunet_includes.h"
-#include "models/sharedfilesmodel.h"
+#include "models/SharedFilesModel.h"
 
 SharedFiles::SharedFiles(QObject *parent) :
     QObject(parent)

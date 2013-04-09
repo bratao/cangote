@@ -51,10 +51,10 @@ signals:
 public slots:
 
 public:
-    void setCompleted(uint64_t completed, bool notifyModified = true);
-    uint64_t getCompleted();
-    void setSize(uint64_t size, bool notifyModified = true);
-    uint64_t getSize();
+    void setCompleted(qint64 completed, bool notifyModified = true);
+    qint64 getCompleted();
+    void setSize(qint64 size, bool notifyModified = true);
+    qint64 getSize();
     void setMetadata(const struct GNUNET_CONTAINER_MetaData *meta, bool notifyModified = true);
     const GNUNET_CONTAINER_MetaData *getMetadata();
     void setFilename(QString filename, bool notifyModified = true);
@@ -65,7 +65,7 @@ public:
     void setParent(DownloadItem *parent, bool notifyModified = true);
     DownloadItem *getParent();
     void modified();
-    uint64_t getRemainingDownload();
+    qint64 getRemainingDownload();
     float getCompletedPercentage();
     void setStopped();
     void setPaused();
@@ -84,11 +84,11 @@ private:
     QString m_uri;
     QString m_filename;
     const struct GNUNET_CONTAINER_MetaData *m_meta;
-    uint64_t m_size;
-    uint64_t m_completed;
+    qint64 m_size;
+    qint64 m_completed;
 
-    uint64_t m_eta;
-    uint64_t m_dateAdded;
+    qint32 m_eta;
+    qint32 m_dateAdded;
     State m_state;
 
 

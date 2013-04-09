@@ -225,7 +225,7 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
     m_config = config;
 
     //Connect to peerinfo notifications
-    m_peerInfo =   GNUNET_PEERINFO_notify (config, peerinfoProcessorCallback, this);
+    m_peerInfo =   GNUNET_PEERINFO_notify (config,0, peerinfoProcessorCallback, this);
     if (m_peerInfo == NULL) {
         qWarning("Failed to connect to PeerInfo service");
         //status->setErrorState("Failed to connect to Peerinfo");

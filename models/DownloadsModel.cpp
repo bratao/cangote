@@ -91,8 +91,8 @@ QVariant DownloadsModel::data(const QModelIndex& index, int role) const
 
 DownloadItem* DownloadsModel::addDownload(DownloadItem *pde, struct GNUNET_FS_DownloadContext *dc,
                                           const struct GNUNET_FS_Uri *uri, QString filename,
-                                          const struct GNUNET_CONTAINER_MetaData *meta,uint64_t size,
-                                          uint64_t completed )
+                                          const struct GNUNET_CONTAINER_MetaData *meta, qint64 size,
+                                          qint64 completed )
 {
 
     //Convert

@@ -50,8 +50,8 @@ Downloads::Downloads(QObject *parent) :
 DownloadItem *
 Downloads::setup_download (DownloadItem *de, DownloadItem *pde, struct GNUNET_FS_DownloadContext *dc,
                 const struct GNUNET_FS_Uri *uri, const char *filename,
-                const struct GNUNET_CONTAINER_MetaData *meta, uint64_t size,
-                uint64_t completed)
+                const struct GNUNET_CONTAINER_MetaData *meta, qint64 size,
+                qint64 completed)
 {
 
   //gWarn("Setuping a download");
@@ -124,9 +124,9 @@ Downloads::pause_download (DownloadItem *de)
 void
 Downloads::mark_download_progress (DownloadItem *de,
             const char *filename,
-            uint64_t size,
-                        uint64_t completed, const void *block_data,
-                        uint64_t offset, uint64_t block_size,
+            qint64 size,
+                        qint64 completed, const void *block_data,
+                        qint64 offset, qint64 block_size,
                         unsigned int depth)
 {
 
@@ -180,7 +180,7 @@ Downloads::mark_download_error (DownloadItem *de,
  * @param size overall size of the file
  */
 void
-Downloads::mark_download_completed (DownloadItem *de, uint64_t size)
+Downloads::mark_download_completed (DownloadItem *de, qint64 size)
 {
     Q_ASSERT(de);
     //gInfo("Download completed !");

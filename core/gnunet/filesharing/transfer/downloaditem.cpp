@@ -103,13 +103,13 @@ void DownloadItem::setMetadata(const GNUNET_CONTAINER_MetaData *meta, bool notif
         modified();
 }
 
-uint64_t DownloadItem::getSize()
+qint64 DownloadItem::getSize()
 {
     return m_size;
 }
 
 
-void DownloadItem::setSize(uint64_t size, bool notifyModified)
+void DownloadItem::setSize(qint64 size, bool notifyModified)
 {
     m_size = size;
 
@@ -117,13 +117,13 @@ void DownloadItem::setSize(uint64_t size, bool notifyModified)
         modified();
 }
 
-uint64_t DownloadItem::getCompleted()
+qint64 DownloadItem::getCompleted()
 {
     return m_size;
 }
 
 
-void DownloadItem::setCompleted(uint64_t completed, bool notifyModified)
+void DownloadItem::setCompleted(qint64 completed, bool notifyModified)
 {
     m_completed = completed;
 
@@ -133,7 +133,7 @@ void DownloadItem::setCompleted(uint64_t completed, bool notifyModified)
 
 
 
-uint64_t DownloadItem::getRemainingDownload()
+qint64 DownloadItem::getRemainingDownload()
 {
     return m_size-m_completed;
 }

@@ -22,7 +22,7 @@
 #include "models/SearchModel.h"
 #include "models/NetworkPeersModel.h"
 #include "models/DownloadsModel.h"
-#include "models/sharedfilesmodel.h"
+#include "models/SharedFilesModel.h"
 
 Models::Models(QObject *parent) :
     QObject(parent)

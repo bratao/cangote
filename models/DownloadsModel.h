@@ -29,7 +29,7 @@ class DownloadsModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit DownloadsModel(QObject *parent = 0);
-    DownloadItem *addDownload(DownloadItem *pde,struct GNUNET_FS_DownloadContext *dc, const struct GNUNET_FS_Uri *uri, QString filename, const struct GNUNET_CONTAINER_MetaData *meta, uint64_t size, uint64_t completed);
+    DownloadItem *addDownload(DownloadItem *pde,struct GNUNET_FS_DownloadContext *dc, const struct GNUNET_FS_Uri *uri, QString filename, const struct GNUNET_CONTAINER_MetaData *meta, qint64 size, qint64 completed);
 
 
 private:
