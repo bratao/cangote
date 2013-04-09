@@ -18,7 +18,7 @@
      Boston, MA 02111-1307, USA.
 */
 
-#include "core/cangote.h"
+//#include "core/cangote.h"
 #include "searchresult.h"
 
 
@@ -206,6 +206,6 @@ void SearchResult::download()
     //                       de,
     //                                           (NULL != de->pde) ? de->pde->dc : NULL));
 
-    gWarn("Download not implemented");
+    //gWarn("Download not implemented");
     emit requestDownload(this);
 }

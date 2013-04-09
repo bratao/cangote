@@ -19,36 +19,32 @@
 */
 
 #include "search.h"
-#include "core/cangote.h"
+//#include "core/cangote.h"
 #include "core/gnunet/gnunet_includes.h"
 #include <extractor.h>
 #include "gnunet/gnunet_container_lib.h"
 
-#include "models/gnunet_fs_search_results.h"
+#include "models/SearchResultModel.h"
 #include "searchresult.h"
+#include "core/cangotecore.h"
 
-
-Search::Search(GNUNET_FS_SearchContext *sc,QString query_txt,QObject *parent) :
+Search::Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent) :
   QObject(parent)
 {
-
+  m_model = NULL;
   this->sc = sc;
   this->query_txt = query_txt;
-  this->model = new GNUnetFsSearchResultsModel(this);
-  Connect();
+
 
 }
-void Search::Connect()
-{
-  this->connect(model, SIGNAL(AskedToDieSignal()), SLOT(AskedToDieSlot()));
 
-}
+
 
 
 void Search::AskedToDieSlot()
 {
   Stop();
-  gDebug("Search:"+query_txt + "asked to die" );
+  //gDebug("Search:"+query_txt + "asked to die" );
 }
 
 SearchResult* Search::UpdateResult(SearchResult *sr,
@@ -58,7 +54,11 @@ SearchResult* Search::UpdateResult(SearchResult *sr,
                                    int availability_certainty)
 {
 
-
+    if(m_model == NULL)
+    {
+        qWarning("Updating a result without a model !");
+        return NULL;
+    }
 
 
     sr->setMetadata((GNUNET_CONTAINER_MetaData *)meta,false);
@@ -87,6 +87,11 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
   thumb = NULL;
 
 
+  if(m_model == NULL)
+  {
+      qWarning("Adding a result without a model !");
+      return NULL;
+  }
 
   if (NULL == uri)
     {
@@ -143,25 +148,11 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 
     QString filenameStr;
 
-    //filenameStr= filenameStr.fromAscii ( desc );
-   // filenameStr = filenameStr.fromLatin1 ( desc );
-   // filenameStr.fromLocal8Bit ( desc );
-    //filenameStr.fromRawData ( desc );
-   // filenameStr =filenameStr.fromStdString ( desc );
-   //filenameStr.fromStdWString ( desc );
-    //filenameStr.fromUcs4 ( desc );
+
     filenameStr = filenameStr.fromUtf8 ( desc );
-    //filenameStr.fromUtf16 ( desc );
-    //filenameStr.fromWCharArray ( desc );
 
 
-
-
-
-    SearchResult* newresult = model->createResult();
-
-
-
+    SearchResult* newresult = m_model->addResult();
 
 
 
@@ -201,7 +192,7 @@ void Search::Stop()
 void Search::Close()
 {
 
-  delete model;
+  delete m_model;
 
 }
 

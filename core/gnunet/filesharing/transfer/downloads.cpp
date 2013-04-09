@@ -19,16 +19,18 @@
 */
 
 #include "downloads.h"
-#include "core/cangote.h"
+//#include "core/cangote.h"
 #include "downloaditem.h"
 #include "core/gnunet/gnunet_includes.h"
-#include "models/downloadmodel.h"
+#include "models/DownloadsModel.h"
+#include "core/cangotecore.h"
+#include "models/models.h"
 
 
 Downloads::Downloads(QObject *parent) :
     QObject(parent)
 {
-    model = new DownloadModel(this);
+    m_model = theApp->models()->downloadsModel();
 }
 
 
@@ -52,7 +54,7 @@ Downloads::setup_download (DownloadItem *de, DownloadItem *pde, struct GNUNET_FS
                 uint64_t completed)
 {
 
-  gWarn("Setuping a download");
+  //gWarn("Setuping a download");
 
   GNUNET_assert (NULL != uri);
   if (NULL == de)
@@ -60,7 +62,7 @@ Downloads::setup_download (DownloadItem *de, DownloadItem *pde, struct GNUNET_FS
     //No existing download entry to build on, create a fresh one
       QString qFilename;
       qFilename = qFilename.fromUtf8(filename);
-      de = model->addDownload(pde,dc,uri,qFilename,meta,size,completed);
+      de = m_model->addDownload(pde,dc,uri,qFilename,meta,size,completed);
   }
   else
   {
@@ -165,7 +167,7 @@ Downloads::mark_download_error (DownloadItem *de,
              const char *emsg)
 {
     Q_ASSERT(de);
-    gWarn(QString(emsg));
+    //gWarn(QString(emsg));
 
     de->setError();
 }
@@ -181,7 +183,7 @@ void
 Downloads::mark_download_completed (DownloadItem *de, uint64_t size)
 {
     Q_ASSERT(de);
-    gInfo("Download completed !");
+    //gInfo("Download completed !");
 
     de->setComplete();
 }
@@ -190,7 +192,7 @@ void
 Downloads::setDownloadActive(DownloadItem *de)
 {
     Q_ASSERT(de);
-    gInfo("Setting a download as active !");
+    //gInfo("Setting a download as active !");
 
     de->setDownloading();
 }
@@ -201,7 +203,7 @@ Downloads::setDownloadInactive(DownloadItem *de)
 
     Q_ASSERT(de);
 
-    gInfo("Setting a download as Inactive !");
+    //gInfo("Setting a download as Inactive !");
 
     de->setPaused();
 

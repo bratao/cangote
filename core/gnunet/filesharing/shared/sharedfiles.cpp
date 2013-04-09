@@ -18,8 +18,10 @@
      Boston, MA 02111-1307, USA.
 */
 
+#include <QDebug>
 #include "sharedfiles.h"
-#include "core/cangote.h"
+#include "core/cangotecore.h"
+#include "models/models.h"
 #include "core/gnunet/gnunet_includes.h"
 #include "models/sharedfilesmodel.h"
 
@@ -27,26 +29,33 @@ SharedFiles::SharedFiles(QObject *parent) :
     QObject(parent)
 {
     m_fs = NULL;
-    m_model = new SharedFilesModel(this);
+    m_model = theApp->models()->sharedModel();
 }
 
 
 
-/**
- * Print indexed filenames to stdout.
- *
- * @param cls closure
- * @param filename the name of the file
- * @param file_id hash of the contents of the indexed file
- * @return GNUNET_OK to continue iteration
- */
 static int
-print_indexed (void *cls, const char *filename, const struct GNUNET_HashCode * file_id)
+indexedFilesCallback (void *cls, const char *filename, const struct GNUNET_HashCode * file_id)
 {
+
+    SharedFiles* sharedFiles = (SharedFiles*)cls;
+
     if(filename == NULL)
         return GNUNET_OK;
-    gDebug(QString("Sharing: %1").arg(filename));
-  return GNUNET_OK;
+
+    sharedFiles->addNewFiles(filename,file_id);
+
+    return GNUNET_OK;
+}
+
+void SharedFiles::addNewFiles(const char *filename, const struct GNUNET_HashCode * file_id)
+{
+
+    const char * hash = GNUNET_h2s_full(file_id);
+    QString strHash(hash);
+    qWarning() << (QString("Sharing: %1 with Hash: %2").arg(filename).arg(strHash));
+
+    m_model->addFile(QString(filename),strHash);
 }
 
 
@@ -55,9 +64,10 @@ void SharedFiles::init(GNUNET_FS_Handle * fs)
 {
     m_fs = fs;
 
-    if (NULL == GNUNET_FS_get_indexed_files (m_fs, &print_indexed, NULL))
+    if (NULL == GNUNET_FS_get_indexed_files (m_fs,
+                                             &indexedFilesCallback, this))
     {
-      m_fs = NULL;
-      return;
+        m_fs = NULL;
+        return;
     }
 }

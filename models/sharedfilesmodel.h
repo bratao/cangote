@@ -23,22 +23,28 @@
 
 #include <QAbstractTableModel>
 
-class SharedFilesModel : public QAbstractTableModel
+#include "core/gnunet/filesharing/shared/sharedfile.h"
+
+class SharedFile;
+class SharedFilesModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
     explicit SharedFilesModel(QObject *parent = 0);
     int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
-    int columnCount(const QModelIndex& parent  = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    enum SearchRoles { FILENAME, FILESIZE ,AVAILIABILITY, APPLICABILITYTRANK, NB_SEARCH_COLUMNS };
 
+
+    void addFile(QString filename, QString filehash);
 signals:
-    
-public slots:
-    
+     void addFileSignal(QString filename, QString filehash);
+private slots:
+    void addFileSlot(QString filename, QString filehash);
+
 private:
-    QList<void*> m_data;
+    QList<SharedFile*> m_data;
+    QHash<int, QByteArray> roleNames() const;
 };
 
 #endif // SHAREDFILESMODEL_H

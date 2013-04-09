@@ -27,12 +27,12 @@
 
 
 
-class GNUNetPeersModel;
+class NetworkPeersModel;
 class Peer : public QObject
 {
   Q_OBJECT
 public:
-  explicit Peer(const struct GNUNET_PeerIdentity *peerIdent, QString id, GNUNetPeersModel *model,int modelIndex, QObject *parent = 0);
+  explicit Peer(const struct GNUNET_PeerIdentity *peerIdent, QString id, QObject *parent = 0);
   
 
 
@@ -80,7 +80,7 @@ public:
     float getOutgoingBandwidth();
     QString getURI();
 signals:
-  
+
     void modifiedSignal(QString id);
 public slots:
   
@@ -94,11 +94,6 @@ private:
     QString id;
 
     QString hostname;
-
-    GNUNetPeersModel* model;
-
-    int modelIndex;
-
 
 
 

@@ -23,41 +23,46 @@
 #include <QObject>
 
 #include "core/gnunet/gnunet_includes.h"
-
+#include "service.h"
 
 class Search;
-
-
-
-
-class GNUnetFsSearchResultsModel;
 class SearchResult;
-class ServiceStatus;
-class GNUnetFsSearchModel;
-class DownloadModel;
+class SearchModel;
+class Downloads;
 class Downloads;
 class SharedFiles;
-class FileSharing : public QObject
+class FileSharing : public ServiceObject
 {
-  Q_OBJECT
+    Q_OBJECT
+
+    Q_PROPERTY(Downloads * downloads READ downloads CONSTANT)
+    Q_PROPERTY(SharedFiles * sharedFiles READ sharedFiles CONSTANT)
+
 public:
     explicit FileSharing( QObject *parent = 0);
 
 
+
+    Downloads* downloads() const
+    { return m_downloads; }
+
+    SharedFiles* sharedFiles() const
+    { return m_sharedFiles; }
+
     ////////////FILESHARING/////////////////////////
     void *
     GNUNET_fs_event_handler (void *cls,
-                                 const struct GNUNET_FS_ProgressInfo *info);
+                             const struct GNUNET_FS_ProgressInfo *info);
 
-        ////////SEARCH//////////
+    ////////SEARCH//////////
     SearchResult *setup_inner_search(struct GNUNET_FS_SearchContext *sc,
-                        SearchResult *parent);
-    Search *
+                                     SearchResult *parent);
+    Search*
     setup_search_tab (struct GNUNET_FS_SearchContext *sc,
-              const struct GNUNET_FS_Uri *query);
+                      const struct GNUNET_FS_Uri *query);
     SearchResult *
     process_search_result (Search *search,
-                   SearchResult *parent,
+                           SearchResult *parent,
                            const struct GNUNET_FS_Uri *uri,
                            const struct GNUNET_CONTAINER_MetaData *meta,
                            struct GNUNET_FS_SearchResult *result,
@@ -66,7 +71,7 @@ public:
     update_search_result (SearchResult *sr,
                           const struct GNUNET_CONTAINER_MetaData *meta,
                           int applicability_rank,
-                  int availability_rank,
+                          int availability_rank,
                           int availability_certainty);
     void
     close_search_tab (Search *tab);
@@ -75,33 +80,34 @@ public:
 
     void
     handle_search_error (struct SearchTab *tab,
-                 const char *emsg);
+                         const char *emsg);
     static void *
     GNUNET_fs_event_handler_callback (void *cls,
-                                 const struct GNUNET_FS_ProgressInfo *info);
+                                      const struct GNUNET_FS_ProgressInfo *info);
 
 
     void start(GNUNET_CONFIGURATION_Handle *config);
     void downloadFromSearch(Search *search);
-    ServiceStatus *getStatus();
+    //ServiceStatus *getStatus();
+   Q_INVOKABLE void search(QString term, int anonLevel);
+    void ProcessEvents();
+signals:
+    void searchSignal(QString term, int anonLevel);
 
-    GNUnetFsSearchModel* searchModel;
-    Downloads* downloads;
-
-    SharedFiles* m_sharedFiles;
-
-public slots:
+private slots:
     void downloadFromSearch(SearchResult *searchResult);
-        void DoSearch(QString terms, int anonLevel);
+    void searchSlot(QString terms, int anonLevel);
 private:
     /**
      * Handle for file-sharing operations.
      */
-        static struct GNUNET_FS_Handle *fs;
+    static struct GNUNET_FS_Handle *fs;
 
-        struct GNUNET_CONFIGURATION_Handle *config;
+    struct GNUNET_CONFIGURATION_Handle *config;
 
-        ServiceStatus* status;
+    SearchModel* m_search;
+    Downloads* m_downloads;
+    SharedFiles* m_sharedFiles;
 
 
 };

@@ -27,15 +27,27 @@
 class DownloadItem : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int index READ index WRITE setIndex)
+
 public:
-    explicit DownloadItem(QString uri, int index, QObject *parent = 0);
+    explicit DownloadItem(QString uri, QObject *parent = 0);
 
     enum State {STATE_ERROR, STATE_STOP ,STATE_PAUSED, STATE_QUEUED,STATE_DOWNLOADING, STATE_COMPLETE, STATE_INVALID};
-    enum Column {TR_NAME, TR_SIZE, TR_PROGRESS, TR_STATUS, TR_DLSPEED, TR_ETA, TR_LABEL, TR_ADD_DATE, TR_AMOUNT_DOWNLOADED, TR_AMOUNT_LEFT, TR_TIME_ELAPSED, NB_COLUMNS};
 
-    
+
+
+    int index() const
+    { return m_index; }
+
+    void setIndex(int index)
+    {
+        m_index = index;
+    }
+
+
+
 signals:
-        void modifiedSignal(int index);
+    void modifiedSignal(int index);
 public slots:
 
 public:
@@ -77,6 +89,8 @@ private:
 
     uint64_t m_eta;
     uint64_t m_dateAdded;
+    State m_state;
+
 
     struct GNUNET_FS_Uri *uri;
     struct GNUNET_FS_DownloadContext *dc;
@@ -84,9 +98,9 @@ private:
 
 
 
-    State m_state;
 
-    int index;
+
+    int m_index;
 
 };
 

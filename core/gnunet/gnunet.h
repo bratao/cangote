@@ -24,55 +24,61 @@
 #include <QtCore>
 #include <QString>
 
+#include "service.h"
 #include "gnunet_includes.h"
 
 
-
 class FileSharing;
-class GNetwork;
-class GNUnetFsSearchModel;
-class GNUNetPeersModel;
-class ServiceStatus;
-class DownloadModel;
-class GNUNet : public QObject
+class NetworkManager;
+class SearchModel;
+class NetworkPeersModel;
+//class ServiceStatus;
+class Downloads;
+class GNUNet : public ServiceObject
 {
     Q_OBJECT
+    Q_PROPERTY(FileSharing * filesharing READ filesharing CONSTANT)
+    Q_PROPERTY(NetworkManager* network READ network CONSTANT)
+    Q_PROPERTY(GNUNET_CONFIGURATION_Handle * config READ config)
+
+
 public:
     explicit GNUNet(QObject *parent = 0);
 
+    FileSharing* filesharing() const
+    { return m_filesharing; }
 
+    NetworkManager* network() const
+    { return m_network; }
 
-    void ProcessEvents();
+    GNUNET_CONFIGURATION_Handle* config() const
+    { return m_config; }
+
 
     static void mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
-                   const struct GNUNET_CONFIGURATION_Handle *cfg);
-
-    static struct GNUNET_CONFIGURATION_Handle *config;
-
+                                 const struct GNUNET_CONFIGURATION_Handle *cfg);
     static void keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
 
-
-    ServiceStatus* getStatus();
 
 
 public slots:
     void Start();
 
 public:
-    FileSharing* filesharing;
-    GNetwork*  network;
 
-    int numEstimateNodes;
 
-    GNUNetPeersModel *getPeersModel();
+    int m_numEstimateNodes;
+
+
     void StartServices();
 
     void mainLoop(char *const*args, const char *cfgfile, const GNUNET_CONFIGURATION_Handle *cfg);
-    GNUnetFsSearchModel *getSearchModel();
-    DownloadModel *getDownloadsModel();
-private:
-    ServiceStatus* status;
 
+private:
+    void ProcessEvents();
+    FileSharing* m_filesharing;
+    NetworkManager*  m_network;
+    static struct GNUNET_CONFIGURATION_Handle *m_config;
 
 
 };

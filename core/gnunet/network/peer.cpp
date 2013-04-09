@@ -20,15 +20,13 @@
 
 
 #include "peer.h"
-#include "core/cangote.h"
-#include "models/gnunet_peers.h"
+//#include "core/cangote.h"
+#include "models/NetworkPeersModel.h"
 
-Peer::Peer(const struct GNUNET_PeerIdentity *peerIdent, QString id,GNUNetPeersModel* model,int modelIndex, QObject *parent) :
+Peer::Peer(const struct GNUNET_PeerIdentity *peerIdent, QString id, QObject *parent) :
   QObject(parent)
 {
     this->id = id;
-    this->model = model;
-    this->modelIndex = modelIndex;
     connected = false;
     transportUsed = "";
     peerActiveAddressCallback = NULL;
@@ -54,8 +52,8 @@ void Peer::modified()
 {
 
     //model->peerModifiedSlot(id);
-    model->setPeerModified(modelIndex);
-  //emit modifiedSignal(id);
+    //model->setPeerModified(modelIndex);
+  emit modifiedSignal(id);
 
 
 }
@@ -151,13 +149,13 @@ bool Peer::isConnected()
 
 void Peer::setTransportName(QString name)
 {
-    this->transportUsed = name;
+    transportUsed = name;
     modified();
 }
 
 QString Peer::getTransportName()
 {
-    return this->transportUsed;
+    return transportUsed;
 }
 
 float Peer::getIncomingBandwidth()

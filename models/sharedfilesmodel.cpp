@@ -18,11 +18,12 @@
      Boston, MA 02111-1307, USA.
 */
 
-#include "sharedfilesmodel.h"
+#include "SharedFilesModel.h"
 
 SharedFilesModel::SharedFilesModel(QObject *parent) :
-    QAbstractTableModel(parent)
+    QAbstractListModel(parent)
 {
+    connect(this,&SharedFilesModel::addFileSignal,this,&SharedFilesModel::addFileSlot);
 }
 
 int SharedFilesModel::rowCount(const QModelIndex& parent) const
@@ -30,40 +31,59 @@ int SharedFilesModel::rowCount(const QModelIndex& parent) const
     return m_data.size();
 }
 
-int SharedFilesModel::columnCount(const QModelIndex& parent) const
-{
-    return 0;
-}
-
 
 QVariant SharedFilesModel::data(const QModelIndex& index, int role) const
 {
-  if(role == Qt::DisplayRole)
+    SharedFile* file = m_data.at(index.row());
+
+    switch(role)
     {
+    case FILENAME:
+        return file->filename();
 
-       switch(index.column())
-       {
-           default:
-                 return QVariant::Invalid;
-       }
-
+    default:
+        return QVariant::Invalid;
     }
 
-  return QVariant::Invalid;
+
+    return QVariant::Invalid;
 }
 
-QVariant SharedFilesModel::headerData(int section, Qt::Orientation orientation, int role) const
+
+void SharedFilesModel::addFile(QString filename, QString filehash)
 {
-
-    if (role != Qt::DisplayRole)
-            return QVariant();
-
-        if (orientation == Qt::Horizontal) {
-            switch (section) {
-                default:
-                    return QVariant();
-            }
-        }
-        return QVariant();
+    emit addFileSignal(filename, filehash);
 }
+
+
+void SharedFilesModel::addFileSlot(QString filename, QString filehash)
+{
+    SharedFile* file = new SharedFile(this);
+    file->setFilename(filename);
+    file->setHash(filehash);
+
+    int count = m_data.count();
+
+
+    beginInsertRows(QModelIndex(), count, count);
+
+
+    m_data.append(file);
+
+    endInsertRows();
+
+}
+
+
+QHash<int, QByteArray> SharedFilesModel::roleNames() const {
+    QHash<int, QByteArray> roles;
+    roles[FILENAME]             = "filename";
+    roles[FILESIZE]             = "filesize";
+    roles[AVAILIABILITY]        = "availiability";
+    roles[APPLICABILITYTRANK]   = "availiabilityRank";
+
+
+    return roles;
+}
+
 

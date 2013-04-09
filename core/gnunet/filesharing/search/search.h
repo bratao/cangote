@@ -26,61 +26,67 @@
 
 
 
-
-
 struct GNUNET_FS_SearchContext;
-class GNUnetFsSearchResultsModel;
+class SearchResultsModel;
 struct SearchResult;
 class Search : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
+    Q_PROPERTY(SearchResultsModel * model READ model WRITE setModel NOTIFY modelChanged)
 public:
-  explicit Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent = 0);
-  SearchResult* AddResult(SearchResult *parent, const struct GNUNET_FS_Uri *uri,
-                         const struct GNUNET_CONTAINER_MetaData *meta,
-                         struct GNUNET_FS_SearchResult *result,
-                         uint32_t applicability_rank);
-  GNUnetFsSearchResultsModel* getModel() { return model;}
-  SearchResult *UpdateResult(SearchResult *sr, const GNUNET_CONTAINER_MetaData *meta, int applicability_rank, int availability_rank, int availability_certainty);
-  void Stop();
+    explicit Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent = 0);
 
-  void Connect();
-  void Close();
-  QString getTerm();
+
+    SearchResultsModel* model() const
+    { return m_model; }
+
+    void setModel(SearchResultsModel* model)
+    {
+        m_model = model;
+        //connect(m_model, &Search::AskedToDieSignal, &Search::AskedToDieSlot());
+        emit modelChanged(model);
+    }
+
+    SearchResult* AddResult(SearchResult *parent, const struct GNUNET_FS_Uri *uri,
+                            const struct GNUNET_CONTAINER_MetaData *meta,
+                            struct GNUNET_FS_SearchResult *result,
+                            uint32_t applicability_rank);
+    SearchResult *UpdateResult(SearchResult *sr, const GNUNET_CONTAINER_MetaData *meta, int applicability_rank, int availability_rank, int availability_certainty);
+    void Stop();
+
+    void Close();
+    QString getTerm();
 signals:
-  
-  void DeadSignal();
+    void modelChanged(SearchResultsModel*);
+    void DeadSignal();
 public slots:
-  void AskedToDieSlot();
+    void AskedToDieSlot();
 
 private:
 
 
 
- GNUnetFsSearchResultsModel* model;
+    SearchResultsModel* m_model;
 
 
-  /**
+    /**
    * Set in case this is an inner search, otherwise NULL.
    */
-  Search *parent;
+    Search *parent;
 
-  /**
+    /**
    * Handle for this search with FS library.
    */
-  struct GNUNET_FS_SearchContext *sc;
-
-  /**
-   * Text of the search query.
-   */
-  QString query_txt;
+    struct GNUNET_FS_SearchContext *sc;
 
 
-  /**
-   * Number of results we got for this search.
-   */
-  unsigned int num_results;
-  
+    //Text of the search query.
+    QString query_txt;
+
+
+    //Number of results we got for this search.
+    unsigned int m_numResults;
+
 };
 
 #endif // SEARCH_H

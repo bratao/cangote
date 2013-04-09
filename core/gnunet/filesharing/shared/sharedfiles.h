@@ -32,6 +32,7 @@ public:
     
     void init();
     void init(struct GNUNET_FS_Handle *fs);
+    void addNewFiles(const char *filename, const struct GNUNET_HashCode *file_id);
 signals:
     
 public slots:

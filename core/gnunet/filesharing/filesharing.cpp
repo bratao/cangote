@@ -21,21 +21,23 @@
 #include <QObject>
 #include <QDebug>
 
-#include "core/cangote.h"
+#include "core/cangotecore.h"
+#include "core/gnunet/gnunet.h"
 #include "filesharing.h"
 #include "search/search.h"
 
-#include "core/gnunet/gnunet.h"
-#include "models/gnunet_fs_search_results.h"
-#include "models/gnunetfssearchmodel.h"
+
+#include "models/SearchResultModel.h"
+#include "models/SearchModel.h"
 #include "search/searchresult.h"
-#include "core/servicestatus.h"
+//#include "core/servicestatus.h"
 
 #include "transfer/downloaditem.h"
 #include "transfer/downloads.h"
-#include "models/downloadmodel.h"
+#include "models/DownloadsModel.h"
 
 #include "shared/sharedfiles.h"
+#include "models/models.h"
 
 
 //Initialize statics
@@ -43,14 +45,18 @@ GNUNET_FS_Handle * FileSharing::fs;
 
 
 FileSharing::FileSharing(QObject *parent) :
-  QObject(parent)
+    ServiceObject(parent)
 {
-    status = new ServiceStatus(this);
-    searchModel = new GNUnetFsSearchModel(this);
-    downloads = new Downloads(this);
+    m_search= theApp->models()->searchModel();
+    m_downloads = new Downloads(this);
     m_sharedFiles = new SharedFiles(this);
 
+    // connect signal-slots for decoupling
+    connect (this, SIGNAL(searchSignal(QString, int)), this,
+        SLOT(searchSlot(QString, int)),Qt::QueuedConnection);
+
 }
+
 
 
 void FileSharing::start(struct GNUNET_CONFIGURATION_Handle *config)
@@ -77,20 +83,20 @@ void FileSharing::start(struct GNUNET_CONFIGURATION_Handle *config)
     if (fs == NULL)
     {
         qWarning("Fs failed");
-        status->setErrorState("FS failed to start");
+        //status->setErrorState("FS failed to start");
     }
     else
     {
-        status->setOkState();
+        //status->setOkState();
         m_sharedFiles->init(fs);
     }
 }
 
 void *
 FileSharing::GNUNET_fs_event_handler_callback (void *cls,
-                         const struct GNUNET_FS_ProgressInfo *info)
+                                               const struct GNUNET_FS_ProgressInfo *info)
 {
-    return theApp->gnunet->filesharing->GNUNET_fs_event_handler(cls,info);
+    return theApp->gnunet()->filesharing()->GNUNET_fs_event_handler(cls,info);
 }
 
 
@@ -120,12 +126,12 @@ FileSharing::GNUNET_fs_event_handler_callback (void *cls,
  *                model at 'iter')
  */
 struct SearchResult *
-FileSharing::setup_inner_search (struct GNUNET_FS_SearchContext *sc,
-                    struct SearchResult *parent)
+        FileSharing::setup_inner_search (struct GNUNET_FS_SearchContext *sc,
+                                         struct SearchResult *parent)
 {
 
-  gError("Setup inner seach not implemented !");
-  return NULL;
+    //gError("Setup inner seach not implemented !");
+    return NULL;
 
 }
 
@@ -137,40 +143,40 @@ FileSharing::setup_inner_search (struct GNUNET_FS_SearchContext *sc,
  * @param query the query, NULL for none (open-URI/orphan tab)
  * @return search tab handle
  */
-struct Search *
-FileSharing::setup_search_tab (struct GNUNET_FS_SearchContext *sc,
-          const struct GNUNET_FS_Uri *query)
+Search*
+        FileSharing::setup_search_tab (struct GNUNET_FS_SearchContext *sc,
+                                       const struct GNUNET_FS_Uri *query)
 {
 
 
-  char * querytmp;
+    char * querytmp;
 
 
 
-  if (query == NULL)
-  {
-    //no real query, tab is for non-queries, use special label
-    querytmp = GNUNET_strdup ("*");
-  }
-  else
-  {
-    //FS_uri functions should produce UTF-8, so let them be
-    if (GNUNET_FS_uri_test_ksk (query))
-      querytmp = GNUNET_FS_uri_ksk_to_string_fancy (query);
+    if (query == NULL)
+    {
+        //no real query, tab is for non-queries, use special label
+        querytmp = GNUNET_strdup ("*");
+    }
     else
-      querytmp = GNUNET_FS_uri_to_string (query);
-  }
+    {
+        //FS_uri functions should produce UTF-8, so let them be
+        if (GNUNET_FS_uri_test_ksk (query))
+            querytmp = GNUNET_FS_uri_ksk_to_string_fancy (query);
+        else
+            querytmp = GNUNET_FS_uri_to_string (query);
+    }
 
 
-  QString queryStr(querytmp);
+    QString queryStr(querytmp);
 
 
-  Search* search = searchModel->addNewSearch(sc,queryStr );
+    Search* search = m_search->addNewSearch(sc,queryStr );
 
 
 
 
-  return search;
+    return search;
 
 }
 
@@ -183,7 +189,7 @@ FileSharing::setup_search_tab (struct GNUNET_FS_SearchContext *sc,
  */
 void
 FileSharing::handle_search_error (struct SearchTab *tab,
-             const char *emsg)
+                                  const char *emsg)
 {
     /*
   gtk_label_set_text (tab->label, _("Error!"));
@@ -209,26 +215,26 @@ FileSharing::handle_search_error (struct SearchTab *tab,
  *                model at 'iter')
  */
 struct SearchResult *
-FileSharing::process_search_result (Search *search,
-               struct SearchResult *parent,
-                       const struct GNUNET_FS_Uri *uri,
-                       const struct GNUNET_CONTAINER_MetaData *meta,
-                       struct GNUNET_FS_SearchResult *result,
-                       uint32_t applicability_rank)
+        FileSharing::process_search_result (Search* search,
+                                            struct SearchResult *parent,
+                                            const struct GNUNET_FS_Uri *uri,
+                                            const struct GNUNET_CONTAINER_MetaData *meta,
+                                            struct GNUNET_FS_SearchResult *result,
+                                            uint32_t applicability_rank)
 {
 
-  struct SearchResult *sr;
+    struct SearchResult *sr;
 
-  if(search == NULL)
-  {
-    qWarning() << "Got a result to a file that don't exist !";
-    return NULL;
-  }
+    if(search == NULL)
+    {
+        qWarning() << "Got a result to a file that don't exist !";
+        return NULL;
+    }
 
-  sr = search->AddResult(parent, uri,meta, result, applicability_rank);
-  connect(sr,SIGNAL(requestDownload(SearchResult*)),SLOT(downloadFromSearch(SearchResult*)));
+    sr = search->AddResult(parent, uri,meta, result, applicability_rank);
+    connect(sr,SIGNAL(requestDownload(SearchResult*)),SLOT(downloadFromSearch(SearchResult*)));
 
-  return sr;
+    return sr;
 
 }
 
@@ -248,26 +254,26 @@ FileSharing::process_search_result (Search *search,
  */
 void
 FileSharing::update_search_result (SearchResult *sr,
-                      const struct GNUNET_CONTAINER_MetaData *meta,
-                      int applicability_rank,
-              int availability_rank,
-                      int availability_certainty)
+                                   const struct GNUNET_CONTAINER_MetaData *meta,
+                                   int applicability_rank,
+                                   int availability_rank,
+                                   int availability_certainty)
 {
 
-  if (sr == NULL)
-  {
-      gWarn("Try to update a search result that don't exist");
-    return;
-  }
+    if (sr == NULL)
+    {
+        //gWarn("Try to update a search result that don't exist");
+        return;
+    }
 
 
 
 
-  sr->setMetadata((GNUNET_CONTAINER_MetaData *)meta,false);
-  sr->setApplicabilityRank(applicability_rank,false);
-  sr->setAvailabilityRank(availability_rank,false);
-  sr->setAvailabilityCertainty(availability_certainty,false);
-  sr->modified();
+    sr->setMetadata((GNUNET_CONTAINER_MetaData *)meta,false);
+    sr->setApplicabilityRank(applicability_rank,false);
+    sr->setAvailabilityRank(availability_rank,false);
+    sr->setAvailabilityCertainty(availability_certainty,false);
+    sr->modified();
 
 
 }
@@ -302,11 +308,11 @@ void
 FileSharing::free_search_result (struct SearchResult *sr)
 {
 
-  if (NULL == sr)
-    return;
+    if (NULL == sr)
+        return;
 
 
-  delete sr;
+    delete sr;
 
 
 
@@ -327,13 +333,13 @@ FileSharing::free_search_result (struct SearchResult *sr)
 
 void *
 FileSharing::GNUNET_fs_event_handler (void *cls,
-                             const struct GNUNET_FS_ProgressInfo *info)
+                                      const struct GNUNET_FS_ProgressInfo *info)
 {
     void *ret;
 
-     switch (info->status)
-     {
-/*
+    switch (info->status)
+    {
+    /*
      case GNUNET_FS_STATUS_PUBLISH_START:
          return setup_publish (info->value.publish.pc, info->value.publish.filename,
                                info->value.publish.size, info->value.publish.pctx);
@@ -376,147 +382,147 @@ FileSharing::GNUNET_fs_event_handler (void *cls,
 
 */
 
-     case GNUNET_FS_STATUS_DOWNLOAD_START:
-         return downloads->setup_download ((DownloadItem *)info->value.download.cctx,
-                                (DownloadItem *)info->value.download.pctx, info->value.download.dc,
-                                info->value.download.uri,
-                                info->value.download.filename,
-                                info->value.download.specifics.start.meta,
-                                info->value.download.size,
-                                info->value.download.completed);
-     case GNUNET_FS_STATUS_DOWNLOAD_RESUME:
-         {
-             ret = downloads->setup_download ((DownloadItem *)info->value.download.cctx, (DownloadItem *)info->value.download.pctx, info->value.download.dc,
-                                     info->value.download.uri, info->value.download.filename,
-                                     info->value.download.specifics.resume.meta,
-                                     info->value.download.size,
-                                     info->value.download.completed);
+    case GNUNET_FS_STATUS_DOWNLOAD_START:
+        return m_downloads->setup_download ((DownloadItem *)info->value.download.cctx,
+                                            (DownloadItem *)info->value.download.pctx, info->value.download.dc,
+                                            info->value.download.uri,
+                                            info->value.download.filename,
+                                            info->value.download.specifics.start.meta,
+                                            info->value.download.size,
+                                            info->value.download.completed);
+    case GNUNET_FS_STATUS_DOWNLOAD_RESUME:
+    {
+        ret = m_downloads->setup_download ((DownloadItem *)info->value.download.cctx, (DownloadItem *)info->value.download.pctx, info->value.download.dc,
+                                           info->value.download.uri, info->value.download.filename,
+                                           info->value.download.specifics.resume.meta,
+                                           info->value.download.size,
+                                           info->value.download.completed);
 
-             if (NULL != info->value.download.specifics.resume.message)
-                 downloads->mark_download_error ((DownloadItem*)ret,
-                                      info->value.download.specifics.resume.message);
+        if (NULL != info->value.download.specifics.resume.message)
+            m_downloads->mark_download_error ((DownloadItem*)ret,
+                                              info->value.download.specifics.resume.message);
 
-             return ret;
-         }
-         break;
-     case GNUNET_FS_STATUS_DOWNLOAD_SUSPEND:
-         downloads->pause_download ((DownloadItem*)info->value.download.cctx);
-         return NULL;
-     case GNUNET_FS_STATUS_DOWNLOAD_PROGRESS:
-         downloads->mark_download_progress ((DownloadItem*)info->value.download.cctx,
-                                 info->value.download.filename,
-                                 info->value.download.size,
-                                 info->value.download.completed,
-                                 info->value.download.specifics.progress.data,
-                                 info->value.download.specifics.progress.
-                                 offset,
-                                 info->value.download.specifics.progress.
-                                 data_len,
-                                 info->value.download.specifics.progress.
-                                 depth);
-         return info->value.download.cctx;
-     case GNUNET_FS_STATUS_DOWNLOAD_ERROR:
-         downloads->mark_download_error ((DownloadItem*)info->value.download.cctx,
-                              info->value.download.specifics.error.message);
-         return info->value.download.cctx;
-     case GNUNET_FS_STATUS_DOWNLOAD_COMPLETED:
-         downloads->mark_download_completed ((DownloadItem*)info->value.download.cctx,
-                                  info->value.download.size);
-         return info->value.download.cctx;
-     case GNUNET_FS_STATUS_DOWNLOAD_STOPPED:
-         downloads->stop_download ((DownloadItem*)info->value.download.cctx);
-         return NULL;
-
-
-     case GNUNET_FS_STATUS_DOWNLOAD_ACTIVE:
-         downloads->setDownloadActive((DownloadItem*)info->value.download.cctx);
-         return info->value.download.cctx;
-     case GNUNET_FS_STATUS_DOWNLOAD_INACTIVE:
-         downloads->setDownloadInactive((DownloadItem*)info->value.download.cctx);
-         return info->value.download.cctx;
-
-     case GNUNET_FS_STATUS_DOWNLOAD_LOST_PARENT:
-         //TODO: Implement LOST PARENT (Directory/ recursive downloads)
-       //  download_lost_parent (info->value.download.cctx);
-         return info->value.download.cctx;
+        return ret;
+    }
+        break;
+    case GNUNET_FS_STATUS_DOWNLOAD_SUSPEND:
+        m_downloads->pause_download ((DownloadItem*)info->value.download.cctx);
+        return NULL;
+    case GNUNET_FS_STATUS_DOWNLOAD_PROGRESS:
+        m_downloads->mark_download_progress ((DownloadItem*)info->value.download.cctx,
+                                             info->value.download.filename,
+                                             info->value.download.size,
+                                             info->value.download.completed,
+                                             info->value.download.specifics.progress.data,
+                                             info->value.download.specifics.progress.
+                                             offset,
+                                             info->value.download.specifics.progress.
+                                             data_len,
+                                             info->value.download.specifics.progress.
+                                             depth);
+        return info->value.download.cctx;
+    case GNUNET_FS_STATUS_DOWNLOAD_ERROR:
+        m_downloads->mark_download_error ((DownloadItem*)info->value.download.cctx,
+                                          info->value.download.specifics.error.message);
+        return info->value.download.cctx;
+    case GNUNET_FS_STATUS_DOWNLOAD_COMPLETED:
+        m_downloads->mark_download_completed ((DownloadItem*)info->value.download.cctx,
+                                              info->value.download.size);
+        return info->value.download.cctx;
+    case GNUNET_FS_STATUS_DOWNLOAD_STOPPED:
+        m_downloads->stop_download ((DownloadItem*)info->value.download.cctx);
+        return NULL;
 
 
+    case GNUNET_FS_STATUS_DOWNLOAD_ACTIVE:
+        m_downloads->setDownloadActive((DownloadItem*)info->value.download.cctx);
+        return info->value.download.cctx;
+    case GNUNET_FS_STATUS_DOWNLOAD_INACTIVE:
+        m_downloads->setDownloadInactive((DownloadItem*)info->value.download.cctx);
+        return info->value.download.cctx;
 
-//
-//  Search
-//
-     case GNUNET_FS_STATUS_SEARCH_START:
-       if (NULL != info->value.search.pctx)
-         return (void*)setup_inner_search (info->value.search.sc,
-                                    (SearchResult*)info->value.search.pctx);
-       return setup_search_tab (info->value.search.sc, info->value.search.query);
-     case GNUNET_FS_STATUS_SEARCH_RESUME:
-       ret = setup_search_tab (info->value.search.sc, info->value.search.query);
-       if (info->value.search.specifics.resume.message)
-         handle_search_error ((SearchTab*)ret,
-                  info->value.search.specifics.resume.message);
-       return ret;
-     case GNUNET_FS_STATUS_SEARCH_RESUME_RESULT:
-       ret =
-           process_search_result ((Search*)info->value.search.cctx, (SearchResult*)info->value.search.pctx,
-                                  info->value.search.specifics.resume_result.uri,
-                                  info->value.search.specifics.resume_result.meta,
-                                  info->value.search.specifics.resume_result.
-                                  result,
-                                  info->value.search.specifics.resume_result.
-                                  applicability_rank);
-       update_search_result ((SearchResult*)ret,
-                 info->value.search.specifics.resume_result.
-                 meta,
-                 info->value.search.specifics.resume_result.
-                 applicability_rank,
-                 info->value.search.specifics.resume_result.
-                 availability_rank,
-                 info->value.search.specifics.resume_result.
-                 availability_certainty);
-       return ret;
-     case GNUNET_FS_STATUS_SEARCH_SUSPEND:
-       close_search_tab ((Search*)info->value.search.cctx);
-       return NULL;
-     case GNUNET_FS_STATUS_SEARCH_RESULT:
-       return process_search_result ((Search*)info->value.search.cctx,
-                                     (SearchResult*)info->value.search.pctx,
-                                     info->value.search.specifics.result.uri,
-                                     info->value.search.specifics.result.meta,
-                                     info->value.search.specifics.result.result,
-                                     info->value.search.specifics.result.
-                                     applicability_rank);
-     case GNUNET_FS_STATUS_SEARCH_RESULT_NAMESPACE:
-       GNUNET_break (0);
-       break;
-     case GNUNET_FS_STATUS_SEARCH_UPDATE:
-       update_search_result ((SearchResult*)info->value.search.specifics.update.cctx,
-                 info->value.search.specifics.update.meta,
-                 info->value.search.specifics.update.
-                 applicability_rank,
-                 info->value.search.specifics.update.
-                 availability_rank,
-                 info->value.search.specifics.update.
-                 availability_certainty);
-       return info->value.search.specifics.update.cctx;
-     case GNUNET_FS_STATUS_SEARCH_ERROR:
-       handle_search_error ((SearchTab*)info->value.search.cctx,
-                info->value.search.specifics.error.message);
-       return info->value.search.cctx;
-     case GNUNET_FS_STATUS_SEARCH_PAUSED:
-       return info->value.search.cctx;
-     case GNUNET_FS_STATUS_SEARCH_CONTINUED:
-       return info->value.search.cctx;
-     case GNUNET_FS_STATUS_SEARCH_RESULT_STOPPED:
-       free_search_result ((SearchResult*)info->value.search.specifics.result_stopped.cctx);
-       return NULL;
-     case GNUNET_FS_STATUS_SEARCH_RESULT_SUSPEND:
-       free_search_result ((SearchResult*)info->value.search.specifics.result_suspend.cctx);
-       return NULL;
-     case GNUNET_FS_STATUS_SEARCH_STOPPED:
-       close_search_tab ((Search*)info->value.search.cctx);
-       return NULL;
-       /*
+    case GNUNET_FS_STATUS_DOWNLOAD_LOST_PARENT:
+        //TODO: Implement LOST PARENT (Directory/ recursive downloads)
+        //  download_lost_parent (info->value.download.cctx);
+        return info->value.download.cctx;
+
+
+
+        //
+        //  Search
+        //
+    case GNUNET_FS_STATUS_SEARCH_START:
+        if (NULL != info->value.search.pctx)
+            return setup_inner_search (info->value.search.sc,
+                                              (SearchResult*)info->value.search.pctx);
+        return (void*)setup_search_tab (info->value.search.sc, info->value.search.query);
+    case GNUNET_FS_STATUS_SEARCH_RESUME:
+        ret = (void*)setup_search_tab (info->value.search.sc, info->value.search.query);
+        if (info->value.search.specifics.resume.message)
+            handle_search_error ((SearchTab*)ret,
+                                 info->value.search.specifics.resume.message);
+        return ret;
+    case GNUNET_FS_STATUS_SEARCH_RESUME_RESULT:
+        ret =
+                process_search_result ((Search*)info->value.search.cctx, (SearchResult*)info->value.search.pctx,
+                                       info->value.search.specifics.resume_result.uri,
+                                       info->value.search.specifics.resume_result.meta,
+                                       info->value.search.specifics.resume_result.
+                                       result,
+                                       info->value.search.specifics.resume_result.
+                                       applicability_rank);
+        update_search_result ((SearchResult*)ret,
+                              info->value.search.specifics.resume_result.
+                              meta,
+                              info->value.search.specifics.resume_result.
+                              applicability_rank,
+                              info->value.search.specifics.resume_result.
+                              availability_rank,
+                              info->value.search.specifics.resume_result.
+                              availability_certainty);
+        return ret;
+    case GNUNET_FS_STATUS_SEARCH_SUSPEND:
+        close_search_tab ((Search*)info->value.search.cctx);
+        return NULL;
+    case GNUNET_FS_STATUS_SEARCH_RESULT:
+        return process_search_result ((Search*)info->value.search.cctx,
+                                      (SearchResult*)info->value.search.pctx,
+                                      info->value.search.specifics.result.uri,
+                                      info->value.search.specifics.result.meta,
+                                      info->value.search.specifics.result.result,
+                                      info->value.search.specifics.result.
+                                      applicability_rank);
+    case GNUNET_FS_STATUS_SEARCH_RESULT_NAMESPACE:
+        GNUNET_break (0);
+        break;
+    case GNUNET_FS_STATUS_SEARCH_UPDATE:
+        update_search_result ((SearchResult*)info->value.search.specifics.update.cctx,
+                              info->value.search.specifics.update.meta,
+                              info->value.search.specifics.update.
+                              applicability_rank,
+                              info->value.search.specifics.update.
+                              availability_rank,
+                              info->value.search.specifics.update.
+                              availability_certainty);
+        return info->value.search.specifics.update.cctx;
+    case GNUNET_FS_STATUS_SEARCH_ERROR:
+        handle_search_error ((SearchTab*)info->value.search.cctx,
+                             info->value.search.specifics.error.message);
+        return info->value.search.cctx;
+    case GNUNET_FS_STATUS_SEARCH_PAUSED:
+        return info->value.search.cctx;
+    case GNUNET_FS_STATUS_SEARCH_CONTINUED:
+        return info->value.search.cctx;
+    case GNUNET_FS_STATUS_SEARCH_RESULT_STOPPED:
+        free_search_result ((SearchResult*)info->value.search.specifics.result_stopped.cctx);
+        return NULL;
+    case GNUNET_FS_STATUS_SEARCH_RESULT_SUSPEND:
+        free_search_result ((SearchResult*)info->value.search.specifics.result_suspend.cctx);
+        return NULL;
+    case GNUNET_FS_STATUS_SEARCH_STOPPED:
+        close_search_tab ((Search*)info->value.search.cctx);
+        return NULL;
+        /*
 case GNUNET_FS_STATUS_UNINDEX_START:
 return info->value.unindex.cctx;
 case GNUNET_FS_STATUS_UNINDEX_RESUME:
@@ -547,12 +553,17 @@ GNUNET_break (0);
 break;
 
 */
-     }
-     return NULL;
+    }
+    return NULL;
 
 }
 
-void FileSharing::DoSearch(QString terms, int anonLevel)
+void FileSharing::search(QString term, int anonLevel)
+{
+    emit searchSignal(term, anonLevel);
+}
+
+void FileSharing::searchSlot(QString terms, int anonLevel)
 {
     char *emsg = NULL;
     struct GNUNET_FS_Uri *uri;
@@ -591,23 +602,29 @@ void FileSharing::downloadFromSearch(SearchResult* searchResult)
     //TODO: Pass a download context
 
 
-   dc= GNUNET_FS_download_start (fs,
-                           searchResult->getUri(),
-                           searchResult->getMeta() /* meta data */,
-                                               searchResult->getFilename().toUtf8(), NULL /* tempname */ ,
-                                               0 /* offset */ ,
-                                               searchResult->getFilesize(),
-                           anonLevel, opt,
-                           NULL,
-                                               NULL);
+    dc= GNUNET_FS_download_start (fs,
+                                  searchResult->getUri(),
+                                  searchResult->getMeta() /* meta data */,
+                                  searchResult->getFilename().toUtf8(), NULL /* tempname */ ,
+                                  0 /* offset */ ,
+                                  searchResult->getFilesize(),
+                                  anonLevel, opt,
+                                  NULL,
+                                  NULL);
 
-   if(dc)
-    gWarn("DOWNLOAD Started !");
-   else
-    gWarn("error starting download");
+    //if(dc)
+    //gWarn("DOWNLOAD Started !");
+    //else
+    //gWarn("error starting download");
 }
 
-ServiceStatus* FileSharing::getStatus()
+//ServiceStatus* FileSharing::getStatus()
+//{
+//    return status;
+//}
+
+void FileSharing::ProcessEvents()
 {
-    return status;
+    QCoreApplication::processEvents();
 }
+

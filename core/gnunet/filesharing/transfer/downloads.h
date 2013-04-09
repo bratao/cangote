@@ -24,7 +24,7 @@
 #include <QObject>
 
 class DownloadItem;
-class DownloadModel;
+class DownloadsModel;
 struct GNUNET_FS_DownloadContext;
 struct GNUNET_FS_Uri;
 struct GNUNET_CONTAINER_MetaData;
@@ -36,7 +36,7 @@ public:
     explicit Downloads(QObject *parent = 0);
     
     DownloadItem *setup_download(DownloadItem *de, DownloadItem *pde, GNUNET_FS_DownloadContext *dc, const GNUNET_FS_Uri *uri, const char *filename, const GNUNET_CONTAINER_MetaData *meta, uint64_t size, uint64_t completed);
-    DownloadModel* model;
+
     void stop_download(DownloadItem *de);
     void pause_download(DownloadItem *de);
     void mark_download_progress(DownloadItem *de, const char *filename, uint64_t size, uint64_t completed, const void *block_data, uint64_t offset, uint64_t block_size, unsigned int depth);
@@ -50,6 +50,7 @@ public slots:
     
 
 private:
+    DownloadsModel* m_model;
 
 };
 

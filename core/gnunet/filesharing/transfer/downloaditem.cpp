@@ -21,11 +21,11 @@
 #include "downloaditem.h"
 #include "core/gnunet/gnunet_includes.h"
 
-DownloadItem::DownloadItem(QString uri,int index, QObject *parent) :
+DownloadItem::DownloadItem(QString uri, QObject *parent) :
     QObject(parent)
 {
     m_uri = uri;
-    this->index = index;
+    m_index = 0;
 
     m_eta = 0;
     m_dateAdded = 0;
@@ -35,7 +35,7 @@ DownloadItem::DownloadItem(QString uri,int index, QObject *parent) :
 
 void DownloadItem::modified()
 {
-  emit modifiedSignal(index);
+  emit modifiedSignal(m_index);
 
 }
 

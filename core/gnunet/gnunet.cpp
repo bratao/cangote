@@ -18,11 +18,10 @@
      Boston, MA 02111-1307, USA.
 */
 
-#include "core/cangote.h"
 #include "gnunet.h"
 #include "filesharing/filesharing.h"
-#include "network/gnetwork.h"
-#include "core/servicestatus.h"
+#include "network/NetworkManager.h"
+//#include "core/servicestatus.h"
 #include "core/gnunet/filesharing/transfer/downloads.h"
 
 #include <math.h>
@@ -32,15 +31,15 @@
 
 
 //Initialize static
-GNUNET_CONFIGURATION_Handle * GNUNet::config;
+GNUNET_CONFIGURATION_Handle * GNUNet::m_config;
 
 
 
 GNUNet::GNUNet(QObject *parent) :
-    QObject(parent)
+    ServiceObject(parent)
 {
 
-    status = new ServiceStatus();
+    //status = new ServiceStatus();
 
 }
 
@@ -49,25 +48,19 @@ GNUNet::GNUNet(QObject *parent) :
  * Static callback. Is the first function executed when GNUNet is running.
  */
 void GNUNet::mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
-                       const struct GNUNET_CONFIGURATION_Handle *cfg)
+                              const struct GNUNET_CONFIGURATION_Handle *cfg)
 {
-
-
     GNUNet* gnunetInstance = (GNUNet*)cls;
-    Q_ASSERT(cls);
+    Q_ASSERT(gnunetInstance);
 
+    //Call our main loop
     gnunetInstance->mainLoop(args,cfgfile,cfg);
-
-
-
 
 }
 
 
-
-
 /**
- * Static task to process our messages.Is needed as the GNUNet loop locks our internal qt Loop.
+ * Static function to process our messages.Is needed as the GNUNet loop locks our internal qt Loop.
  */
 void GNUNet::keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc)
 {
@@ -76,9 +69,10 @@ void GNUNet::keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext
 
     //Process the events
     gnunetInstance->ProcessEvents();
+    gnunetInstance->filesharing()->ProcessEvents();
 
     //Call again in 500 millisecond.
-    GNUNET_SCHEDULER_add_delayed (GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_MILLISECONDS, 700), &keepaliveTask, gnunetInstance);
+    GNUNET_SCHEDULER_add_delayed (GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_MILLISECONDS, 500), &keepaliveTask, gnunetInstance);
 }
 
 
@@ -88,11 +82,11 @@ void GNUNet::Start()
 {
 
 
-    filesharing = new FileSharing();
-    network = new GNetwork();
+    m_filesharing = new FileSharing();
+    m_network = new NetworkManager();
 
-    status->setChildrenService(filesharing->getStatus());
-    status->setChildrenService(network->getStatus());
+    //status->setChildrenService(filesharing->getStatus());
+    // status->setChildrenService(network->getStatus());
 
 
     static struct GNUNET_GETOPT_CommandLineOption options[] = {
@@ -101,7 +95,7 @@ void GNUNet::Start()
 
     char *const argv[] = {
         "cangote",
-       // "-L", "DEBUG",
+        // "-L", "DEBUG",
         NULL
     };
 
@@ -110,65 +104,35 @@ void GNUNet::Start()
     char * teste = "cangote";
     int argc = (sizeof (argv) / sizeof (char *)) - 1;
     int ret =
-        GNUNET_PROGRAM_run ((sizeof (argv) / sizeof (char *)) - 1,argv,
-        //GNUNET_PROGRAM_run ( 1, (char * const*)teste,
-                             "cangote", "cangote help", options,
-                             mainLoopCallback, this);
+            GNUNET_PROGRAM_run ((sizeof (argv) / sizeof (char *)) - 1,argv,
+                                //GNUNET_PROGRAM_run ( 1, (char * const*)teste,
+                                "cangote", "cangote help", options,
+                                mainLoopCallback, this);
 
 
 
 }
 
-    QElapsedTimer timer;
+QElapsedTimer timer;
 
-static int
-gnunet_W32_select (void *cls, struct GNUNET_NETWORK_FDSet *rfds,
-                   struct GNUNET_NETWORK_FDSet *wfds,
-                   struct GNUNET_NETWORK_FDSet *efds,
-                   const struct GNUNET_TIME_Relative timeout)
-{
-    GNUNet* gnunetInstance = (GNUNet*)cls;
-
-    if(!timer.hasExpired(150))
-    {
-       // gWarn("Will sleep !");
-        Sleep(150- timer.elapsed());
-    }
-
-
-    //Process the events
-    gnunetInstance->ProcessEvents();
-
-
-    //gWarn("Processing the events !");
-    //Reset timer
-    timer.start();
-    return GNUNET_NETWORK_socket_select(rfds,wfds,efds,timeout);
-
-}
 
 /**
  * Is the first function executed when GNUNet is running.
  */
 void GNUNet::mainLoop(char *const *args, const char *cfgfile,
-                       const struct GNUNET_CONFIGURATION_Handle *cfg)
+                      const struct GNUNET_CONFIGURATION_Handle *cfg)
 {
 
 
-    status->setOkState();
+    //status->setOkState();
 
     //Create our configuration
-    config = GNUNET_CONFIGURATION_create ();
-    GNUNET_CONFIGURATION_load (config, "cangote.conf");
+    m_config = GNUNET_CONFIGURATION_create ();
+    GNUNET_CONFIGURATION_load (m_config, "cangote.conf");
 
 
     //A update function to process our messages
     GNUNET_SCHEDULER_add_now ( keepaliveTask, this);
-
-    //Set our Scheduler on W32
-#ifdef Q_WS_WIN
-   // GNUNET_SCHEDULER_set_select (&gnunet_W32_select, this);
-#endif
 
 
 
@@ -180,35 +144,13 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
 
 void GNUNet::StartServices()
 {
-    network->start(config);
-    filesharing->start(config);
+    m_network->start(m_config);
+    m_filesharing->start(m_config);
 }
-
-
-GNUNetPeersModel* GNUNet::getPeersModel()
-{
-    return network->getModel();
-}
-
-
 
 void GNUNet::ProcessEvents()
 {
     QCoreApplication::processEvents();
-}
-
-ServiceStatus* GNUNet::getStatus()
-{
-    return status;
-}
-
-GNUnetFsSearchModel* GNUNet::getSearchModel()
-{
-    return filesharing->searchModel;
-}
-
-DownloadModel* GNUNet::getDownloadsModel()
-{
-    return filesharing->downloads->model;
+    m_filesharing->ProcessEvents();
 }
 
