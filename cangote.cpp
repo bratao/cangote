@@ -14,6 +14,8 @@
 #include "models/DownloadsModel.h"
 #include "models/SharedFilesModel.h"
 
+#include "core/gnunet/filesharing/search/searchresult.h"
+
 
 #define URI "Cangote"
 
@@ -55,6 +57,9 @@ void Cangote::registerQmlTypes()
     qmlRegisterUncreatableType<DownloadsModel>(URI, 1, 0, "DownloadsModel", QLatin1String("Use calling the gnunet method."));
     qmlRegisterUncreatableType<SharedFilesModel>(URI, 1, 0, "SharedFilesModel", QLatin1String("Use calling the gnunet method."));
     qmlRegisterUncreatableType<NetworkPeersModel>(URI, 1, 0, "NetworkPeersModel", QLatin1String("Use calling the gnunet method."));
+
+
+    qmlRegisterUncreatableType<SearchResult>(URI, 1, 0, "SearchResult", QLatin1String("Use calling the gnunet method."));
 
 }
 

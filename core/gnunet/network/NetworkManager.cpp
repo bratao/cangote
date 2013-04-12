@@ -68,9 +68,8 @@ void NetworkManager::peerinfoProcessorCallback (void *cls, const struct GNUNET_P
  */
 void NetworkManager::ATSstatusChangeCallback (void *cls,
                                               const struct GNUNET_HELLO_Address *address,
-                                              int address_active,
-                                              struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
                                               struct GNUNET_BANDWIDTH_Value32NBO bandwidth_in,
+                                    struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
                                               const struct GNUNET_ATS_Information *ats,
                                               uint32_t ats_count)
 {
@@ -78,7 +77,7 @@ void NetworkManager::ATSstatusChangeCallback (void *cls,
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
-    networkInstance->peerATSstatusChange(address,address_active, bandwidth_in, bandwidth_out, ats,ats_count);
+    networkInstance->peerATSstatusChange(address, bandwidth_in, bandwidth_out, ats,ats_count);
 
 }
 
@@ -90,14 +89,16 @@ int NetworkManager::incomeMsgCallback (void *cls,
                                   const struct GNUNET_PeerIdentity *
                                   other,
                                   const struct GNUNET_MessageHeader *
-                                  message)
+                                  message,
+                                  const struct GNUNET_ATS_Information
+                                  * atsi, unsigned int atsi_count)
 {
 
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
 
-    networkInstance->incomeMsg(other,message);
+    networkInstance->incomeMsg(other,message,atsi,atsi_count);
 
     return GNUNET_OK;
 
@@ -110,14 +111,16 @@ int NetworkManager::outcomeMsgCallback (void *cls,
                                   const struct GNUNET_PeerIdentity *
                                   other,
                                   const struct GNUNET_MessageHeader *
-                                  message)
+                                  message,
+                                  const struct GNUNET_ATS_Information
+                                  * atsi, unsigned int atsi_count)
 {
 
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
 
-    networkInstance->outcomeMsg(other,message);
+    networkInstance->outcomeMsg(other,message,atsi,atsi_count);
 
     return GNUNET_OK;
 
@@ -178,12 +181,13 @@ NetworkManager::gotActiveAddressCallback (void *cls, const struct GNUNET_PeerIde
  * Static Callback called when a peer got connected
  */
 void
-NetworkManager::notifyConnectCallback (void *cls, const struct GNUNET_PeerIdentity *peer)
+NetworkManager::notifyConnectCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
+                const struct GNUNET_ATS_Information *ats, uint32_t ats_count)
 {
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
-    networkInstance->notifyConnect(peer);
+    networkInstance->notifyConnect(peer,ats,ats_count);
 }
 
 
@@ -225,7 +229,7 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
     m_config = config;
 
     //Connect to peerinfo notifications
-    m_peerInfo =   GNUNET_PEERINFO_notify (config,0, peerinfoProcessorCallback, this);
+    m_peerInfo =   GNUNET_PEERINFO_notify (config, peerinfoProcessorCallback, this);
     if (m_peerInfo == NULL) {
         qWarning("Failed to connect to PeerInfo service");
         //status->setErrorState("Failed to connect to Peerinfo");
@@ -261,7 +265,9 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
 int NetworkManager::incomeMsg (const struct GNUNET_PeerIdentity *
                                   other,
                                   const struct GNUNET_MessageHeader *
-                                  message)
+                                  message,
+                                  const struct GNUNET_ATS_Information
+                                  * atsi, unsigned int atsi_count)
 {
     struct GNUNET_CRYPTO_HashAsciiEncoded enc;
     GNUNET_CRYPTO_hash_to_enc (&other->hashPubKey, &enc);
@@ -296,7 +302,9 @@ int NetworkManager::incomeMsg (const struct GNUNET_PeerIdentity *
 int NetworkManager::outcomeMsg (const struct GNUNET_PeerIdentity *
                                   other,
                                   const struct GNUNET_MessageHeader *
-                                  message)
+                                  message,
+                                  const struct GNUNET_ATS_Information
+                                  * atsi, unsigned int atsi_count)
 {
 
 
@@ -341,7 +349,8 @@ int NetworkManager::outcomeMsg (const struct GNUNET_PeerIdentity *
  */
 
 void
-NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
+NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent,
+                const struct GNUNET_ATS_Information *ats, uint32_t ats_count)
 {
   m_connectionsCounter++;
 
@@ -495,9 +504,8 @@ NetworkManager::gotActiveAddress(const struct GNUNET_PeerIdentity *peerIdent,
  */
 void
 NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
-                                     int address_active,
-                                     struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
                                      struct GNUNET_BANDWIDTH_Value32NBO bandwidth_in,
+                      struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
                                      const struct GNUNET_ATS_Information *ats,
                                      uint32_t ats_count)
 {

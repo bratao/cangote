@@ -25,10 +25,10 @@
 SearchResult::SearchResult(QObject *parent) :
     QObject(parent)
 {
-    index = NULL;
+    m_index = NULL;
     availability_certainty = 0;
     availability_rank = 0;
-    fileSize = 0;
+    m_fileSize = 0;
     meta = NULL;
     uri = NULL;
 }
@@ -36,22 +36,22 @@ SearchResult::SearchResult(QObject *parent) :
 
 void SearchResult::modified()
 {
-  emit modifiedSignal(index->row());
-
+    emit modifiedSignal(m_index->row());
+    
 }
 
 int SearchResult::getPercentAvail()
 {
     int percent_avail;
-
+    
     if (availability_certainty > 0)
-      percent_avail = 50 + (int)(availability_rank * 50.0 / availability_certainty);
-     // percent_avail = availability_rank;
+        percent_avail = 50 + (int)(availability_rank * 50.0 / availability_certainty);
+    // percent_avail = availability_rank;
     else
-      percent_avail = 0;
-
+        percent_avail = 0;
+    
     return percent_avail;
-
+    
 }
 
 
@@ -59,7 +59,7 @@ int SearchResult::getPercentAvail()
 void SearchResult::setMetadata(GNUNET_CONTAINER_MetaData *meta, bool notifyModified)
 {
     this->meta = meta;
-
+    
     if(notifyModified)
         modified();
 }
@@ -75,7 +75,7 @@ void SearchResult::setAvailabilityRank(int availability_rank, bool notifyModifie
     this->availability_rank = availability_rank;
     if(notifyModified)
         modified();
-
+    
 }
 
 void SearchResult::setApplicabilityRank(int applicability_rank, bool notifyModified)
@@ -83,7 +83,7 @@ void SearchResult::setApplicabilityRank(int applicability_rank, bool notifyModif
     this->applicability_rank = applicability_rank;
     if(notifyModified)
         modified();
-
+    
 }
 
 int SearchResult::getApplicabilityRank()
@@ -94,7 +94,7 @@ int SearchResult::getApplicabilityRank()
 
 void SearchResult::setFilesize(unsigned int fileSize, bool notifyModified)
 {
-    this->fileSize = fileSize;
+    m_fileSize = fileSize;
     if(notifyModified)
         modified();
 }
@@ -103,39 +103,39 @@ void SearchResult::setFilesize(unsigned int fileSize, bool notifyModified)
 
 void SearchResult::setFilename(QString filename, bool notifyModified)
 {
-    this->filename = filename;
+    m_filename = filename;
     if(notifyModified)
         modified();
 }
 
 QString SearchResult::getFilename()
 {
-    return filename;
+    return m_filename;
 }
 
 
 unsigned int SearchResult::getFilesize()
 {
-    return fileSize;
+    return m_fileSize;
 }
 
 void SearchResult::setOwner(Search* owner, bool notifyModified)
 {
-    this->owner = owner;
+    this->m_owner = owner;
     if(notifyModified)
         modified();
 }
 
 Search* SearchResult::getOwner()
 {
-    return owner;
+    return m_owner;
 }
 
 
 
 void SearchResult::setParent(SearchResult* parent, bool notifyModified)
 {
-    this->parent = parent;
+    this->m_parent = parent;
     if(notifyModified)
         modified();
 }
@@ -150,7 +150,7 @@ void SearchResult::setAvailabilityCertainty(int availability_certainty, bool not
 
 void SearchResult::setPreview(void* preview, bool notifyModified)
 {
-    this->preview = preview;
+    this->m_preview = preview;
     if(notifyModified)
         modified();
 }
@@ -171,7 +171,7 @@ const GNUNET_FS_Uri * SearchResult::getUri()
 
 void SearchResult::setResult(GNUNET_FS_SearchResult *result, bool notifyModified)
 {
-    this->result = result;
+    this->m_result = result;
     if(notifyModified)
         modified();
 }
@@ -179,8 +179,8 @@ void SearchResult::setResult(GNUNET_FS_SearchResult *result, bool notifyModified
 
 void SearchResult::setIndex(QPersistentModelIndex *index, bool notifyModified)
 {
-    this->index = index;
-
+    this->m_index = index;
+    
     if(notifyModified)
         modified();
 }
@@ -188,8 +188,8 @@ void SearchResult::setIndex(QPersistentModelIndex *index, bool notifyModified)
 
 QPersistentModelIndex* SearchResult::getIndex()
 {
-    Q_ASSERT(index);
-    return index;
+    Q_ASSERT(m_index);
+    return m_index;
 }
 
 
@@ -205,7 +205,7 @@ void SearchResult::download()
     //                       de->anonymity, opt,
     //                       de,
     //                                           (NULL != de->pde) ? de->pde->dc : NULL));
-
+    
     //gWarn("Download not implemented");
     emit requestDownload(this);
 }

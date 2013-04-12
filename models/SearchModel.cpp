@@ -116,9 +116,20 @@ void  SearchModel::closeSearchSlot(int index)
 
     beginRemoveRows(QModelIndex(), index, index);
 
+    Search* search = getSearch(index);
+    search->Stop();
+
+    //Model was allocated here because QML can't work with cross-tread models.
+    if(search->model())
+        delete search->model();
+
     m_data.removeAt(index);
 
     endRemoveRows();
+
+
+
+
 
 
 }

@@ -1,17 +1,17 @@
 /*
      This file is part of Cangote
      (C) 2012 Bruno Cabral (and other contributing authors)
-     
+
      Cangote is free software; you can redistribute it and/or modify
      it under the terms of the GNU General Public License as published
      by the Free Software Foundation; either version 3, or (at your
      option) any later version.
-     
+
      Cangote is distributed in the hope that it will be useful, but
      WITHOUT ANY WARRANTY; without even the implied warranty of
      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
      General Public License for more details.
-     
+
      You should have received a copy of the GNU General Public License
      along with Cangote; see the file COPYING.  If not, write to the
      Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -30,7 +30,7 @@ class SearchResult : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchResult(QObject *parent = 0);
+    explicit SearchResult(QObject *m_parent = 0);
 
 
     Search *getOwner();
@@ -40,41 +40,41 @@ public:
     void setAvailabilityCertainty(int availability_certainty, bool notifyModified =true);
     void modified();
     int getPercentAvail();
-    void setFilename(QString filename, bool notifyModified =true);
-    void setFilesize(unsigned int fileSize, bool notifyModified =true);
-    void setOwner(Search *owner, bool notifyModified =true);
-    void setParent(SearchResult *parent, bool notifyModified =true);
-    void setPreview(void *preview, bool notifyModified =true);
+    void setFilename(QString m_filename, bool notifyModified =true);
+    void setFilesize(unsigned int m_fileSize, bool notifyModified =true);
+    void setOwner(Search *m_owner, bool notifyModified =true);
+    void setParent(SearchResult *m_parent, bool notifyModified =true);
+    void setPreview(void *m_preview, bool notifyModified =true);
     void setUri(GNUNET_FS_Uri *uri, bool notifyModified =true);
-    void setResult(GNUNET_FS_SearchResult *result, bool notifyModified =true);
+    void setResult(GNUNET_FS_SearchResult *m_result, bool notifyModified =true);
     QPersistentModelIndex *getIndex();
-    void setIndex(QPersistentModelIndex *index, bool notifyModified =true);
+    void setIndex(QPersistentModelIndex *m_index, bool notifyModified =true);
     QString getFilename();
     unsigned int getFilesize();
     int getApplicabilityRank();
     GNUNET_CONTAINER_MetaData *getMeta();
-    void download();
+    Q_INVOKABLE void download();
     const GNUNET_FS_Uri *getUri();
 private:
-    QString filename;
-    void* preview;
-    unsigned int fileSize;
-    QPersistentModelIndex* index;
-    class Search* owner;
-    struct GNUNET_FS_SearchResult *result;
-    SearchResult *parent;
+    QString m_filename;
+    void* m_preview;
+    unsigned int m_fileSize;
+    QPersistentModelIndex* m_index;
+    class Search* m_owner;
+    struct GNUNET_FS_SearchResult *m_result;
+    SearchResult *m_parent;
     const struct GNUNET_FS_Uri* uri;
     struct GNUNET_CONTAINER_MetaData *meta;
     unsigned int applicability_rank;
     int availability_rank;
     int availability_certainty;
-    
+
 signals:
-        void modifiedSignal(int index);
-        void requestDownload(SearchResult* result);
-    
+        void modifiedSignal(int m_index);
+        void requestDownload(SearchResult* m_result);
+
 public slots:
-    
+
 };
 
 #endif // SEARCHRESULT_H

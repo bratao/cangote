@@ -39,17 +39,13 @@ public:
 
 public:
     explicit SearchResultsModel(QObject *parent = 0);
-    void RequestToDie();
-
-    void Die();
     int getSize();
     SearchResult* addResult();
 
-    SearchResult *getResult(int index);
+    Q_INVOKABLE SearchResult *getResult(int index);
 signals:
 
-    void AskedToDieSignal();
-    void DeadSignal();
+
     void addResultSignal(SearchResult* result);
 
 public slots:

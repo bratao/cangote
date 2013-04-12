@@ -9,6 +9,7 @@ Rectangle {
     Column
     {
         anchors.fill: parent
+        /*
         SideBarBlock
         {
             id: searchBlock
@@ -16,14 +17,14 @@ Rectangle {
             anchors.right : parent.right
             anchors.left : parent.left
             height: parent.height/2
-        }
+        }*/
         Block
         {
-            id: sharedBlock
-            title: "Shared"
+            id: searchBlock
+            title: "Searches"
             anchors.right : parent.right
             anchors.left : parent.left
-            height: parent.height/2
+            height: parent.height///2
         }
 
     }

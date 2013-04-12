@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.1
 import QtQuick.Controls 1.0
 import Cangote 1.0
 
@@ -7,33 +7,11 @@ Item{
 
     id: searchTabs
 
-    Component {
-        id: mytab
-        Label {
-            text: "oie !"
-        }
-    }
-
-        /*
-        TableView
-        {
-           model : Cangote.models.searchModel
-
-           TableViewColumn
-           {
-               role: "id"
-               title: "ID"
-               width: 120
-           }
-        }
-*/
-
     TabView {
     anchors.fill: parent
     id: tabsView
 
     }
-
 
     Repeater
     {
@@ -47,11 +25,10 @@ Item{
         onItemAdded: {
             var component = Qt.createComponent("SearchResultPage.qml");
             var tab = tabsView.addTab(item.myTerm, component)
-            tab.title = item.myTerm
-            //console.log(tab)
-           // console.log(tab.children[0])
-            //tab.children[0] = item.myTerm
-            //tab.children[0].searchModel = Cangote.models.searchModel.getSearch(index).model
+            //tab.title = item.myTerm
+            tab.active = 1
+            tab.item.searchModel = Cangote.models.searchModel.getSearch(index).model
+            console.log("added a new tab")
 
         }
         onItemRemoved: {

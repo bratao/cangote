@@ -41,11 +41,13 @@
 #include <QtWidgets/QApplication>
 #include <QtQml>
 #include <QtQuick/QQuickView>
-
+#include <QSystemTrayIcon>
 #include "cangote.h"
 
 
 #define QMLPATH QString("E:\\Projetos\\Meus Projetos\\Cangote\\Software\\Qt Cangote\\cangote\\")
+void createTray();
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -70,8 +72,23 @@ int main(int argc, char *argv[])
         return -1;
     }
     QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
+
+    //Create the tray icon
+    createTray();
+
+    window->setTitle("Cangote P2P");
+    window->setIcon(QIcon(":/asserts/CangoteHead.ico"));
     window->show();
     return app.exec();
 }
+
+void createTray()
+{
+    QSystemTrayIcon*  tray = new QSystemTrayIcon(QIcon(":/asserts/CangoteHead.ico")); //Same as above
+    tray->setVisible(true);
+
+}
+
+
 
 

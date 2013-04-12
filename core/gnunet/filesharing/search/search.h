@@ -58,9 +58,11 @@ public:
     QString getTerm();
 signals:
     void modelChanged(SearchResultsModel*);
-    void DeadSignal();
-public slots:
-    void AskedToDieSlot();
+    void StopSignal();
+    void CloseSignal();
+private slots:
+    void StopSlot();
+    void CloseSlot();
 
 private:
 

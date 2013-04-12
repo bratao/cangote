@@ -1,5 +1,5 @@
 
-import QtQuick 2.0
+import QtQuick 2.1
 import QtQuick.Controls 1.0
 import "preferences"
 
@@ -9,6 +9,16 @@ ApplicationWindow {
     minimumWidth: 400
     minimumHeight: 300
 
+    menuBar: MenuBar {
+        Menu {
+            title: "File"
+            MenuItem { text: "Quit"; onTriggered: Qt.quit() }
+        }
+        Menu {
+            title: "Help"
+            MenuItem { text: "About..."; enabled: false }
+        }
+    }
 
     Header {
         id: header

@@ -6,15 +6,12 @@ QMAKE_CXXFLAGS+=-ggdb -O1 -Wall -Wextra #-Werror
 
 !win32 {
    LIBS += -L/home/bratao/gnunet/gnunet-bin/lib -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lextractor
-
- INCLUDEPATH += /home/bratao/gnunet/gnunet-bin/lib
- DEPENDPATH += /home/bratao/gnunet/gnunet-bin/lib
-
 }
 win32 {
    LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lws2_32 -lintl -lextractor
 }
 
+RC_ICONS = asserts\CangoteHead.ico
 
 SOURCES += \
     main.cpp \

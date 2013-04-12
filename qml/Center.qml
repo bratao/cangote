@@ -22,24 +22,29 @@ SplitView {
 
 
         Tab {
+           active: true
            Browser{
            }
         }
 
         Tab {
+           active: true
            Network{
            }
         }
 
         Tab {
+           active: true
            Search{
            }
         }
         Tab {
+            active: true
             Transfers{
             }
         }
         Tab {
+           active: true
            Shared{
            }
         }

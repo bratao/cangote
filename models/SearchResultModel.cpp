@@ -137,25 +137,19 @@ void SearchResultsModel::removeResultSlot(QObject* result)
 
 }
 
- SearchResult* SearchResultsModel::getResult(int index)
+
+
+
+SearchResult* SearchResultsModel::getResult(int index)
 {
     if(index >= m_data.count())
       return NULL;
-    return m_data[index];
+
+    return m_data.at(index);
 }
 
 
-void SearchResultsModel::RequestToDie()
-{
 
-  emit AskedToDieSignal();
-}
-
-void SearchResultsModel::Die()
-{
-
-  emit DeadSignal();
-}
 
 int SearchResultsModel::getSize()
 {

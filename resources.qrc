@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>qml/main.qml</file>
         <file>qml/images/qt_icon.png</file>
+        <file>asserts/Cangote.ico</file>
+        <file>asserts/CangoteHead.ico</file>
     </qresource>
 </RCC>

@@ -35,16 +35,10 @@ Search::Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent) :
   this->sc = sc;
   this->query_txt = query_txt;
 
+  //Trans thread signals
+  connect(this,&Search::StopSignal,this,&Search::StopSlot);
+  connect(this,&Search::CloseSignal,this,&Search::CloseSlot);
 
-}
-
-
-
-
-void Search::AskedToDieSlot()
-{
-  Stop();
-  //gDebug("Search:"+query_txt + "asked to die" );
 }
 
 SearchResult* Search::UpdateResult(SearchResult *sr,
@@ -66,6 +60,7 @@ SearchResult* Search::UpdateResult(SearchResult *sr,
     sr->setAvailabilityRank(availability_rank,false);
     sr->setAvailabilityCertainty(availability_certainty,false);
     sr->modified();
+
 
 
 }
@@ -179,20 +174,27 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 }
 
 
-
+void Search::StopSlot()
+{
+    GNUNET_FS_search_stop (sc);
+}
 
 
 void Search::Stop()
 {
 
-    GNUNET_FS_search_stop (sc);
+    emit StopSignal();
+
 
 }
 
 void Search::Close()
 {
+    emit CloseSignal();
+}
+void Search::CloseSlot()
+{
 
-  delete m_model;
 
 }
 
