@@ -3,7 +3,7 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 1.0
 
 Window {
-    id: window1
+    id: preferencesWnd
 
     width: 800
     height: 600

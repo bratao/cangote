@@ -22,9 +22,9 @@
 #include <QDebug>
 //#include "core/cangote.h"
 
-#define START_SERVICES true
+#define START_SERVICES false
 
-#define USE_ARM true
+#define USE_ARM false
 
 GNUNetLauncher::GNUNetLauncher(QObject *parent) :
     QObject(parent)

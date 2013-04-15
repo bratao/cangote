@@ -8,6 +8,7 @@ import "Sidebar"
 SplitView {
     id: centerRoot
     property alias source: mainView.currentIndex
+    property alias search: searchTab.item
 
     SideBar
     {
@@ -34,10 +35,14 @@ SplitView {
         }
 
         Tab {
+           id: searchTab
            active: true
+
            Search{
+               id: searchScreen
            }
         }
+
         Tab {
             active: true
             Transfers{

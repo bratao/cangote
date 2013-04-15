@@ -1,6 +1,6 @@
 QT += widgets qml quick
 CONFIG += console
-TARGET = application
+TARGET = cangote
 
 QMAKE_CXXFLAGS+=-ggdb -O1 -Wall -Wextra #-Werror
 
@@ -63,9 +63,9 @@ OTHER_FILES += \
     qml/Transfer/Transfers.qml \
     qml/Shared/Shared.qml \
     qml/Sidebar/SideBar.qml \
-    qml/Sidebar/SideBarBlock.qml \
     qml/Sidebar/Block.qml \
-    qml/Sidebar/BlockDelegate.qml
+    qml/Sidebar/BlockDelegate.qml \
+    qml/Sidebar/MenuButton.qml
 
 RESOURCES += \
     resources.qrc

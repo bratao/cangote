@@ -41,8 +41,4 @@ ApplicationWindow {
         width: parent.width
     }
 
-
-    PreferencesWindow { id: window1 }
-
-
 }

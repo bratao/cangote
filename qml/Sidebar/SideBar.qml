@@ -9,23 +9,80 @@ Rectangle {
     Column
     {
         anchors.fill: parent
-        /*
-        SideBarBlock
+
+        function resetSelected() {
+            browserBlock.selected = false
+            networkBlock.selected = false
+            searchBlock.selected = false
+            transferBlock.selected = false
+            sharedBlock.selected = false
+            searchBlock.itemSelected = -1
+            }
+
+
+        Block
         {
-            id: searchBlock
-            title: "search"
-            anchors.right : parent.right
-            anchors.left : parent.left
-            height: parent.height/2
-        }*/
+            id: browserBlock
+            title: "Browser"
+            onHeaderClicked: {
+                parent.resetSelected()
+                center.source = 0;
+                selected = true;
+            }
+        }
+        Block
+        {
+            id: networkBlock
+            title: "Network"
+            onHeaderClicked: {
+                parent.resetSelected()
+                center.source = 1;
+                selected = true;
+            }
+        }
+
         Block
         {
             id: searchBlock
             title: "Searches"
-            anchors.right : parent.right
-            anchors.left : parent.left
-            height: parent.height///2
+            model: Cangote.models.searchModel
+            onHeaderClicked: {
+
+            }
+            onChanged: {
+                browserBlock.selected = false
+                networkBlock.selected = false
+                searchBlock.selected = false
+                transferBlock.selected = false
+                sharedBlock.selected = false
+                center.source = 2;
+                center.search.visibleIndex = indexChanged
+            }
         }
+
+        Block
+        {
+            id: transferBlock
+            title: "Transfer"
+            onHeaderClicked: {
+                parent.resetSelected()
+                center.source = 3;
+                selected = true;
+            }
+        }
+
+        Block
+        {
+            id: sharedBlock
+            title: "Shared Files"
+            onHeaderClicked: {
+                parent.resetSelected()
+                center.source = 4;
+                selected = true;
+            }
+        }
+
+
 
     }
 }

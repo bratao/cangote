@@ -3,13 +3,17 @@ import QtQuick.Controls 1.0
 import Cangote 1.0
 
 Item{
-    anchors.fill: parent
+    property alias visibleIndex: tabsView.currentIndex
 
+    anchors.fill: parent
     id: searchTabs
 
+
     TabView {
-    anchors.fill: parent
-    id: tabsView
+        anchors.fill: parent
+        frameVisible: false
+        tabsVisible: false
+        id: tabsView
 
     }
 
@@ -33,6 +37,7 @@ Item{
         }
         onItemRemoved: {
             tabsView.removeTab(index)
+
         }
     }
 
