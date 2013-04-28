@@ -36,6 +36,6 @@
 #include <gnunet/gnunet_fs_service.h>
 #include <gnunet/gnunet_nse_service.h>
 #include <gnunet/gnunet_core_service.h>
-
+#include <gnunet/gnunet_arm_service.h>
 
 #endif // GNUNET_INCLUDES_H

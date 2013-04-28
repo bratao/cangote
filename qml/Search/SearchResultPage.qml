@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
-
+import Cangote 1.0
 
 Item {
     property string searchTerm
@@ -70,6 +70,11 @@ Item {
         {
             title: "Size"
             role: "filesize"
+            delegate:Item{
+                Text {
+                    text: Utils.friendlyUnit(itemValue,false)
+                }
+            }
         }
 
     }

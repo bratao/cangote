@@ -38,47 +38,25 @@ public:
     bool startResolver();
     void connectSignals();
     
+    void relaunchServices();
 signals:
     
 public slots:
     void CoreError(QProcess::ProcessError error);
-        void errorHandler(QProcess::ProcessState state);
+    void finished(int exitCode, QProcess::ExitStatus exitStatus);
+    void errorHandler(QProcess::ProcessError error);
+    void stateChanged(QProcess::ProcessState state);
 private:
     QProcessEnvironment env;
     QString m_path;
 
     QProcess *m_armProcess;
-    QProcess *m_hostListProcess;
-    QProcess *m_topologyProcess;
-    QProcess *m_atsProcess;
-    QProcess *m_coreProcess;
-    QProcess *m_dataStoreProcess;
-    QProcess *m_dhtProcess;
-    QProcess *m_fsProcess;
-    QProcess *m_nseProcess;
-    QProcess *m_peerinfoProcess;
-    QProcess *m_statsProcess;
-    QProcess *m_transportProcess;
-    QProcess *m_meshProcess;
-    QProcess *m_resolverProcess;
 
 
-
-
-    bool startHostList();
-    bool startCore();
-    bool startTopology();
-    bool startAts();
     bool startArm();
-    bool startDht();
-    bool startFs();
-    bool startTransport();
-    bool startNse();
-    bool startMesh();
-    bool startPeerinfo();
-    bool startStats();
-    bool startDatastore();
+
     
+    void cleanOldProcesses();
 };
 
 #endif // GNUNETLAUNCHER_H

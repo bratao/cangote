@@ -22,9 +22,9 @@
 #include <QDebug>
 //#include "core/cangote.h"
 
-#define START_SERVICES false
+#define START_SERVICES true
 
-#define USE_ARM false
+#define USE_ARM true
 
 GNUNetLauncher::GNUNetLauncher(QObject *parent) :
     QObject(parent)
@@ -49,44 +49,26 @@ void GNUNetLauncher::stopServices()
         QProcess* killArmProcess     = new QProcess(this);
         killArmProcess->setProcessEnvironment(env);
         killArmProcess->start("gnunet-arm.exe -e");
-        killArmProcess->waitForFinished(5000);
-    }
-    else
-    {
-        //TODO: do not kill the services, gracefully stop
-        m_hostListProcess->kill();
-        m_topologyProcess->kill();
-        m_atsProcess->kill();
-        m_coreProcess->kill();
-        m_dataStoreProcess->kill();
-        m_dhtProcess->kill();
-        m_fsProcess->kill();
-        m_nseProcess->kill();
-        m_meshProcess->kill();
-        m_peerinfoProcess->kill();
-        m_statsProcess->kill();
-        m_transportProcess->kill();
-        m_resolverProcess->kill();
-
-        //Wait for finish
-        m_hostListProcess->waitForFinished(3000);
-        m_topologyProcess->waitForFinished(3000);
-        m_atsProcess->waitForFinished(3000);
-        m_coreProcess->waitForFinished(3000);
-        m_dataStoreProcess->waitForFinished(3000);
-        m_dhtProcess->waitForFinished(3000);
-        m_fsProcess->waitForFinished(3000);
-        m_nseProcess->waitForFinished(3000);
-        m_meshProcess->waitForFinished(3000);
-        m_peerinfoProcess->waitForFinished(3000);
-        m_statsProcess->waitForFinished(3000);
-        m_transportProcess->waitForFinished(3000);
-        m_resolverProcess->waitForFinished(3000);
+        killArmProcess->waitForFinished(1000);
     }
 
 
 }
 
+void GNUNetLauncher::cleanOldProcesses()
+{
+    QProcess* killArmProcess     = new QProcess(this);
+#ifdef Q_OS_WIN
+    killArmProcess->setProcessEnvironment(env);
+    killArmProcess->start("taskkill -f /IM gnunet-*");
+#else
+    QProcess* killArmProcess     = new QProcess(this);
+    killArmProcess->setProcessEnvironment(env);
+    killArmProcess->start("pkill -9 -f gnunet-*");
+#endif
+    killArmProcess->waitForFinished(1000);
+
+}
 
 
 void GNUNetLauncher::startServices()
@@ -97,52 +79,35 @@ void GNUNetLauncher::startServices()
 
     setEnvironment();
 
-    if(USE_ARM)
-    {
-        m_armProcess = new QProcess(this);
-        startArm();
-    }
-    else
-    {
-        m_hostListProcess     = new QProcess(this);
-        m_topologyProcess     = new QProcess(this);
-        m_atsProcess          = new QProcess(this);
-        m_coreProcess         = new QProcess(this);
-        m_dataStoreProcess    = new QProcess(this);
-        m_dhtProcess          = new QProcess(this);
-        m_fsProcess           = new QProcess(this);
-        m_nseProcess          = new QProcess(this);
-        m_meshProcess         = new QProcess(this);
-        m_peerinfoProcess     = new QProcess(this);
-        m_statsProcess        = new QProcess(this);
-        m_transportProcess    = new QProcess(this);
-        m_resolverProcess     = new QProcess(this);
-
-
-
-        startCore();
-        startAts();
-        startHostList();
-        startTopology();
-        startDht();
-        startFs();
-        startTransport();
-        startNse();
-        startMesh();
-        startPeerinfo();
-        startStats();
-        startDatastore();
-        startResolver();
-
-        connectSignals();
-    }
-
-
-
+    m_armProcess = new QProcess(this);
+    startArm();
 
 }
 
-void GNUNetLauncher::errorHandler(QProcess::ProcessState state)
+void GNUNetLauncher::relaunchServices()
+{
+    if(!START_SERVICES)
+        return;
+
+    delete m_armProcess;
+    m_armProcess = new QProcess(this);
+    cleanOldProcesses();
+    startArm();
+}
+
+void
+GNUNetLauncher::finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    qWarning() << (QString(exitStatus));
+}
+
+void GNUNetLauncher::errorHandler(QProcess::ProcessError error)
+{
+   qWarning() << (QString(error));
+}
+
+
+void GNUNetLauncher::stateChanged(QProcess::ProcessState state)
 {
    qWarning() << (QString(state));
 }
@@ -150,30 +115,30 @@ void GNUNetLauncher::errorHandler(QProcess::ProcessState state)
 void GNUNetLauncher::connectSignals()
 {
 
-    connect(m_fsProcess,SIGNAL(stateChanged(QProcess::ProcessState)),this, SLOT(errorHandler(QProcess::ProcessState)));
 
 }
 
 void GNUNetLauncher::setEnvironment()
 {
     env = QProcessEnvironment::systemEnvironment();
-   // env.insert("TMPDIR", "C:\\MyApp\\temp"); // Add an environment variable
     env.insert("PATH", env.value("Path") + ";C:\\sbuild\\mingw\\bin" +";C:\\sbuild\\mingw\\lib\\gnunet\\libexec" + ";C:\\sbuild\\mingw\\lib\\gnunet");
 }
 
 bool GNUNetLauncher::startArm()
 {
+    QStringList arguments;
+    arguments << "-s";
+
     m_armProcess->setProcessEnvironment(env);
-    m_armProcess->start("gnunet-arm.exe -s");
-}
+    m_armProcess->start("gnunet-arm.exe", arguments);
+    m_armProcess->waitForStarted(5000);
 
-bool GNUNetLauncher::startCore()
-{
-    m_coreProcess->setProcessEnvironment(env);
-    m_coreProcess->setWorkingDirectory("C:\\sbuild\\mingw\\lib\\gnunet\\libexec");
-    connect(m_coreProcess,SIGNAL(error(QProcess::ProcessError)),SLOT(CoreError(QProcess::ProcessError)));
+   // connect(m_armProcess, &QProcess::stateChanged, this, &GNUNetLauncher::stateChanged);
+    //connect(m_armProcess, &QProcess::error, this, &GNUNetLauncher::errorHandler);
+   // connect(m_armProcess, &QProcess::finished, this, &GNUNetLauncher::finished);
 
-    m_coreProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-core.exe");
+   // connect(m_armProcess,SIGNAL(error(QProcess::ProcessError)),this, SLOT(errorHandler(QProcess::ProcessError)));
+   // connect(m_armProcess,SIGNAL(finished(int , QProcess::ExitStatus)),this, SLOT(finished(int , QProcess::ExitStatus)));
 
 }
 
@@ -182,80 +147,6 @@ void GNUNetLauncher::CoreError ( QProcess::ProcessError error )
 {
 
     qWarning() << (QString(error));
-}
-
-bool GNUNetLauncher::startHostList()
-{
-    m_hostListProcess->setProcessEnvironment(env);
-    m_hostListProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-daemon-hostlist.exe");
-}
-
-bool GNUNetLauncher::startTopology()
-{
-    m_topologyProcess->setProcessEnvironment(env);
-    m_topologyProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-daemon-topology.exe");
-}
-
-bool GNUNetLauncher::startAts()
-{
-    m_atsProcess->setProcessEnvironment(env);
-    m_atsProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-ats.exe");
-}
-
-bool GNUNetLauncher::startDht()
-{
-    m_dhtProcess->setProcessEnvironment(env);
-    m_dhtProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-dht.exe");
-}
-
-bool GNUNetLauncher::startFs()
-{
-    m_fsProcess->setProcessEnvironment(env);
-    m_fsProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-fs.exe");
-}
-
-bool GNUNetLauncher::startTransport()
-{
-    m_transportProcess->setProcessEnvironment(env);
-    m_transportProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-transport.exe");
-}
-
-bool GNUNetLauncher::startNse()
-{
-    m_nseProcess->setProcessEnvironment(env);
-    m_nseProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-nse.exe");
-}
-
-bool GNUNetLauncher::startMesh()
-{
-    m_meshProcess->setProcessEnvironment(env);
-    m_meshProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-mesh.exe");
-}
-
-bool GNUNetLauncher::startPeerinfo()
-{
-    m_peerinfoProcess->setProcessEnvironment(env);
-    m_peerinfoProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-peerinfo.exe");
-}
-
-bool GNUNetLauncher::startStats()
-{
-    m_statsProcess->setProcessEnvironment(env);
-    m_statsProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-statistics.exe");
-}
-
-
-bool GNUNetLauncher::startDatastore()
-{
-    m_dataStoreProcess->setProcessEnvironment(env);
-    m_dataStoreProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-datastore.exe");
-}
-
-
-bool GNUNetLauncher::startResolver()
-{
-    m_resolverProcess->setProcessEnvironment(env);
-    m_resolverProcess->start("C:\\sbuild\\mingw\\lib\\gnunet\\libexec\\gnunet-service-resolver.exe");
 }
 
 

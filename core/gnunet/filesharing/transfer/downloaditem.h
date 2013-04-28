@@ -66,7 +66,7 @@ public:
     DownloadItem *getParent();
     void modified();
     qint64 getRemainingDownload();
-    float getCompletedPercentage();
+    int getCompletedPercentage();
     void setStopped();
     void setPaused();
     void setCompleted();
@@ -78,6 +78,8 @@ public:
     void setETA(int eta);
     int getDataAdded();
     void setDataAdded(int date);
+
+
 private:
     DownloadItem * m_parent;
     struct GNUNET_FS_DownloadContext *m_context;

@@ -22,48 +22,55 @@
 #include "peer.h"
 //#include "core/cangote.h"
 #include "models/NetworkPeersModel.h"
+#include <QTimer>
+#include <QTime>
+
+#define TIMER_FREQUENCY 1000
+
 
 Peer::Peer(const struct GNUNET_PeerIdentity *peerIdent, QString id, QObject *parent) :
-  QObject(parent)
+    QObject(parent)
 {
-    this->id = id;
-    connected = false;
-    transportUsed = "";
-    peerActiveAddressCallback = NULL;
+    m_id = id;
+    m_peerIdent = peerIdent;
 
-    ATS_bandwidth_in = 0;
-    ATS_bandwidth_out = 0;
-    got_address = false;
-    tos = NULL;
-    palc = NULL;
-
-
-    bandIncoming = new PeerBandwidth();
-    bandOutgoing = new PeerBandwidth();
+    m_connected = false;
+    m_transportName = "";
+    m_peerActiveAddressCallback = NULL;
+    m_atsBandwidthIn = 0;
+    m_atsBandwidthOut = 0;
+    m_gotAddress = false;
+    m_tos = NULL;
+    m_palc = NULL;
 
 
+    m_bandwidthIncoming = new PeerBandwidth();
+    m_bandwidthOutgoing = new PeerBandwidth();
 
-    this->peerIdent = peerIdent;
+    m_timer = new QTimer(this);
+    connect(m_timer, &QTimer::timeout,this, &Peer::timerSlot);
 
 }
 
+
+void Peer::timerSlot()
+{
+    modified();
+    m_timer->stop();
+}
 
 void Peer::modified()
 {
 
     //model->peerModifiedSlot(id);
     //model->setPeerModified(modelIndex);
-  emit modifiedSignal(id);
-
+    m_lastUpdated = QTime::currentTime();
+    emit modifiedSignal(m_index);
 
 }
 
 
 
-QString Peer::getId()
-{
-    return id;
-}
 
 QString Peer::getURI()
 {
@@ -85,86 +92,60 @@ QString Peer::getURI()
         get_uri = GNUNET_NO;
         */
     //FIXME:: Implement get URL
-    return "Not implamented";
+    return "Not implemented";
 }
 
 
-QString Peer::getHostname()
-{
-    return hostname;
-}
-
-void Peer::setHostname(QString hostname)
-{
-    this->hostname = hostname;
-    modified();
-}
 
 void Peer::setATSInfo(unsigned int bandIn,unsigned int bandOut)
 {
-    this->ATS_bandwidth_in = bandIn;
-    this->ATS_bandwidth_out = bandOut;
+    m_atsBandwidthIn = bandIn;
+    m_atsBandwidthOut = bandOut;
     modified();
 }
 
 void Peer::addIncomingTraffic(int msgSize)
 {
-    bandIncoming->addMsg(msgSize);
+    m_bandwidthIncoming->addMsg(msgSize);
     modified();
 }
 
 unsigned int Peer::getIncomingTraffic()
 {
-    return bandIncoming->getTotalTraffic();
+    return m_bandwidthIncoming->getTotalTraffic();
 }
 
 
 void Peer::addOutgoingTraffic(int msgSize)
 {
-    bandOutgoing->addMsg(msgSize);
+    m_bandwidthOutgoing->addMsg(msgSize);
     modified();
 }
 
 unsigned int Peer::getOutgoingTraffic()
 {
-    return bandOutgoing->getTotalTraffic();
-}
-
-void Peer::setConnected()
-{
-    connected =  true;
-    modified();
-}
-
-void Peer::setDisconnected()
-{
-    connected = false;
-    modified();
-}
-
-bool Peer::isConnected()
-{
-    return connected;
-}
-
-void Peer::setTransportName(QString name)
-{
-    transportUsed = name;
-    modified();
-}
-
-QString Peer::getTransportName()
-{
-    return transportUsed;
+    return m_bandwidthOutgoing->getTotalTraffic();
 }
 
 float Peer::getIncomingBandwidth()
 {
-    return bandIncoming->getBandwidth();
+    float band = m_bandwidthIncoming->getBandwidth();
+
+    //Set to update the calculation in case we have any traffic
+    if ((band > 1) && !m_timer->isActive())
+        m_timer->start(TIMER_FREQUENCY);
+
+    return band;
 }
 
 float Peer::getOutgoingBandwidth()
 {
-    return bandOutgoing->getBandwidth();
+    float band = m_bandwidthOutgoing->getBandwidth();
+
+    //Set to update the calculation in case we have any traffic
+    if ((band > 1) && !m_timer->isActive())
+        m_timer->start(TIMER_FREQUENCY);
+
+    return band;
 }
 

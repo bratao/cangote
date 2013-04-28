@@ -52,8 +52,7 @@ signals:
     void addNewPeerSignal(Peer* item, QString key);
     
 public slots:
-    void process();
-
+    void modifiedSlot(int indexRow);
 private slots:
     Peer *addNewPeerSlot(Peer* item, QString key);
 
@@ -69,7 +68,7 @@ private:
     int minIndex;
     int maxIndex;
     QList<Peer*> m_data;
-    QTimer *cacheTimer;
+
     
 };
 

@@ -39,6 +39,7 @@ GNUNet::GNUNet(QObject *parent) :
     ServiceObject(parent)
 {
 
+    m_connected = false;
     //status = new ServiceStatus();
 
 }
@@ -81,12 +82,14 @@ void GNUNet::keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext
 void GNUNet::Start()
 {
 
+    //TODO: Remove this sleep. Its here because we need so time after starting the process.
+    //If we start too fast, we lose some messages.
+    sleep(2);
 
     m_filesharing = new FileSharing();
     m_network = new NetworkManager();
 
-    //status->setChildrenService(filesharing->getStatus());
-    // status->setChildrenService(network->getStatus());
+    connect(m_network, &NetworkManager::connectedPeersChanged, this, &GNUNet::setConnectedPeers, Qt::QueuedConnection);
 
 
     static struct GNUNET_GETOPT_CommandLineOption options[] = {
@@ -141,11 +144,61 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
 
 }
 
+static void
+arm_connection_state_change (void *cls,
+                 int connected)
+{
+  char *service_list;
+  GNUNet* gnunetInstance = (GNUNet*)cls;
+  Q_ASSERT(cls);
+
+
+  if (connected)
+  {
+
+      gnunetInstance->setConnected(true);
+      /*
+    service_list = format_service_list (0, NULL);
+    GNUNET_FS_GTK_update_connection_indicator (cls, TRUE, service_list);
+    GNUNET_free_non_null (service_list);
+    GNUNET_ARM_request_service_list (arm, SERVICE_LIST_TIMEOUT,
+                     &service_list_callback, cls);*/
+  }
+  else
+  {
+      gnunetInstance->setConnected(false);
+      /*GNUNET_FS_GTK_update_connection_indicator (cls, FALSE,
+          _("Can't connect to the Automatic Restart Manager service."));*/
+  }
+
+}
+
+static void
+service_status_change (void *cls,
+               const char *service,
+               enum GNUNET_ARM_ServiceStatus status)
+{
+  /* Very crude, we can probably do better.
+   * Maybe keep a list of running services, and modify it in response
+   * to service status changes, then update the indicator,
+   * without requesting a list from ARM every goddamned time?
+   */
+ /* GNUNET_ARM_request_service_list (arm,
+                   SERVICE_LIST_TIMEOUT,
+                   &service_list_callback, cls);*/
+}
+
+
+
 
 void GNUNet::StartServices()
 {
     m_network->start(m_config);
     m_filesharing->start(m_config);
+
+    //Start arm
+    arm = GNUNET_ARM_connect (m_config, &arm_connection_state_change, this);
+    armon = GNUNET_ARM_monitor (m_config, service_status_change, this);
 }
 
 void GNUNet::ProcessEvents()

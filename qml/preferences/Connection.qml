@@ -1,5 +1,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import Cangote 1.0
 
 Item {
     anchors.fill: parent
@@ -24,6 +25,10 @@ Item {
             {
                 title: "Tcp"
                 checkable: true
+                checked: Preferences.tcpEnabled
+                onCheckedChanged: {
+                    Preferences.tcpEnabled = checked
+                }
                 Column
                 {
                     Row{
@@ -33,9 +38,13 @@ Item {
                         }
                         SpinBox{
                             id: tcpPortSpinBox
+                            value: Preferences.tcpPort
                             width: 80
                             minimumValue: 1
                             maximumValue: 65536
+                            onValueChanged: {
+                                Preferences.tcpPort = value
+                            }
                         }
                     }
                     Row{
@@ -48,6 +57,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 65536
+                            value: Preferences.tcpAdvertisedPort
+                            onValueChanged: {
+                                Preferences.tcpAdvertisedPort = value
+                            }
                         }
                     }
                     Row{
@@ -60,6 +73,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 65536
+                            value: Preferences.tcpMaxConnections
+                            onValueChanged: {
+                                Preferences.tcpMaxConnections = value
+                            }
                         }
                     }
                 }
@@ -68,6 +85,10 @@ Item {
             {
                 title: "Udp"
                 checkable: true
+                checked: Preferences.udpEnabled
+                onCheckedChanged: {
+                    Preferences.udpEnabled = checked
+                }
                 Column
                 {
                     Row{
@@ -80,6 +101,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 65536
+                            value: Preferences.udpPort
+                            onValueChanged: {
+                                Preferences.udpPort = value
+                            }
                         }
                     }
                     Row{
@@ -92,6 +117,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 65536
+                            value: Preferences.udpAdvertisedPort
+                            onValueChanged: {
+                                Preferences.udpAdvertisedPort = value
+                            }
                         }
                     }
                     Row{
@@ -104,6 +133,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 1000000
+                            value: Preferences.udpMaxSpeed
+                            onValueChanged: {
+                                Preferences.udpMaxSpeed = value
+                            }
                         }
                     }
                 }
@@ -124,6 +157,11 @@ Item {
                     CheckBox
                     {
                         text: "Use IPV6"
+                        checked: Preferences.ipv6Enabled
+                        onCheckedChanged: {
+                            Preferences.ipv6Enabled = checked
+                        }
+
                     }
                     Row{
                         Label{
@@ -135,6 +173,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 100000
+                            value: Preferences.downloadSpeed
+                            onValueChanged: {
+                                Preferences.downloadSpeed = value
+                            }
                         }
                     }
                     Row{
@@ -147,6 +189,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 100000
+                            value: Preferences.uploadSpeed
+                            onValueChanged: {
+                                Preferences.uploadSpeed = value
+                            }
                         }
                     }
                     Row{
@@ -159,6 +205,10 @@ Item {
                             width: 80
                             minimumValue: 1
                             maximumValue: 10000
+                            value: Preferences.neighboursLimit
+                            onValueChanged: {
+                                Preferences.neighboursLimit = value
+                            }
                         }
                     }
                 }
@@ -171,18 +221,34 @@ Item {
                     CheckBox
                     {
                         text: "I'm behind a NAT"
+                        checked: Preferences.behindNat
+                        onCheckedChanged: {
+                            Preferences.behindNat = checked
+                        }
                     }
                     CheckBox
                     {
                         text: "NAT ports have been opened manually"
+                        checked: Preferences.portsOpen
+                        onCheckedChanged: {
+                            Preferences.portsOpen = checked
+                        }
                     }
                     CheckBox
                     {
                         text: "Use UPnP"
+                        checked: Preferences.UPNPEnabled
+                        onCheckedChanged: {
+                            Preferences.UPNPEnabled = checked
+                        }
                     }
                     CheckBox
                     {
                         text: "Use ICMP method"
+                        checked: Preferences.ICMPMethod
+                        onCheckedChanged: {
+                            Preferences.ICMPMethod = checked
+                        }
                     }
                     Row{
                         Label{
@@ -192,6 +258,10 @@ Item {
                         TextField{
                             id: ipv4Addr
                             width: 80
+                            text: Preferences.externalIpv4Address
+                            onTextChanged: {
+                                Preferences.externalIpv4Address = text
+                            }
                         }
                     }
                 }

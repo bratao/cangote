@@ -75,7 +75,7 @@ long PeerBandwidth::getTotalTraffic()
 float PeerBandwidth::getBandwidth(){
 
     int sum = 0;
-    const int WIN = 4;   //4 seconds of window
+    const int WIN = 10;   //4 seconds of window
     Msg* msg;
 
     QTime time = QTime::currentTime();

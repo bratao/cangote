@@ -54,7 +54,7 @@ Downloads::setup_download (DownloadItem *de, DownloadItem *pde, struct GNUNET_FS
                 qint64 completed)
 {
 
-  //gWarn("Setuping a download");
+  qDebug("Setuping a download");
 
   GNUNET_assert (NULL != uri);
   if (NULL == de)
@@ -167,7 +167,7 @@ Downloads::mark_download_error (DownloadItem *de,
              const char *emsg)
 {
     Q_ASSERT(de);
-    //gWarn(QString(emsg));
+    qWarning() << QString("Download Error : %1").arg(emsg);
 
     de->setError();
 }

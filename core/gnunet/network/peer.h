@@ -28,38 +28,73 @@
 
 
 class NetworkPeersModel;
+class QTimer;
 class Peer : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
+    Q_PROPERTY(QString id READ getId WRITE setId)
+    Q_PROPERTY(QString transportName READ getTransportName WRITE setTransportName)
+    Q_PROPERTY(QString hostname READ getHostname WRITE setHostname)
+    Q_PROPERTY(bool connected READ isConnected WRITE setConnected)
+    Q_PROPERTY(int index READ getIndex WRITE setIndex)
+
+
+
 public:
-  explicit Peer(const struct GNUNET_PeerIdentity *peerIdent, QString id, QObject *parent = 0);
-  
+    //Id
+    QString getId() const
+    { return m_id; }
+    void setId (QString id)
+    {
+        m_id = id;
+        emit modifiedSignal(m_index);
+    }
+
+    //Transport Name
+    QString getTransportName() const
+    { return m_transportName; }
+    void setTransportName(QString transportName)
+    {
+        m_transportName = transportName;
+        emit modifiedSignal(m_index);
+    }
+
+    //Host Name
+    QString getHostname() const
+    { return m_hostname; }
+    void setHostname(QString hostname)
+    {
+        m_hostname = hostname;
+        emit modifiedSignal(m_index);
+    }
+
+
+    //Host Name
+    bool isConnected() const
+    { return m_connected; }
+    void setConnected(bool connected)
+    {
+        m_connected = connected;
+        emit modifiedSignal(m_index);
+    }
+
+
+    //Index
+    int getIndex() const
+    { return m_index; }
+    void setIndex(int index)
+    {
+        m_index = index;
+    }
+
+
+public:
+    explicit Peer(const struct GNUNET_PeerIdentity *m_peerIdent, QString m_id, QObject *parent = 0);
+
 
 
 public:
 
-    /**
-     * Handle to an active lookup for addresses of this peer, or NULL.
-     */
-    struct GNUNET_TRANSPORT_PeerIterateContext *palc;
-
-    /**
-     * Handle for address to string conversion.
-     */
-    struct GNUNET_TRANSPORT_AddressToStringContext *tos;
-
-    /**
-     * Did we get any address?
-     */
-
-    QString getId();
-
-    QString getHostname();
-    void setHostname(QString hostname);
-
-    int ATS_bandwidth_in;
-    int ATS_bandwidth_out;
-    int got_address;
 
 
     void setATSInfo(unsigned int bandIn, unsigned int bandOut);
@@ -67,34 +102,54 @@ public:
     unsigned int getIncomingTraffic();
     void addOutgoingTraffic(int msgSize);
     unsigned int getOutgoingTraffic();
-    bool connected;
-    QString transportUsed;
-    void setConnected();
-    bool isConnected();
-    void setDisconnected();
-    void setTransportName(QString name);
-    QString getTransportName();
-    struct GNUNET_TRANSPORT_PeerIterateContext * peerActiveAddressCallback;
+
+
     float getIncomingBandwidth();
-    void modified();
     float getOutgoingBandwidth();
+
+
+
     QString getURI();
 signals:
 
-    void modifiedSignal(QString id);
+    void modifiedSignal(int index);
 public slots:
-  
+    void modified();
+    void timerSlot();
+public:
+    struct GNUNET_TRANSPORT_PeerIterateContext * m_peerActiveAddressCallback;
+
+    /**
+     * Handle to an active lookup for addresses of this peer, or NULL.
+     */
+    struct GNUNET_TRANSPORT_PeerIterateContext *m_palc;
+
+    /**
+     * Handle for address to string conversion.
+     */
+    struct GNUNET_TRANSPORT_AddressToStringContext *m_tos;
+
+    int m_gotAddress;
+
 private:
 
-    PeerBandwidth* bandIncoming;
-    PeerBandwidth* bandOutgoing;
+    QString m_id;
+    int m_index;
+    QString m_hostname;
+    int m_atsBandwidthIn;
+    int m_atsBandwidthOut;
 
-    const struct GNUNET_PeerIdentity *peerIdent;
+    bool m_connected;
+    QString m_transportName;
 
-    QString id;
+    PeerBandwidth* m_bandwidthIncoming;
+    PeerBandwidth* m_bandwidthOutgoing;
 
-    QString hostname;
+    const struct GNUNET_PeerIdentity *m_peerIdent;
 
+    QTimer *m_timer;
+
+    QTime m_lastUpdated;
 
 
 

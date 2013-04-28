@@ -42,27 +42,33 @@
 #include <QtQml>
 #include <QtQuick/QQuickView>
 #include <QSystemTrayIcon>
+#include <iostream>
 #include "cangote.h"
 
 
 #define QMLPATH QString("E:\\Projetos\\Meus Projetos\\Cangote\\Software\\Qt Cangote\\cangote\\")
 void createTray();
+void logProcessor(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 int main(int argc, char *argv[])
 {
+
     QApplication app(argc, argv);
     QQmlEngine engine;
+    QQmlComponent component(&engine);
 
-
+    qWarning("Starting Cangote p2p");
     Cangote cangote;
 
 
-    QQmlComponent component(&engine);
     component.loadUrl(QUrl::fromLocalFile("../cangote/qml/main.qml"));
     if ( !component.isReady() ) {
         qWarning("%s", qPrintable(component.errorString()));
         return -1;
     } 
+
+    //Install log processor
+    //qInstallMessageHandler(logProcessor);
 
 
     QObject *topLevel = component.create();
@@ -76,10 +82,12 @@ int main(int argc, char *argv[])
     //Create the tray icon
     createTray();
 
+
     window->setTitle("Cangote P2P");
     window->setIcon(QIcon(":/asserts/CangoteHead.ico"));
     window->show();
     return app.exec();
+
 }
 
 void createTray()
@@ -88,6 +96,29 @@ void createTray()
     tray->setVisible(true);
 
 }
+
+void logProcessor(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QFile file(QDate::currentDate().toString("cangote_dd_MM_yyyy.log"));
+
+    Q_ASSERT(file.open(QIODevice::Append | QIODevice::Text));
+
+    QTextStream out(&file);
+    out << QTime::currentTime().toString("hh:mm:ss.zzz ");
+
+    switch (type)
+    {
+    case QtDebugMsg:	out << "[Debug] "; break;
+    case QtWarningMsg:  out << "[Warning] "; break;
+    case QtCriticalMsg: out << "[Critical] "; break;
+    case QtFatalMsg:    out << "[Fatal] "; break;
+    }
+
+    out << msg << '\n';
+
+    out.flush();
+}
+
 
 
 

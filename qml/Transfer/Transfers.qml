@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import Cangote 1.0
+//import Utils 1.0
 
 Item
 {
@@ -21,11 +22,36 @@ Item
         onTriggered: console.log("TODO: Stop the transfer.")
     }
 
+    Action {
+        id: cancel
+        text: "Cancel"
+        onTriggered: console.log("TODO: Cancel the transfer.")
+    }
+
+    Action {
+        id: openFile
+        text: "Open File"
+        onTriggered: {
+            Utils.openFilePicker();
+        }
+    }
+
+    Action {
+        id: openFolder
+        text: "Open Folder"
+        onTriggered: console.log("TODO: Open the transfer folder.")
+    }
+
+
 
     Menu {
         id: contextMenu
         MenuItem { action: resume }
         MenuItem { action: stop }
+        MenuItem { action: cancel }
+        MenuSeparator { }
+        MenuItem { action: openFile }
+        MenuItem { action: openFolder }
 
     }
 
@@ -36,7 +62,6 @@ Item
         id: transfersList
         anchors.fill: parent
         model:Cangote.models.downloadsModel
-
 
 
         itemDelegate: Item {
@@ -68,21 +93,27 @@ Item
             title: "Name"
             role: "name"
         }
+
         TableViewColumn{
             title: "Size"
             role: "size"
+            delegate:Item{
+                Text {
+                    text: Utils.friendlyUnit(itemValue,false)
+                }
+            }
         }
         TableViewColumn{
             title: "Progress"
-            role: "progress"
+            role: "downloadProgress"
             delegate : Item{
                 anchors.fill: parent
 
                 ProgressBar{
                     anchors.fill: parent
                     minimumValue: 0
-                    maximumValue: 1
-                    value: progress
+                    maximumValue: 100
+                    value: itemValue
                 }
             }
         }

@@ -2,6 +2,8 @@ import QtQuick 2.1
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.0
 
+import Cangote 1.0
+
 Window {
     id: preferencesWnd
 
@@ -10,12 +12,17 @@ Window {
 
     title: "Preferences"
 
+    onVisibleChanged: {
+        Preferences.save();
+    }
+
     ListModel {
         id: libraryModel
         ListElement{ name: "General";         tabId: 0  }
         ListElement{ name: "Directories";     tabId: 1  }
         ListElement{ name: "Connection";      tabId: 2  }
         ListElement{ name: "Network";         tabId: 3  }
+        ListElement{ name: "Advanced";         tabId: 4  }
     }
 
 
@@ -68,6 +75,12 @@ Window {
 
             Tab {
                 Network
+                {
+
+                }
+            }
+            Tab {
+                Advanced
                 {
 
                 }

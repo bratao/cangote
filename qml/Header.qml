@@ -4,6 +4,7 @@ import QtQuick.Controls.Styles 1.0
 
 import Cangote 1.0
 
+
 ToolBar {
     id:toolbar
     height: 40
@@ -67,6 +68,14 @@ ToolBar {
                 onClicked: searchField.text = ""
             }
         }
+
+        Rectangle{
+            color: "grey"
+            anchors.verticalCenter: parent.verticalCenter
+            width: 1
+            height: parent.height -5
+        }
+
         ToolButton {
             height: 40
             width: 70
@@ -81,6 +90,22 @@ ToolBar {
             }
 
         }
+
+        ToolButton {
+            height: 40
+            width: 70
+            text: "Publish files"
+            onClicked:
+            {
+                var publish = Qt.createComponent("Publish/PublishFile.qml");
+                var publishObj = publish.createObject();
+
+                publishObj.visible =true
+
+            }
+
+        }
+
     }
 
 

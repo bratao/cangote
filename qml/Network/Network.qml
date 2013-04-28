@@ -48,7 +48,22 @@ Item{
                 text: itemValue
              }
          }
+        TableViewColumn {
+            role: "connected"
+            width: 10
+            delegate: Item {
+                anchors.fill: parent
+                Rectangle{
+                    anchors.centerIn: parent
 
+                    width: 12
+                    height: 12
+                    radius: 10
+                    color: itemValue ? "green" : "red"
+                }
+
+            }
+        }
         TableViewColumn {
             role: "id"
             title: "ID"
@@ -56,13 +71,23 @@ Item{
         }
         TableViewColumn {
             role: "incomingBand"
-            title: "Incoming Quota"
+            title: "Incoming Speed"
             width: 120
+            delegate:Item{
+                Text {
+                    text: Utils.friendlyUnit(itemValue,true)
+                }
+            }
         }
         TableViewColumn {
             role: "outgoingBand"
-            title: "Outgoing quota"
+            title: "Outgoing Speed"
             width: 120
+            delegate:Item{
+                Text {
+                    text: Utils.friendlyUnit(itemValue,true)
+                }
+            }
         }
         TableViewColumn {
             role: "hostname"
@@ -73,17 +98,23 @@ Item{
             role: "incomingTraffic"
             title: "Incoming traffic"
             width: 120
+            delegate:Item{
+                Text {
+                    text: Utils.friendlyUnit(itemValue,false)
+                }
+            }
         }
         TableViewColumn {
             role: "outgoingTraffic"
             title: "Outgoing traffic"
             width: 120
+            delegate:Item{
+                Text {
+                    text: Utils.friendlyUnit(itemValue,false)
+                }
+            }
         }
-        TableViewColumn {
-            role: "connected"
-            title: "Connected"
-            width: 120
-        }
+
         TableViewColumn {
             role: "transport"
             title: "Transport"

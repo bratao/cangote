@@ -1,14 +1,20 @@
 QT += widgets qml quick
-CONFIG += console
 TARGET = cangote
+CONFIG+=qml_debug
 
-QMAKE_CXXFLAGS+=-ggdb -O1 -Wall -Wextra #-Werror
+#QMAKE_CXXFLAGS+=-Wall -Wextra #-Werror
+QMAKE_CXXFLAGS_RELEASE += -g
+QMAKE_CFLAGS_RELEASE += -g
+QMAKE_LFLAGS_RELEASE =
+
 
 !win32 {
    LIBS += -L/home/bratao/gnunet/gnunet-bin/lib -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lextractor
+
 }
 win32 {
-   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lws2_32 -lintl -lextractor
+   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lgnunetarm -lws2_32 -lintl -lextractor
+    INCLUDEPATH += C:/sbuild/mingw/include
 }
 
 RC_ICONS = asserts\CangoteHead.ico
@@ -37,7 +43,9 @@ SOURCES += \
     core/gnunet/filesharing/shared/sharedfile.cpp \
     models/DownloadsModel.cpp \
     models/models.cpp \
-    models/SharedFilesModel.cpp
+    models/SharedFilesModel.cpp \
+    preferences/preferences.cpp \
+    utils/utils.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -59,13 +67,15 @@ OTHER_FILES += \
     qml/Network/Network.qml \
     qml/Search/Search.qml \
     qml/Search/SearchResultPage.qml \
-    test.txt \
     qml/Transfer/Transfers.qml \
     qml/Shared/Shared.qml \
     qml/Sidebar/SideBar.qml \
     qml/Sidebar/Block.qml \
     qml/Sidebar/BlockDelegate.qml \
-    qml/Sidebar/MenuButton.qml
+    qml/Sidebar/MenuButton.qml \
+    qml/Publish/PublishFile.qml \
+    qml/preferences/Advanced.qml \
+    qml/Network/AddPeer.qml
 
 RESOURCES += \
     resources.qrc
@@ -94,10 +104,11 @@ HEADERS += \
     service.h \
     models/NetworkPeersModel.h \
     core/gnunet/network/NetworkManager.h \
-    core/gnunet/models.h \
     models/SearchModel.h \
     models/SearchResultModel.h \
     core/gnunet/filesharing/shared/sharedfile.h \
     models/DownloadsModel.h \
     models/models.h \
-    models/SharedFilesModel.h
+    models/SharedFilesModel.h \
+    preferences/preferences.h \
+    utils/utils.h

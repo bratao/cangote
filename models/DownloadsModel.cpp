@@ -57,8 +57,24 @@ QVariant DownloadsModel::data(const QModelIndex& index, int role) const
         return m_data[index.row()]->getCompletedPercentage();
         break;
     case STATUS:
-        return m_data[index.row()]->getState();
+    {
+        int state = m_data[index.row()]->getState();
+        if(state == DownloadItem::STATE_ERROR)
+            return tr("Error");
+        else if (state == DownloadItem::STATE_STOP)
+            return tr("Stop");
+        else if (state == DownloadItem::STATE_PAUSED)
+            return tr("Paused");
+        else if (state == DownloadItem::STATE_QUEUED)
+            return tr("Error");
+        else if (state == DownloadItem::STATE_DOWNLOADING)
+            return tr("Downloading");
+        else if (state == DownloadItem::STATE_COMPLETE)
+            return tr("Complete");
+        else
+            return tr("Invalid");
         break;
+    }
     case DLSPEED:
         return m_data[index.row()]->getFilename();
         break;
@@ -121,7 +137,7 @@ QHash<int, QByteArray> DownloadsModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NAME]                   = "name";
     roles[SIZE]                   = "size";
-    roles[PROGRESS]               = "progress";
+    roles[PROGRESS]               = "downloadProgress";
     roles[STATUS]                 = "status";
     roles[DLSPEED]                = "downSpeed";
     roles[ETA]                    = "eta";
@@ -147,9 +163,8 @@ void DownloadsModel::addDownloadSlot(DownloadItem* download)
     beginInsertRows(QModelIndex(), count, count);
 
     m_data.append(download);
-
-    connect(download, SIGNAL(modifiedSignal(int)),SLOT(resultModifiedSlot(int)));
-
+    connect(download, &DownloadItem::modifiedSignal,this, &DownloadsModel::resultModifiedSlot);
+    download->setIndex(count);
 
     endInsertRows();
 
@@ -158,6 +173,5 @@ void DownloadsModel::addDownloadSlot(DownloadItem* download)
 
 void DownloadsModel::resultModifiedSlot(int indexRow)
 {
-    emit dataChanged(index(indexRow,0), index(indexRow,NB_COLUMNS));
-
+    emit dataChanged(index(indexRow,0), index(indexRow,0));
 }

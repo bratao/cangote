@@ -29,8 +29,10 @@ DownloadItem::DownloadItem(QString uri, QObject *parent) :
 
     m_eta = 0;
     m_dateAdded = 0;
+    m_completed = 0;
+    m_size = 0;
+    m_state = STATE_INVALID;
 }
-
 
 
 void DownloadItem::modified()
@@ -138,12 +140,16 @@ qint64 DownloadItem::getRemainingDownload()
     return m_size-m_completed;
 }
 
-float DownloadItem::getCompletedPercentage()
+int DownloadItem::getCompletedPercentage()
 {
-    if((m_completed == 0) || (m_size == 0))
-        return 0.0;
+    float percentage = 0.0;
 
-    return m_completed/(float)m_size;
+    if((m_completed == 0) || (m_size == 0))
+        percentage = 0.0;
+
+    percentage = m_completed/(float)m_size;
+
+    return (int)(percentage*100);
 }
 
 void DownloadItem::setStopped()

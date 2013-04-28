@@ -40,15 +40,20 @@ class NetworkPeersModel;
 class NetworkManager : public ServiceObject
 {
     Q_OBJECT
-
+    Q_PROPERTY(int connectedPeers READ getConnectedPeers WRITE setConnectedPeers NOTIFY connectedPeersChanged)
 
 public:
+
+    //Connected peers
+    int getConnectedPeers() const
+    { return m_connectedPeers; }
+
 
 
 
     static void
     peerAddressCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
-                                  const struct GNUNET_HELLO_Address *address);
+                         const struct GNUNET_HELLO_Address *address);
     static void
     peerAddressStringConvertCallback (void *cls, const char *address);
 
@@ -65,14 +70,14 @@ public:
     void peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
                            const struct GNUNET_HELLO_Message *hello,
                            const char *err_msg);
-    void peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
+    void peerATSstatusChange (const struct GNUNET_HELLO_Address *address, int address_active,
                               struct GNUNET_BANDWIDTH_Value32NBO bandwidth_in,
                               struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
                               const struct GNUNET_ATS_Information *m_ats,
                               uint32_t ats_count);
 
     void       newPeerAddress (const struct GNUNET_PeerIdentity *peer,
-                                const struct GNUNET_HELLO_Address *address);
+                               const struct GNUNET_HELLO_Address *address);
     void       peerNewAddressString (QString id, const char *address);
 
 
@@ -83,16 +88,17 @@ public:
 
 
     static void ATSstatusChangeCallback (void *cls,
-                                    const struct GNUNET_HELLO_Address *address,
-                                    struct GNUNET_BANDWIDTH_Value32NBO bandwidth_in,
-                                    struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
-                                    const struct GNUNET_ATS_Information *m_ats,
-                                    uint32_t ats_count);
+                                         const GNUNET_HELLO_Address *address, int address_active,
+                                         GNUNET_BANDWIDTH_Value32NBO bandwidth_in,
+                                         GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
+                                         const struct GNUNET_ATS_Information *m_ats,
+                                         uint32_t ats_count);
+
 
 
     static void
     checkNseMessageCallback (void *cls, struct GNUNET_TIME_Absolute timestamp,
-                       double estimate, double std_dev);
+                             double estimate, double std_dev);
 
     void checkNseMessage(GNUNET_TIME_Absolute timestamp, double estimate, double std_dev);
 
@@ -113,17 +119,16 @@ public:
     struct GNUNET_CONFIGURATION_Handle *m_config;
 
 
+    static int incomeMsgCallback(void *cls, const struct GNUNET_PeerIdentity *other, const struct GNUNET_MessageHeader *message);
 
-    static int incomeMsgCallback(void *cls, const struct GNUNET_PeerIdentity *other, const struct GNUNET_MessageHeader *message,
-                                 const struct GNUNET_ATS_Information *atsi, unsigned int atsi_count);
-
-    static int outcomeMsgCallback(void *cls, const struct GNUNET_PeerIdentity *other, const struct GNUNET_MessageHeader *message,
-                                  const struct GNUNET_ATS_Information *atsi, unsigned int atsi_count);
-    int incomeMsg(const GNUNET_PeerIdentity *other, const GNUNET_MessageHeader *message, const GNUNET_ATS_Information *atsi, unsigned int atsi_count);
-    int outcomeMsg(const GNUNET_PeerIdentity *other, const GNUNET_MessageHeader *message, const GNUNET_ATS_Information *atsi, unsigned int atsi_count);
-    static void notifyConnectCallback(void *cls, const GNUNET_PeerIdentity *peer, const GNUNET_ATS_Information *m_ats, uint32_t ats_count);
+    static int outcomeMsgCallback(void *cls, const struct GNUNET_PeerIdentity *other, const struct GNUNET_MessageHeader *message);
+    int incomeMsg(const GNUNET_PeerIdentity *other, const GNUNET_MessageHeader *message);
+    int outcomeMsg(const GNUNET_PeerIdentity *other, const GNUNET_MessageHeader *message);
+    static void notifyConnectCallback(void *cls, const GNUNET_PeerIdentity *peer);
     static void notifyDisconnectCallback(void *cls, const GNUNET_PeerIdentity *peer);
-    void notifyConnect(const GNUNET_PeerIdentity *peerIdent, const GNUNET_ATS_Information *m_ats, uint32_t ats_count);
+    void notifyConnect(const GNUNET_PeerIdentity *peerIdent);
+
+
     void notifyDisconnect(const GNUNET_PeerIdentity *peerIdent);
     void gotActiveAddress(const GNUNET_PeerIdentity *peerIdent, const GNUNET_HELLO_Address *address);
     static void gotActiveAddressCallback(void *cls, const GNUNET_PeerIdentity *peer, const GNUNET_HELLO_Address *address);
@@ -133,17 +138,19 @@ public:
     int getEstimateNetworkSize();
     int getConnectedNodes();
     //ServiceStatus *getStatus();
+    void setConnectedPeers(int connected);
 private:
-        void getGlobalBandwidth();
+    void getGlobalBandwidth();
 
 public slots:
 
-private:
+signals:
+    void connectedPeersChanged(int connected);
 
 
     //Statistics
 private:
-    int m_connectionsCounter;
+    int m_connectedPeers;
     int numEstimateNodes;
     int outcomingBand;
     int incomingBand;

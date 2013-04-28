@@ -2,15 +2,19 @@
 #include <QtQml/qqml.h>
 
 #include "cangote.h"
+#include "utils/utils.h"
+#include "preferences/preferences.h"
+
 #include "core/cangotecore.h"
 #include "core/gnunet/gnunet.h"
 #include "core/gnunet/network/NetworkManager.h"
-#include "models/NetworkPeersModel.h"
+#include "core/gnunet/filesharing/search/search.h"
 #include "core/gnunet/filesharing/filesharing.h"
+
 #include "models/SearchModel.h"
 #include "models/models.h"
 #include "models/SearchResultModel.h"
-#include "core/gnunet/filesharing/search/search.h"
+#include "models/NetworkPeersModel.h"
 #include "models/DownloadsModel.h"
 #include "models/SharedFilesModel.h"
 
@@ -19,17 +23,23 @@
 
 #define URI "Cangote"
 
+/* Static member variables */
+Utils* theUtils;
+Preferences* thePrefs;
+
 
 Cangote::Cangote(QObject *parent) :
     QObject(parent)
 {
     m_core = new CangoteCore();
+    theUtils = new Utils();
+    thePrefs = new Preferences;
     registerQmlTypes();
 }
 
 
-//Define the singleton type provider function (callback).
-static QObject *singleton_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+//Define the theApp singleton type provider.
+static QObject *theApp_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine);
     Q_UNUSED(scriptEngine);
@@ -38,11 +48,35 @@ static QObject *singleton_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
     return theApp;
 }
 
+static QObject *theUtils_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(scriptEngine);
+
+
+    return theUtils;
+}
+
+static QObject *thePrefs_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(scriptEngine);
+
+
+    return thePrefs;
+}
+
+
+
+
 void Cangote::registerQmlTypes()
 {
 
+    qmlRegisterSingletonType<CangoteCore>(URI, 1, 0, "Utils", theUtils_provider);
+    qmlRegisterSingletonType<CangoteCore>(URI, 1, 0, "Preferences", thePrefs_provider);
+    qmlRegisterSingletonType<CangoteCore>(URI, 1, 0, "Cangote", theApp_provider);
 
-    qmlRegisterSingletonType<CangoteCore>(URI, 1, 0, "Cangote", singleton_provider);
+
     qmlRegisterUncreatableType<GNUNet>(URI, 1, 0, "GNUNet", QLatin1String("Use the cangote core proprety."));
     qmlRegisterUncreatableType<NetworkManager>(URI, 1, 0, "NetworkManager", QLatin1String("Use calling the gnunet method."));
 

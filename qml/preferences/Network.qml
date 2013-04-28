@@ -1,5 +1,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import Cangote 1.0
 
 Item {
     anchors.fill: parent
@@ -15,21 +16,23 @@ Item {
         }
 
 
-
-
-
-
         CheckBox {
             id: transmitingUnsolicitedContent
             text: "Enable transmiting unsolicited content transmission from this peer"
-            checked: true
             width: 100
+            checked: Preferences.pushingContent
+            onCheckedChanged: {
+                Preferences.pushingContent = checked
+            }
         }
         CheckBox {
             id: frameCheckbox
             text: "Enable caching content from the network at this peer"
-            checked: true
             width: 100
+            checked: Preferences.cachingContent
+            onCheckedChanged: {
+                Preferences.cachingContent = checked
+            }
         }
 
 
@@ -46,13 +49,13 @@ Item {
                 width: 300
 
                 tickmarksEnabled: true
-
-                value : 1000
                 minimumValue: 100
-                maximumValue: 10000
-                stepSize: 10
+                maximumValue: 100000
+                stepSize: 100
+                value: Preferences.datastoreSize
 
                 onValueChanged: {
+                    //Preferences.datastoreSize = value
                     if(spinBoxDataStore != null)
                         spinBoxDataStore.value = value;
                 }
@@ -60,12 +63,13 @@ Item {
             SpinBox {
                 id: spinBoxDataStore
                 minimumValue: 100
-                maximumValue: 10000
-                value: sliderDataStore.value
+                maximumValue: 100000
                 width:80
+                value: Preferences.datastoreSize
                 onValueChanged: {
                     if(spinBoxDataStore != null)
                         sliderDataStore.value = value;
+                    Preferences.datastoreSize = value
                 }
             }
 
@@ -86,24 +90,26 @@ Item {
 
                 tickmarksEnabled: true
 
-                value : 1000
                 minimumValue: 100
-                maximumValue: 10000
-                stepSize: 10
+                maximumValue: 100000
+                stepSize: 100
+                value: Preferences.datacacheSize
                 onValueChanged: {
+                    //Preferences.datacacheSize = value
                     if(spinBoxDataCache!= null)
-                        spinBoxDataCache.value = value;
+                       spinBoxDataCache.value = value;
                 }
             }
             SpinBox {
                 id: spinBoxDataCache
                 minimumValue: 100
-                maximumValue: 10000
-                value: sliderDataCache.value
+                maximumValue: 100000
                 width:80
+                value: Preferences.datacacheSize
                 onValueChanged: {
-                    if(sliderDataCache!= null)
-                        sliderDataCache.value = value;
+                    Preferences.datacacheSize = value
+                    //if(spinBoxDataCache!= null)
+                    //    spinBoxDataCache.value = value;
                 }
             }
 
@@ -111,6 +117,7 @@ Item {
 
         GroupBox
         {
+            checkable: true
             title: "Friend-to-Friend configuration"
             Column
             {
@@ -118,6 +125,10 @@ Item {
                 CheckBox
                 {
                     text: "Friend to Friend only"
+                    checked: Preferences.friendToFriendOnly
+                    onCheckedChanged: {
+                        Preferences.friendToFriendOnly = checked
+                    }
                 }
                 Row{
                     spacing: 5
@@ -128,6 +139,10 @@ Item {
                     {
                         id: numberFriendsSpinbox
                         width: 50
+                        value: Preferences.minimalNumberOfFriends
+                        onValueChanged: {
+                            Preferences.minimalNumberOfFriends = value
+                        }
                     }
                     Label{
                         text: "Friends"
@@ -139,6 +154,7 @@ Item {
 
         GroupBox
         {
+            checkable: true
             title: "Host List"
             Row
             {
@@ -148,18 +164,28 @@ Item {
                     CheckBox
                     {
                         text: "Use Hostlists to bootstrap"
+                        checked: Preferences.hostlistsEnabled
+                        onCheckedChanged: {
+                            Preferences.hostlistsEnabled = checked
+                        }
                     }
                     CheckBox
                     {
                         text: "Learn servers from p2p"
+                        checked: Preferences.learnHostslistsFromNetworkEnabled
+                        onCheckedChanged: {
+                            Preferences.learnHostslistsFromNetworkEnabled = checked
+                        }
                     }
                 }
                 Column
                 {
-                    /*TextArea
-                    {
-
-                    }*/
+                    TextField{
+                        text:Preferences.hostlist
+                        onTextChanged: {
+                            Preferences.hostlist = text
+                        }
+                    }
                 }
             }
         }

@@ -42,7 +42,7 @@ NetworkManager::NetworkManager(QObject *parent) :
     ServiceObject(parent)
 {
 
-    m_connectionsCounter = 0;
+    m_connectedPeers = 0;
     numEstimateNodes = 0;
     nextBandwidthRetrive = QTime::currentTime();
 
@@ -54,8 +54,8 @@ NetworkManager::NetworkManager(QObject *parent) :
  * Static Callback called when we have a information about a peer.
  */
 void NetworkManager::peerinfoProcessorCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
-                                             const struct GNUNET_HELLO_Message *hello,
-                                             const char *err_msg)
+                                                const struct GNUNET_HELLO_Message *hello,
+                                                const char *err_msg)
 {
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
@@ -66,10 +66,12 @@ void NetworkManager::peerinfoProcessorCallback (void *cls, const struct GNUNET_P
 /**
  * Static Callback called when a peer has a QoS status change.
  */
+
 void NetworkManager::ATSstatusChangeCallback (void *cls,
                                               const struct GNUNET_HELLO_Address *address,
+                                              int address_active,
                                               struct GNUNET_BANDWIDTH_Value32NBO bandwidth_in,
-                                    struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
+                                              struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
                                               const struct GNUNET_ATS_Information *ats,
                                               uint32_t ats_count)
 {
@@ -77,7 +79,7 @@ void NetworkManager::ATSstatusChangeCallback (void *cls,
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
-    networkInstance->peerATSstatusChange(address, bandwidth_in, bandwidth_out, ats,ats_count);
+    networkInstance->peerATSstatusChange(address,address_active, bandwidth_in, bandwidth_out, ats,ats_count);
 
 }
 
@@ -85,47 +87,45 @@ void NetworkManager::ATSstatusChangeCallback (void *cls,
 /**
  * Static Callback called when a we recieve an incoming message.
  */
+
 int NetworkManager::incomeMsgCallback (void *cls,
-                                  const struct GNUNET_PeerIdentity *
-                                  other,
-                                  const struct GNUNET_MessageHeader *
-                                  message,
-                                  const struct GNUNET_ATS_Information
-                                  * atsi, unsigned int atsi_count)
+                                       const struct GNUNET_PeerIdentity *
+                                       other,
+                                       const struct GNUNET_MessageHeader *
+                                       message)
 {
 
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
 
-    networkInstance->incomeMsg(other,message,atsi,atsi_count);
+    networkInstance->incomeMsg(other,message);
 
     return GNUNET_OK;
 
 }
+
 
 /**
  * Static Callback called when a we recieve an outcome message.
  */
+
 int NetworkManager::outcomeMsgCallback (void *cls,
-                                  const struct GNUNET_PeerIdentity *
-                                  other,
-                                  const struct GNUNET_MessageHeader *
-                                  message,
-                                  const struct GNUNET_ATS_Information
-                                  * atsi, unsigned int atsi_count)
+                                        const struct GNUNET_PeerIdentity *
+                                        other,
+                                        const struct GNUNET_MessageHeader *
+                                        message)
 {
 
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
 
-    networkInstance->outcomeMsg(other,message,atsi,atsi_count);
+    networkInstance->outcomeMsg(other,message);
 
     return GNUNET_OK;
 
 }
-
 
 
 
@@ -133,7 +133,7 @@ int NetworkManager::outcomeMsgCallback (void *cls,
  * Static Callback called when a peer get a address.
  */
 void NetworkManager::peerAddressCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
-        const struct GNUNET_HELLO_Address *address)
+                                          const struct GNUNET_HELLO_Address *address)
 {
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
@@ -164,7 +164,7 @@ void NetworkManager::peerAddressStringConvertCallback (void *cls, const char *ad
  */
 void
 NetworkManager::gotActiveAddressCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
-                 const struct GNUNET_HELLO_Address *address)
+                                          const struct GNUNET_HELLO_Address *address)
 {
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
@@ -180,17 +180,15 @@ NetworkManager::gotActiveAddressCallback (void *cls, const struct GNUNET_PeerIde
 /**
  * Static Callback called when a peer got connected
  */
+
 void
-NetworkManager::notifyConnectCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
-                const struct GNUNET_ATS_Information *ats, uint32_t ats_count)
+NetworkManager::notifyConnectCallback (void *cls, const struct GNUNET_PeerIdentity *peer)
 {
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
 
-    networkInstance->notifyConnect(peer,ats,ats_count);
+    networkInstance->notifyConnect(peer);
 }
-
-
 
 /**
  * Static Callback called when a peer got disconnected
@@ -202,7 +200,7 @@ NetworkManager::notifyDisconnectCallback(void *cls, const struct GNUNET_PeerIden
     Q_ASSERT(networkInstance);
 
 
-   networkInstance->notifyDisconnect(peer);
+    networkInstance->notifyDisconnect(peer);
 }
 
 
@@ -210,7 +208,7 @@ NetworkManager::notifyDisconnectCallback(void *cls, const struct GNUNET_PeerIden
  * Static Callback called when network size estimate is updated.
  */
 void NetworkManager::checkNseMessageCallback (void *cls, struct GNUNET_TIME_Absolute timestamp,
-                                    double estimate, double std_dev)
+                                              double estimate, double std_dev)
 {
     NetworkManager* networkInstance = (NetworkManager*)cls;
     Q_ASSERT(networkInstance);
@@ -218,7 +216,26 @@ void NetworkManager::checkNseMessageCallback (void *cls, struct GNUNET_TIME_Abso
     networkInstance->checkNseMessage(timestamp,estimate,std_dev);
 }
 
+/*
+static int
+parse_hello_uri (const char *put_uri)
+{
+  struct GNUNET_HELLO_Message *hello = NULL;
 
+  int ret = GNUNET_HELLO_parse_uri(put_uri, &my_public_key, &hello, &GPI_plugins_find);
+
+  if (NULL != hello) {
+    // WARNING: this adds the address from URI WITHOUT verification!
+    if (GNUNET_OK == ret)
+      ac = GNUNET_PEERINFO_add_peer (peerinfo, hello, &add_continuation, NULL);
+    else
+      tt = GNUNET_SCHEDULER_add_now (&state_machine, NULL);
+    GNUNET_free (hello);
+  }
+
+  return ret;
+}
+*/
 
 
 /**
@@ -229,7 +246,10 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
     m_config = config;
 
     //Connect to peerinfo notifications
-    m_peerInfo =   GNUNET_PEERINFO_notify (config, peerinfoProcessorCallback, this);
+
+    m_peerInfo =   GNUNET_PEERINFO_notify (config,NULL, peerinfoProcessorCallback, this);
+
+
     if (m_peerInfo == NULL) {
         qWarning("Failed to connect to PeerInfo service");
         //status->setErrorState("Failed to connect to Peerinfo");
@@ -263,11 +283,10 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
 
 
 int NetworkManager::incomeMsg (const struct GNUNET_PeerIdentity *
-                                  other,
-                                  const struct GNUNET_MessageHeader *
-                                  message,
-                                  const struct GNUNET_ATS_Information
-                                  * atsi, unsigned int atsi_count)
+                               other,
+                               const struct GNUNET_MessageHeader *
+                               message)
+
 {
     struct GNUNET_CRYPTO_HashAsciiEncoded enc;
     GNUNET_CRYPTO_hash_to_enc (&other->hashPubKey, &enc);
@@ -299,12 +318,12 @@ int NetworkManager::incomeMsg (const struct GNUNET_PeerIdentity *
 /**
  * Static Callback called when a we recieve an outcome message.
  */
+
 int NetworkManager::outcomeMsg (const struct GNUNET_PeerIdentity *
-                                  other,
-                                  const struct GNUNET_MessageHeader *
-                                  message,
-                                  const struct GNUNET_ATS_Information
-                                  * atsi, unsigned int atsi_count)
+                                other,
+                                const struct GNUNET_MessageHeader *
+                                message)
+
 {
 
 
@@ -348,32 +367,43 @@ int NetworkManager::outcomeMsg (const struct GNUNET_PeerIdentity *
  * @param ats_count number of entries in ats (excluding 0-termination)
  */
 
+
 void
-NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent,
-                const struct GNUNET_ATS_Information *ats, uint32_t ats_count)
+NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
 {
-  m_connectionsCounter++;
-
-  struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-  GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
-  QString peerIdStr((char *)&enc);
-
-  if(!theApp->models()->networkModel())
-      return;
-  Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
-
-  if(peer == NULL)
-      peer = theApp->models()->networkModel()->addNewPeer(peerIdent,peerIdStr);
-
-
-  if(!peer->peerActiveAddressCallback)
-      peer->peerActiveAddressCallback = GNUNET_TRANSPORT_peer_get_active_addresses (m_config, peerIdent, GNUNET_YES,
-                                                  GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_SECONDS, 30),
-                                                  &gotActiveAddressCallback, this);
 
 
 
-  peer->setConnected();
+    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
+    GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
+    QString peerIdStr((char *)&enc);
+
+    if(!theApp->models()->networkModel())
+    {
+
+        qWarning() << tr("Tried to add a peer while the network model was not created");
+        return;
+    }
+    Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
+
+    if(peer == NULL)
+        peer = theApp->models()->networkModel()->addNewPeer(peerIdent,peerIdStr);
+
+
+    //TODO :: Cancel the request
+    if(!peer->m_peerActiveAddressCallback)
+        peer->m_peerActiveAddressCallback = GNUNET_TRANSPORT_peer_get_active_addresses (m_config, peerIdent, GNUNET_NO,
+                                                                                        GNUNET_TIME_UNIT_FOREVER_REL,
+                                                                                        &gotActiveAddressCallback, this);
+
+
+
+    //Just set as connected if the previous status was disconnected
+    if(!peer->isConnected())
+        setConnectedPeers(++m_connectedPeers);
+
+    peer->setConnected(true);
+
 }
 
 
@@ -387,19 +417,21 @@ NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent,
 void
 NetworkManager::notifyDisconnect(const struct GNUNET_PeerIdentity *peerIdent)
 {
-  m_connectionsCounter --;
+    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
+    GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
+    QString peerIdStr((char *)&enc);
 
-  struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-  GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
-  QString peerIdStr((char *)&enc);
+    if(!theApp->models()->networkModel())
+    {
+        qWarning() << tr("Tried to remove a peer while the network model was not created");
+        return;
+    }
+    Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
+    if(peer == NULL)
+        return;
 
-  if(!theApp->models()->networkModel())
-      return;
-  Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
-  if(peer == NULL)
-      return;
-
-  peer->setDisconnected();
+    peer->setConnected(false);
+    setConnectedPeers(--m_connectedPeers);
 
 
 }
@@ -416,15 +448,18 @@ NetworkManager::notifyDisconnect(const struct GNUNET_PeerIdentity *peerIdent)
  * @param err_msg NULL if successful, otherwise contains error message
  */
 void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
-                                   const struct GNUNET_HELLO_Message *hello,
-                                   const char *err_msg)
+                                       const struct GNUNET_HELLO_Message *hello,
+                                       const char *err_msg)
 {
     struct GNUNET_CRYPTO_HashAsciiEncoded enc;
     GNUNET_CRYPTO_hash_to_enc (&peer->hashPubKey, &enc);
     QString peerIdStr((char *)&enc);
 
     if(!theApp->models()->networkModel())
+    {
+        qWarning() << tr("Got a info about a peer while the network model was not created");
         return;
+    }
 
 
     Peer* newPeer = NULL;
@@ -439,11 +474,11 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
 
 
     //Get The address
-    if(newPeer->palc == NULL) {
-        newPeer->palc = GNUNET_TRANSPORT_peer_get_active_addresses ((const GNUNET_CONFIGURATION_Handle*)theApp->gnunet()->config(), peer,
-                        GNUNET_NO,
-                        GNUNET_TIME_UNIT_FOREVER_REL,
-                        peerAddressCallback, this);
+    if(newPeer->m_palc == NULL) {
+        newPeer->m_palc = GNUNET_TRANSPORT_peer_get_active_addresses ((const GNUNET_CONFIGURATION_Handle*)theApp->gnunet()->config(), peer,
+                                                                      GNUNET_NO,
+                                                                      GNUNET_TIME_UNIT_FOREVER_REL,
+                                                                      peerAddressCallback, this);
     }
 
 
@@ -457,24 +492,27 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
  */
 void
 NetworkManager::gotActiveAddress(const struct GNUNET_PeerIdentity *peerIdent,
-                            const struct GNUNET_HELLO_Address *address)
+                                 const struct GNUNET_HELLO_Address *address)
 {
 
 
-    if (peerIdent == NULL)
-    {
-        /* done */
-        return;
-    }
 
     if (address == NULL)
     {
-        //TODO:: Disconnected ??
+        qDebug() << tr("Peer removed because dont have an active address");
+        notifyDisconnect(peerIdent);
         return;
     }
 
+    //We have an address so is connected
+
+    notifyConnect(peerIdent);
+
     if(!theApp->models()->networkModel())
+    {
+        qWarning() << tr("Got an active address for a peer while the network model was not created");
         return;
+    }
 
     struct GNUNET_CRYPTO_HashAsciiEncoded enc;
     GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
@@ -504,8 +542,9 @@ NetworkManager::gotActiveAddress(const struct GNUNET_PeerIdentity *peerIdent,
  */
 void
 NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
+                                     int address_active,
                                      struct GNUNET_BANDWIDTH_Value32NBO bandwidth_in,
-                      struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
+                                     struct GNUNET_BANDWIDTH_Value32NBO bandwidth_out,
                                      const struct GNUNET_ATS_Information *ats,
                                      uint32_t ats_count)
 {
@@ -517,6 +556,7 @@ NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
 
     if(!theApp->models()->networkModel())
         return;
+
     peer = theApp->models()->networkModel()->getPeer(peerId);
 
     if (NULL == peer)
@@ -546,24 +586,23 @@ NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
  */
 void
 NetworkManager::newPeerAddress ( const struct GNUNET_PeerIdentity *peer,
-                             const struct GNUNET_HELLO_Address *address)
+                                 const struct GNUNET_HELLO_Address *address)
 {
 
     struct GNUNET_CRYPTO_HashAsciiEncoded enc;
 
 
     if (NULL == address) {
-        /* disconnect */
-        // gtk_list_store_set (ls, &iter,
-        //         PEERINFO_MC_NUMBER_OF_ADDRESSES, (guint) 0,
-        //         PEERINFO_MC_CONNECTIVITY_LED, led_red,
-        //         PEERINFO_MC_CONNECTED_STATUS, FALSE,
-        //                     -1);
+        qWarning() << tr("Null address at newPeerAddress");
+        notifyDisconnect(peer);
         return;
     }
 
     if(!theApp->models()->networkModel())
+    {
+        qDebug() << tr("Peer got a new address, but the model was not created");
         return;
+    }
 
 
     GNUNET_CRYPTO_hash_to_enc (&address->peer.hashPubKey, &enc);
@@ -574,19 +613,17 @@ NetworkManager::newPeerAddress ( const struct GNUNET_PeerIdentity *peer,
 
     if(peerp == NULL)
     {
-        //gWarn(QString("Recieve an address for a peer that is not on our list. Peer %1").arg(peerIdStr));
+        qWarning() << QString("Recieve an address for a peer that is not on our list. Peer %1").arg(peerIdStr);
         return;
     }
 
 
-    // gtk_list_store_set (ls, &iter,
-    //           PEERINFO_MC_NUMBER_OF_ADDRESSES, 1,
-    //           PEERINFO_MC_CONNECTIVITY_LED, led_green,
-    //           PEERINFO_MC_CONNECTED_STATUS, TRUE,
-    //           -1);
-    if (NULL != peerp->tos)
-        GNUNET_TRANSPORT_address_to_string_cancel (peerp->tos);
-    peerp->got_address = GNUNET_NO;
+    //Set as a connected peer
+    notifyConnect(peer);
+
+    if (NULL != peerp->m_tos)
+        GNUNET_TRANSPORT_address_to_string_cancel (peerp->m_tos);
+    peerp->m_gotAddress = GNUNET_NO;
 
 
     //Create the conteiner to aggregate the peerid and the callback.
@@ -595,11 +632,11 @@ NetworkManager::newPeerAddress ( const struct GNUNET_PeerIdentity *peer,
     conteiner->id = peerIdStr;
     conteiner->networkInstance = this;
 
-    peerp->tos =
+    peerp->m_tos =
             GNUNET_TRANSPORT_address_to_string (theApp->gnunet()->config(), address,
-                                            GNUNET_NO,
-                                            GNUNET_TIME_UNIT_FOREVER_REL,
-                                            peerAddressStringConvertCallback, conteiner);
+                                                GNUNET_NO,
+                                                GNUNET_TIME_UNIT_FOREVER_REL,
+                                                peerAddressStringConvertCallback, conteiner);
 
 }
 
@@ -623,25 +660,25 @@ NetworkManager::peerNewAddressString (QString id, const char *address)
 
     if(peer == NULL)
     {
-        //gWarn("Got a result for a peer address string that dont exist on our map !");
+        qWarning() << tr("Got a result for a peer address string that dont exist on our map !");
         return;
     }
 
 
     if (NULL == address) {
         /* error */
-        if (GNUNET_NO == peer->got_address)
+        if (GNUNET_NO == peer->m_gotAddress)
         {
             hostname =  "<no address>";
             peer->setHostname(hostname);
         }
 
-        peer->tos = NULL;
+        peer->m_tos = NULL;
     }
     else
     {
         hostname = (char *)address;
-        peer->got_address = GNUNET_YES;
+        peer->m_gotAddress = GNUNET_YES;
         peer->setHostname(hostname);
     }
 
@@ -658,13 +695,14 @@ NetworkManager::peerNewAddressString (QString id, const char *address)
  *
  */
 void NetworkManager::checkNseMessage (struct GNUNET_TIME_Absolute timestamp,
-                           double estimate, double std_dev)
+                                      double estimate, double std_dev)
 {
 
     numEstimateNodes = pow(2,estimate);
     QString msg;
     msg = "Estimated number of nodes %1";
     msg= msg.arg(numEstimateNodes);
+    qWarning() << msg;
     //gDebug(msg);
 }
 
@@ -702,13 +740,19 @@ int NetworkManager::getOutgoingBand()
 
 int NetworkManager::getEstimateNetworkSize()
 {
-    if(m_connectionsCounter > numEstimateNodes)
-        return m_connectionsCounter;
+    if(m_connectedPeers > numEstimateNodes)
+        return m_connectedPeers;
     else
         return numEstimateNodes;
 }
 
 int NetworkManager::getConnectedNodes()
 {
-    return m_connectionsCounter;
+    return m_connectedPeers;
+}
+
+void NetworkManager::setConnectedPeers(int connected)
+{
+    m_connectedPeers = connected;
+    emit connectedPeersChanged(connected);
 }

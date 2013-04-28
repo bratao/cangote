@@ -24,19 +24,11 @@
 #include "models/NetworkPeersModel.h"
 
 
-#define REFRESH_RATE 500
 
 NetworkPeersModel::NetworkPeersModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
-    cacheTimer = NULL;
-
-    cacheTimer = new QTimer(this);
-    connect(cacheTimer, SIGNAL(timeout()), this, SLOT(process()));
-    cacheTimer->start(REFRESH_RATE);
-
     connect(this, &NetworkPeersModel::addNewPeerSignal, this, &NetworkPeersModel::addNewPeerSlot, Qt::BlockingQueuedConnection);
-
 }
 
 
@@ -72,38 +64,38 @@ QVariant NetworkPeersModel::data(const QModelIndex& index, int role) const
     Peer* peer = m_data[index.row()];
 
 
-       switch(role)
-       {
-           case ID:
-               return peer->getId();
-               break;
-           case INCOMING_BANDWIDTH:
-               return peer->getIncomingBandwidth();
-               break;
-           case OUTGOING_BANDWIDTH:
-               return peer->getOutgoingBandwidth();
-               break;
-           case HOSTNAME:
-               return peer->getHostname();
-               break;
-           case INCOMING_TRAFFIC:
-               return peer->getIncomingTraffic();
-               break;
-           case OUTGOING_TRAFFIC:
-               return peer->getOutgoingTraffic();
-               break;
-           case CONNECTED:
-               return peer->connected;
-               break;
-           case TRANSPORT:
-               return peer->getTransportName();
-               break;
-           default:
-                 return QVariant::Invalid;
-       }
+    switch(role)
+    {
+    case ID:
+        return peer->getId();
+        break;
+    case INCOMING_BANDWIDTH:
+        return peer->getIncomingBandwidth();
+        break;
+    case OUTGOING_BANDWIDTH:
+        return peer->getOutgoingBandwidth();
+        break;
+    case HOSTNAME:
+        return peer->getHostname();
+        break;
+    case INCOMING_TRAFFIC:
+        return peer->getIncomingTraffic();
+        break;
+    case OUTGOING_TRAFFIC:
+        return peer->getOutgoingTraffic();
+        break;
+    case CONNECTED:
+        return peer->isConnected();
+        break;
+    case TRANSPORT:
+        return peer->getTransportName();
+        break;
+    default:
+        return QVariant::Invalid;
+    }
 
 
-  return QVariant::Invalid;
+    return QVariant::Invalid;
 }
 
 QHash<int, QByteArray> NetworkPeersModel::roleNames() const {
@@ -130,16 +122,9 @@ void NetworkPeersModel::setPeerModified(int id)
 }
 
 
-void NetworkPeersModel::process()
+void NetworkPeersModel::modifiedSlot(int indexRow)
 {
-    //No changes
-    //if(minIndex > maxIndex)
-    //    return;
-
-    //TODO:: FIX ME : Refreshing everyone.
-    minIndex = 0;
-    maxIndex = GetCount();
-    emit dataChanged(index(minIndex, 0), index(maxIndex, NB_PEERS_COLUMNS-1));
+    emit dataChanged(index(indexRow,0), index(indexRow,0));
 
 
 }
@@ -147,9 +132,9 @@ void NetworkPeersModel::process()
 
 Peer* NetworkPeersModel::addNewPeer(const struct GNUNET_PeerIdentity  *peerIdent, QString key)
 {
-        Peer* item = new Peer(peerIdent,key);
-        emit addNewPeerSignal(item,key);
-        return item;
+    Peer* item = new Peer(peerIdent,key);
+    emit addNewPeerSignal(item,key);
+    return item;
 }
 
 
@@ -161,15 +146,16 @@ Peer* NetworkPeersModel::addNewPeerSlot(Peer* item, QString key)
 
     if (m_lookupIndex.contains(key))
     {
-      return NULL;
+        return NULL;
     }
     else
     {
         int index = m_data.count();
         beginInsertRows(QModelIndex(), index, index);
         m_data.append(item);
+        item->setIndex(index);
 
-        //connect(item, SIGNAL(modifiedSignal(QString)),SLOT(peerModifiedSlot(QString)));
+        connect(item, &Peer::modifiedSignal,this, &NetworkPeersModel::modifiedSlot);
 
         m_lookupIndex[key] = index;
         endInsertRows();
@@ -203,7 +189,7 @@ Peer* NetworkPeersModel::getPeer(QModelIndex index)
 
 int NetworkPeersModel::GetCount()
 {
-  return m_data.count();
+    return m_data.count();
 }
 
 

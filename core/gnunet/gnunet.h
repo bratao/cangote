@@ -41,6 +41,10 @@ class GNUNet : public ServiceObject
     Q_PROPERTY(NetworkManager* network READ network CONSTANT)
     Q_PROPERTY(GNUNET_CONFIGURATION_Handle * config READ config)
 
+    Q_PROPERTY(bool connected READ isConnected WRITE setConnected NOTIFY connectedChanged)
+    Q_PROPERTY(int connectedPeers READ getConnectedPeers WRITE setConnectedPeers NOTIFY connectedPeersChanged)
+
+
 
 public:
     explicit GNUNet(QObject *parent = 0);
@@ -55,12 +59,34 @@ public:
     { return m_config; }
 
 
+
+    bool isConnected() const
+    { return m_connected; }
+
+    void setConnected(bool connected)
+    {
+        m_connected = connected;
+        emit connectedChanged(m_connected);
+    }
+
+
+    //Connected peers
+    int getConnectedPeers() const
+    { return m_connectedPeers; }
+    void setConnectedPeers(int connected)
+    {
+        m_connectedPeers = connected;
+        emit connectedPeersChanged(connected);
+    }
+
+
     static void mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
                                  const struct GNUNET_CONFIGURATION_Handle *cfg);
     static void keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
 
-
-
+signals:
+    void connectedChanged(bool connected);
+    void connectedPeersChanged(int connected);
 public slots:
     void Start();
 
@@ -78,7 +104,19 @@ private:
     void ProcessEvents();
     FileSharing* m_filesharing;
     NetworkManager*  m_network;
+    int m_connectedPeers;
     static struct GNUNET_CONFIGURATION_Handle *m_config;
+
+    bool m_connected;
+    /**
+     * Handle for ARM monitoring.
+     */
+    struct GNUNET_ARM_MonitorHandle *armon;
+
+    /**
+     * Handle for ARM controlling.
+     */
+    struct GNUNET_ARM_Handle *arm;
 
 
 };
