@@ -29,8 +29,8 @@ SearchResult::SearchResult(QObject *parent) :
     availability_certainty = 0;
     availability_rank = 0;
     m_fileSize = 0;
-    meta = NULL;
-    uri = NULL;
+    m_meta = NULL;
+    m_uri = NULL;
 }
 
 
@@ -58,7 +58,7 @@ int SearchResult::getPercentAvail()
 
 void SearchResult::setMetadata(GNUNET_CONTAINER_MetaData *meta, bool notifyModified)
 {
-    this->meta = meta;
+    this->m_meta = meta;
     
     if(notifyModified)
         modified();
@@ -66,7 +66,7 @@ void SearchResult::setMetadata(GNUNET_CONTAINER_MetaData *meta, bool notifyModif
 
 GNUNET_CONTAINER_MetaData* SearchResult::getMeta()
 {
-    return meta;
+    return m_meta;
 }
 
 
@@ -80,7 +80,7 @@ void SearchResult::setAvailabilityRank(int availability_rank, bool notifyModifie
 
 void SearchResult::setApplicabilityRank(int applicability_rank, bool notifyModified)
 {
-    this->applicability_rank = applicability_rank;
+    this->m_applicabilityRank = applicability_rank;
     if(notifyModified)
         modified();
     
@@ -88,7 +88,7 @@ void SearchResult::setApplicabilityRank(int applicability_rank, bool notifyModif
 
 int SearchResult::getApplicabilityRank()
 {
-    return applicability_rank;
+    return m_applicabilityRank;
 }
 
 
@@ -158,14 +158,14 @@ void SearchResult::setPreview(void* preview, bool notifyModified)
 
 void SearchResult::setUri(GNUNET_FS_Uri * uri, bool notifyModified)
 {
-    this->uri = uri;
+    this->m_uri = uri;
     if(notifyModified)
         modified();
 }
 
 const GNUNET_FS_Uri * SearchResult::getUri()
 {
-    return this->uri;
+    return this->m_uri;
 }
 
 

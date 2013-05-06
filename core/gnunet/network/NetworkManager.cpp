@@ -216,11 +216,16 @@ void NetworkManager::checkNseMessageCallback (void *cls, struct GNUNET_TIME_Abso
     networkInstance->checkNseMessage(timestamp,estimate,std_dev);
 }
 
+
 /*
-static int
-parse_hello_uri (const char *put_uri)
+ * Insert a peer in our list
+ */
+void NetworkManager::putHello (QString helloUrl)
 {
+
   struct GNUNET_HELLO_Message *hello = NULL;
+
+  const char *put_uri = helloUrl.toLatin1().constData();
 
   int ret = GNUNET_HELLO_parse_uri(put_uri, &my_public_key, &hello, &GPI_plugins_find);
 
@@ -235,7 +240,7 @@ parse_hello_uri (const char *put_uri)
 
   return ret;
 }
-*/
+
 
 
 /**

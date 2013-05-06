@@ -291,7 +291,7 @@ void
 FileSharing::close_search_tab (struct Search *tab)
 {
 
-    tab->Close();
+    tab->close();
 
 }
 

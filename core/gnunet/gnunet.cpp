@@ -125,13 +125,35 @@ QElapsedTimer timer;
 void GNUNet::mainLoop(char *const *args, const char *cfgfile,
                       const struct GNUNET_CONFIGURATION_Handle *cfg)
 {
-
-
-    //status->setOkState();
+    char *fn;
+    struct GNUNET_CRYPTO_EccPrivateKey *priv;
 
     //Create our configuration
     m_config = GNUNET_CONFIGURATION_create ();
     GNUNET_CONFIGURATION_load (m_config, "cangote.conf");
+
+    //Get my information
+
+    /* load private key */
+    if (GNUNET_OK !=
+            GNUNET_CONFIGURATION_get_value_filename (m_config, "PEER", "PRIVATE_KEY",
+                                                     &fn))
+    {
+        FPRINTF (stderr, _("Could not find option `%s:%s' in configuration.\n"),
+                 "GNUNETD", "HOSTKEYFILE");
+        return;
+    }
+    if (NULL == (priv = GNUNET_CRYPTO_ecc_key_create_from_file (fn)))
+    {
+        FPRINTF (stderr, _("Loading hostkey from `%s' failed.\n"), fn);
+        GNUNET_free (fn);
+        return;
+    }
+    GNUNET_free (fn);
+    GNUNET_CRYPTO_ecc_key_get_public (priv, &m_myPublicKey);
+    GNUNET_CRYPTO_ecc_key_free (priv);
+    GNUNET_CRYPTO_hash (&m_myPublicKey, sizeof (m_myPublicKey), &m_myPeerIdentity.hashPubKey);
+
 
 
     //A update function to process our messages
@@ -146,44 +168,44 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
 
 static void
 arm_connection_state_change (void *cls,
-                 int connected)
+                             int connected)
 {
-  char *service_list;
-  GNUNet* gnunetInstance = (GNUNet*)cls;
-  Q_ASSERT(cls);
+    char *service_list;
+    GNUNet* gnunetInstance = (GNUNet*)cls;
+    Q_ASSERT(cls);
 
 
-  if (connected)
-  {
+    if (connected)
+    {
 
-      gnunetInstance->setConnected(true);
-      /*
+        gnunetInstance->setConnected(true);
+        /*
     service_list = format_service_list (0, NULL);
     GNUNET_FS_GTK_update_connection_indicator (cls, TRUE, service_list);
     GNUNET_free_non_null (service_list);
     GNUNET_ARM_request_service_list (arm, SERVICE_LIST_TIMEOUT,
                      &service_list_callback, cls);*/
-  }
-  else
-  {
-      gnunetInstance->setConnected(false);
-      /*GNUNET_FS_GTK_update_connection_indicator (cls, FALSE,
+    }
+    else
+    {
+        gnunetInstance->setConnected(false);
+        /*GNUNET_FS_GTK_update_connection_indicator (cls, FALSE,
           _("Can't connect to the Automatic Restart Manager service."));*/
-  }
+    }
 
 }
 
 static void
 service_status_change (void *cls,
-               const char *service,
-               enum GNUNET_ARM_ServiceStatus status)
+                       const char *service,
+                       enum GNUNET_ARM_ServiceStatus status)
 {
-  /* Very crude, we can probably do better.
+    /* Very crude, we can probably do better.
    * Maybe keep a list of running services, and modify it in response
    * to service status changes, then update the indicator,
    * without requesting a list from ARM every goddamned time?
    */
- /* GNUNET_ARM_request_service_list (arm,
+    /* GNUNET_ARM_request_service_list (arm,
                    SERVICE_LIST_TIMEOUT,
                    &service_list_callback, cls);*/
 }
@@ -197,8 +219,8 @@ void GNUNet::StartServices()
     m_filesharing->start(m_config);
 
     //Start arm
-    arm = GNUNET_ARM_connect (m_config, &arm_connection_state_change, this);
-    armon = GNUNET_ARM_monitor (m_config, service_status_change, this);
+    m_arm = GNUNET_ARM_connect (m_config, &arm_connection_state_change, this);
+    m_armon = GNUNET_ARM_monitor (m_config, service_status_change, this);
 }
 
 void GNUNet::ProcessEvents()

@@ -4,6 +4,7 @@ CONFIG+=qml_debug
 
 #QMAKE_CXXFLAGS+=-Wall -Wextra #-Werror
 QMAKE_CXXFLAGS_RELEASE += -g
+QMAKE_CXXFLAGS += -std=c++11
 QMAKE_CFLAGS_RELEASE += -g
 QMAKE_LFLAGS_RELEASE =
 
@@ -45,7 +46,9 @@ SOURCES += \
     models/models.cpp \
     models/SharedFilesModel.cpp \
     preferences/preferences.cpp \
-    utils/utils.cpp
+    utils/utils.cpp \
+    models/PublishFileModel.cpp \
+    core/publish/publishfile.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -75,7 +78,8 @@ OTHER_FILES += \
     qml/Sidebar/MenuButton.qml \
     qml/Publish/PublishFile.qml \
     qml/preferences/Advanced.qml \
-    qml/Network/AddPeer.qml
+    qml/Network/AddPeer.qml \
+    qml/Search/Tooltip.qml
 
 RESOURCES += \
     resources.qrc
@@ -111,4 +115,6 @@ HEADERS += \
     models/models.h \
     models/SharedFilesModel.h \
     preferences/preferences.h \
-    utils/utils.h
+    utils/utils.h \
+    models/PublishFileModel.h \
+    core/publish/publishfile.h

@@ -3,6 +3,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 
+#include "cangote.h"
+
 Utils::Utils(QObject *parent) :
     QObject(parent)
 {
@@ -39,9 +41,9 @@ QString Utils::friendlyUnit(quint32 val, bool is_speed) {
 }
 
 
-QString Utils::openFilePicker()
+QStringList Utils::openFilePicker()
 {
-    return QFileDialog::getOpenFileName(NULL,
+    return QFileDialog::getOpenFileNames(NULL,
         tr("Pick Files"), NULL, NULL);
 }
 

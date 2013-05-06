@@ -26,7 +26,7 @@
 /* Static member variables */
 Utils* theUtils;
 Preferences* thePrefs;
-
+QQuickWindow* theWindow;
 
 Cangote::Cangote(QObject *parent) :
     QObject(parent)

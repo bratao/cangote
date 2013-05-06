@@ -28,23 +28,28 @@
 #include "searchresult.h"
 #include "core/cangotecore.h"
 
-Search::Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent) :
-  QObject(parent)
-{
-  m_model = NULL;
-  this->sc = sc;
-  this->query_txt = query_txt;
 
-  //Trans thread signals
-  connect(this,&Search::StopSignal,this,&Search::StopSlot);
-  connect(this,&Search::CloseSignal,this,&Search::CloseSlot);
+/*
+ *
+ */
+Search::Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent) :
+    QObject(parent)
+{
+    m_model = NULL;
+    m_sc = sc;
+    m_query = query_txt;
+
+    //Trans thread signals
+    connect(this,&Search::stopped,this,&Search::stopSlot);
+    connect(this,&Search::closed,this,&Search::closeSlot);
 
 }
 
+//TODO: Check me, apprentely no one calls me
 SearchResult* Search::UpdateResult(SearchResult *sr,
                                    const struct GNUNET_CONTAINER_MetaData *meta,
                                    int applicability_rank,
-                           int availability_rank,
+                                   int availability_rank,
                                    int availability_certainty)
 {
 
@@ -67,57 +72,57 @@ SearchResult* Search::UpdateResult(SearchResult *sr,
 
 
 SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri *uri,
-                       const struct GNUNET_CONTAINER_MetaData *meta,
-                       struct GNUNET_FS_SearchResult *result,
-                       uint32_t applicability_rank)
+                                const struct GNUNET_CONTAINER_MetaData *meta,
+                                struct GNUNET_FS_SearchResult *result,
+                                uint32_t applicability_rank)
 {
 
 
-  size_t ts;
-  unsigned char *thumb;
-  int fsize;
-  QString mime;
-  QString strUri;
+    size_t ts;
+    unsigned char *thumb;
+    int fsize;
+    QString mime;
+    QString strUri;
 
-  thumb = NULL;
+    thumb = NULL;
 
 
-  if(m_model == NULL)
-  {
-      qWarning("Adding a result without a model !");
-      return NULL;
-  }
-
-  if (NULL == uri)
+    if(m_model == NULL)
     {
-      /* opened directory file */
-      fsize = 0;
-      strUri = "no URI";
+        qWarning("Adding a result without a model !");
+        return NULL;
+    }
+
+    if (NULL == uri)
+    {
+        /* opened directory file */
+        fsize = 0;
+        strUri = "no URI";
     }
     else
     {
-      if ( (GNUNET_FS_uri_test_loc (uri)) ||
-           (GNUNET_FS_uri_test_chk (uri)) )
-      {
-        fsize = GNUNET_FS_uri_chk_get_file_size (uri);
+        if ( (GNUNET_FS_uri_test_loc (uri)) ||
+             (GNUNET_FS_uri_test_chk (uri)) )
+        {
+            fsize = GNUNET_FS_uri_chk_get_file_size (uri);
 
-        char* tmpMime = GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
-                                                                       EXTRACTOR_METATYPE_MIMETYPE,
-                                                                       EXTRACTOR_METATYPE_FORMAT,
-                                                                       -1);
+            char* tmpMime = GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
+                                                                           EXTRACTOR_METATYPE_MIMETYPE,
+                                                                           EXTRACTOR_METATYPE_FORMAT,
+                                                                           -1);
 
-        mime.fromLocal8Bit(tmpMime);
-      }
-      else
-      {
-        /* FIXME-FEATURE-MAYBE: create mime type for namespaces? */
-        /* FIXME-BUG-MAYBE: can we encounter ksk URIs here too? */
-        fsize = 0;
-        mime = "GNUnet namespace";
+            mime.fromLocal8Bit(tmpMime);
+        }
+        else
+        {
+            /* FIXME-FEATURE-MAYBE: create mime type for namespaces? */
+            /* FIXME-BUG-MAYBE: can we encounter ksk URIs here too? */
+            fsize = 0;
+            mime = "GNUnet namespace";
 
-      }
-      char* tempuri = GNUNET_FS_uri_to_string (uri);
-      strUri = strUri.fromLatin1(tempuri);
+        }
+        char* tempuri = GNUNET_FS_uri_to_string (uri);
+        strUri = strUri.fromLatin1(tempuri);
     }
 
     ts = GNUNET_CONTAINER_meta_data_get_thumbnail (meta, &thumb);
@@ -126,18 +131,18 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 
 
     char* desc =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
-                                                       EXTRACTOR_METATYPE_PACKAGE_NAME,
-                                                       EXTRACTOR_METATYPE_TITLE,
-                                                       EXTRACTOR_METATYPE_BOOK_TITLE,
-                                                       EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
-                                                       EXTRACTOR_METATYPE_FILENAME,
-                                                       EXTRACTOR_METATYPE_DESCRIPTION,
-                                                       EXTRACTOR_METATYPE_SUMMARY,
-                                                       EXTRACTOR_METATYPE_ALBUM,
-                                                       EXTRACTOR_METATYPE_COMMENT,
-                                                       EXTRACTOR_METATYPE_SUBJECT,
-                                                       EXTRACTOR_METATYPE_KEYWORDS,
-                                                       -1);
+                                                                 EXTRACTOR_METATYPE_PACKAGE_NAME,
+                                                                 EXTRACTOR_METATYPE_TITLE,
+                                                                 EXTRACTOR_METATYPE_BOOK_TITLE,
+                                                                 EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
+                                                                 EXTRACTOR_METATYPE_FILENAME,
+                                                                 EXTRACTOR_METATYPE_DESCRIPTION,
+                                                                 EXTRACTOR_METATYPE_SUMMARY,
+                                                                 EXTRACTOR_METATYPE_ALBUM,
+                                                                 EXTRACTOR_METATYPE_COMMENT,
+                                                                 EXTRACTOR_METATYPE_SUBJECT,
+                                                                 EXTRACTOR_METATYPE_KEYWORDS,
+                                                                 -1);
 
 
 
@@ -174,25 +179,26 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 }
 
 
-void Search::StopSlot()
+void Search::stopSlot()
 {
-    GNUNET_FS_search_stop (sc);
+    GNUNET_FS_search_stop (m_sc);
 }
 
 
-void Search::Stop()
+void Search::stop()
 {
 
-    emit StopSignal();
+    emit stopped();
 
 
 }
 
-void Search::Close()
+void Search::close()
 {
-    emit CloseSignal();
+    emit closed();
 }
-void Search::CloseSlot()
+
+void Search::closeSlot()
 {
 
 
@@ -200,5 +206,5 @@ void Search::CloseSlot()
 
 QString Search::getTerm()
 {
-    return query_txt;
+    return m_query;
 }

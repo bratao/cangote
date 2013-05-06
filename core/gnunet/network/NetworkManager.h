@@ -139,6 +139,7 @@ public:
     int getConnectedNodes();
     //ServiceStatus *getStatus();
     void setConnectedPeers(int connected);
+    void putHello(QString helloUrl);
 private:
     void getGlobalBandwidth();
 

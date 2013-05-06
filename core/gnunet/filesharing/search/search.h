@@ -25,7 +25,6 @@
 #include <stdint.h>
 
 
-
 struct GNUNET_FS_SearchContext;
 class SearchResultsModel;
 struct SearchResult;
@@ -34,56 +33,57 @@ class Search : public QObject
     Q_OBJECT
     Q_PROPERTY(SearchResultsModel * model READ model WRITE setModel NOTIFY modelChanged)
 public:
-    explicit Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent = 0);
+    explicit Search(GNUNET_FS_SearchContext *m_sc,QString m_query, QObject *m_parent = 0);
 
 
+    //Properties definition
     SearchResultsModel* model() const
     { return m_model; }
 
     void setModel(SearchResultsModel* model)
     {
         m_model = model;
-        //connect(m_model, &Search::AskedToDieSignal, &Search::AskedToDieSlot());
         emit modelChanged(model);
     }
 
-    SearchResult* AddResult(SearchResult *parent, const struct GNUNET_FS_Uri *uri,
-                            const struct GNUNET_CONTAINER_MetaData *meta,
-                            struct GNUNET_FS_SearchResult *result,
-                            uint32_t applicability_rank);
-    SearchResult *UpdateResult(SearchResult *sr, const GNUNET_CONTAINER_MetaData *meta, int applicability_rank, int availability_rank, int availability_certainty);
-    void Stop();
 
-    void Close();
+    SearchResult* AddResult(SearchResult *m_parent, const struct GNUNET_FS_Uri *uri,
+                            const struct GNUNET_CONTAINER_MetaData *meta,
+                            struct GNUNET_FS_SearchResult *result,uint32_t applicability_rank);
+
+    SearchResult* UpdateResult(SearchResult *sr, const GNUNET_CONTAINER_MetaData *meta, int applicability_rank,
+                               int availability_rank, int availability_certainty);
+
+    //Stop the search
+    void stop();
+
+    //Ask the search to close
+    void close();
+
+
     QString getTerm();
 signals:
     void modelChanged(SearchResultsModel*);
-    void StopSignal();
-    void CloseSignal();
+    void stopped();
+    void closed();
 private slots:
-    void StopSlot();
-    void CloseSlot();
+    void stopSlot();
+    void closeSlot();
 
 private:
 
-
-
+    //Our model
     SearchResultsModel* m_model;
 
+    //Parent search
+    //Set in case this is an inner search, otherwise NULL.
+    Search *m_parent;
 
-    /**
-   * Set in case this is an inner search, otherwise NULL.
-   */
-    Search *parent;
+    //Handle for this search with FS library.
+    struct GNUNET_FS_SearchContext *m_sc;
 
-    /**
-   * Handle for this search with FS library.
-   */
-    struct GNUNET_FS_SearchContext *sc;
-
-
-    //Text of the search query.
-    QString query_txt;
+    //Search query.
+    QString m_query;
 
 
     //Number of results we got for this search.

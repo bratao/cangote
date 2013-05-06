@@ -2,7 +2,7 @@
 #define UTILS_H
 
 #include <QObject>
-
+#include <QStringList>
 class Utils : public QObject
 {
     Q_OBJECT
@@ -16,7 +16,7 @@ public slots:
 
 public:
     Q_INVOKABLE QString friendlyUnit(quint32 val, bool is_speed);
-    Q_INVOKABLE QString openFilePicker();
+    Q_INVOKABLE QStringList openFilePicker();
     Q_INVOKABLE QString openFolderPicker();
     Q_INVOKABLE void openFile(QString file);
 };

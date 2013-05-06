@@ -34,9 +34,9 @@ public:
 
 
     Search *getOwner();
-    void setMetadata(GNUNET_CONTAINER_MetaData *meta, bool notifyModified =true);
+    void setMetadata(GNUNET_CONTAINER_MetaData *m_meta, bool notifyModified =true);
     void setAvailabilityRank(int availability_rank, bool notifyModified =true);
-    void setApplicabilityRank(int applicability_rank, bool notifyModified =true);
+    void setApplicabilityRank(int m_applicabilityRank, bool notifyModified =true);
     void setAvailabilityCertainty(int availability_certainty, bool notifyModified =true);
     void modified();
     int getPercentAvail();
@@ -45,7 +45,7 @@ public:
     void setOwner(Search *m_owner, bool notifyModified =true);
     void setParent(SearchResult *m_parent, bool notifyModified =true);
     void setPreview(void *m_preview, bool notifyModified =true);
-    void setUri(GNUNET_FS_Uri *uri, bool notifyModified =true);
+    void setUri(GNUNET_FS_Uri *m_uri, bool notifyModified =true);
     void setResult(GNUNET_FS_SearchResult *m_result, bool notifyModified =true);
     QPersistentModelIndex *getIndex();
     void setIndex(QPersistentModelIndex *m_index, bool notifyModified =true);
@@ -56,6 +56,7 @@ public:
     Q_INVOKABLE void download();
     const GNUNET_FS_Uri *getUri();
 private:
+
     QString m_filename;
     void* m_preview;
     unsigned int m_fileSize;
@@ -63,9 +64,9 @@ private:
     class Search* m_owner;
     struct GNUNET_FS_SearchResult *m_result;
     SearchResult *m_parent;
-    const struct GNUNET_FS_Uri* uri;
-    struct GNUNET_CONTAINER_MetaData *meta;
-    unsigned int applicability_rank;
+    const struct GNUNET_FS_Uri* m_uri;
+    struct GNUNET_CONTAINER_MetaData *m_meta;
+    unsigned int m_applicabilityRank;
     int availability_rank;
     int availability_certainty;
 

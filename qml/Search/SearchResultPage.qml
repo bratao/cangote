@@ -5,8 +5,12 @@ import Cangote 1.0
 Item {
     property string searchTerm
     property var searchModel
-
+    property bool needTooltip: false
+    property real tooltipX: 0
+    property real tooltipY: 0
     anchors.fill: parent
+
+    id: resultPage
 
     Action {
         id: download
@@ -21,12 +25,28 @@ Item {
 
     }
 
+    //The tooltip
+    Tooltip {
+        id: tooltip
+        states: State {
+            name: "inuse"
+            when: needTooltip
+            PropertyChanges {
+                target: tooltip
+                visible: true
+                x: tooltipX
+                y: tooltipY
+            }
+        }
+    }
+
 
     TableView
     {
         id: searchResultList
         anchors.fill: parent
         model: searchModel
+
 
         onActivated:
         {
@@ -36,15 +56,28 @@ Item {
         }
 
         itemDelegate: Item {
-
+            id: item
 
             MouseArea {
+                id: ma
                 anchors.fill:  parent
                 acceptedButtons:  Qt.RightButton
                 propagateComposedEvents: true
+                hoverEnabled: true
+
+                onMouseXChanged: {
+                    tooltipX= ma.mapToItem(resultPage,mouseX,0).x
+                    tooltipY= ma.mapToItem(resultPage,0,mouseY).y
+                }
+
+                onHoveredChanged: {
+                    needTooltip=ma.containsMouse
+                    tooltipX= ma.mapToItem(resultPage,mouseX,0).x
+                    tooltipY= ma.mapToItem(resultPage,0,mouseY).y
+                    tooltip.searchTerm = itemValue
+                }
 
                 onPressed: {
-
                     contextMenu.popup(mouseX,mouseY,0, parent)
                     searchResultList.currentRow = rowIndex
 

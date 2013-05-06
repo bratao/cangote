@@ -111,12 +111,23 @@ private:
     /**
      * Handle for ARM monitoring.
      */
-    struct GNUNET_ARM_MonitorHandle *armon;
+    struct GNUNET_ARM_MonitorHandle *m_armon;
 
     /**
      * Handle for ARM controlling.
      */
-    struct GNUNET_ARM_Handle *arm;
+    struct GNUNET_ARM_Handle *m_arm;
+
+    /**
+     * My peer identity.
+     */
+    static struct GNUNET_PeerIdentity m_myPeerIdentity;
+
+    /**
+     * My public key.
+     */
+    static struct GNUNET_CRYPTO_EccPublicKeyBinaryEncoded m_myPublicKey;
+
 
 
 };

@@ -6,6 +6,7 @@
 class CangoteCore;
 class Utils;
 class Preferences;
+class QQuickWindow;
 class Cangote : public QObject
 {
     Q_OBJECT
@@ -22,6 +23,9 @@ private:
     void registerQmlTypes();
     
 };
+
+//Those are the externals visible to the whole application ( globals)
 extern Utils* theUtils;
 extern Preferences* thePrefs;
+extern QQuickWindow* theWindow;
 #endif // CANGOTE_H

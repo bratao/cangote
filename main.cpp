@@ -50,6 +50,10 @@
 void createTray();
 void logProcessor(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
+
+
+
+
 int main(int argc, char *argv[])
 {
 
@@ -72,8 +76,8 @@ int main(int argc, char *argv[])
 
 
     QObject *topLevel = component.create();
-    QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
-    if ( !window ) {
+    theWindow = qobject_cast<QQuickWindow *>(topLevel);
+    if ( !theWindow ) {
         qWarning("Error: Your root item has to be a Window.");
         return -1;
     }
@@ -83,9 +87,9 @@ int main(int argc, char *argv[])
     createTray();
 
 
-    window->setTitle("Cangote P2P");
-    window->setIcon(QIcon(":/asserts/CangoteHead.ico"));
-    window->show();
+    theWindow->setTitle("Cangote P2P");
+    theWindow->setIcon(QIcon(":/asserts/CangoteHead.ico"));
+    theWindow->show();
     return app.exec();
 
 }
