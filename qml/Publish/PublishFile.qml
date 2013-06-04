@@ -1,6 +1,7 @@
 import QtQuick 2.1
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 
 import Cangote 1.0
 Window {
@@ -22,6 +23,7 @@ Window {
             anchors.right: rightColumn.left
             TableView{
                 width: parent.width
+                model: Cangote.models.publishModel
                 TableViewColumn{ role: "name"  ; title: "Name" ; width: 200 }
             }
 
@@ -30,12 +32,14 @@ Window {
                 width: parent.width
                 height:30
                 flat: true
-                Row{
+                RowLayout{
+
                     Button{
                         text: "Add File"
 
                         onClicked: {
                             var file = Utils.openFilePicker();
+                            Cangote.gnunet.publish.addFiles(file);
                         }
                     }
                     Button{

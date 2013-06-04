@@ -22,35 +22,52 @@
 #include <QDebug>
 //#include "core/cangote.h"
 
-#define START_SERVICES true
-
-#define USE_ARM true
-
 GNUNetLauncher::GNUNetLauncher(QObject *parent) :
     QObject(parent)
 {
+    m_armProcess = NULL;
 
-    startServices();
+    connect(this,&GNUNetLauncher::relaunchServicesSignal,this,&GNUNetLauncher::relaunchServicesSlot);
+    connect(this,&GNUNetLauncher::stopSignal,this,&GNUNetLauncher::stopSlot);
+
 }
 
 GNUNetLauncher::~GNUNetLauncher()
 {
-    stopServices();
+    stopSlot();
 }
 
-void GNUNetLauncher::stopServices()
+
+void GNUNetLauncher::start()
 {
 
-    if(!START_SERVICES)
-        return;
+    setEnvironment();
 
-    if(USE_ARM)
-    {
-        QProcess* killArmProcess     = new QProcess(this);
-        killArmProcess->setProcessEnvironment(env);
-        killArmProcess->start("gnunet-arm.exe -e");
-        killArmProcess->waitForFinished(1000);
-    }
+    m_armProcess = new QProcess(this);
+    startArm();
+
+}
+
+void GNUNetLauncher::stopSlot()
+{
+
+
+    QProcess* killArmProcess     = new QProcess(this);
+    killArmProcess->setProcessEnvironment(env);
+    killArmProcess->start("gnunet-arm.exe -e");
+    killArmProcess->waitForFinished(1000);
+
+
+
+}
+
+bool GNUNetLauncher::startArm()
+{
+    QStringList arguments;
+    arguments << "-s";
+
+    m_armProcess->setProcessEnvironment(env);
+    m_armProcess->start("gnunet-arm.exe", arguments);
 
 
 }
@@ -66,30 +83,17 @@ void GNUNetLauncher::cleanOldProcesses()
     killArmProcess->setProcessEnvironment(env);
     killArmProcess->start("pkill -9 -f gnunet-*");
 #endif
-    killArmProcess->waitForFinished(1000);
 
 }
 
 
-void GNUNetLauncher::startServices()
+void GNUNetLauncher::relaunchServicesSlot()
 {
 
-    if(!START_SERVICES)
-        return;
-
-    setEnvironment();
-
-    m_armProcess = new QProcess(this);
-    startArm();
-
-}
-
-void GNUNetLauncher::relaunchServices()
-{
-    if(!START_SERVICES)
-        return;
-
-    delete m_armProcess;
+    if(m_armProcess)
+    {
+        delete m_armProcess;
+    }
     m_armProcess = new QProcess(this);
     cleanOldProcesses();
     startArm();
@@ -103,13 +107,13 @@ GNUNetLauncher::finished(int exitCode, QProcess::ExitStatus exitStatus)
 
 void GNUNetLauncher::errorHandler(QProcess::ProcessError error)
 {
-   qWarning() << (QString(error));
+    qWarning() << (QString(error));
 }
 
 
 void GNUNetLauncher::stateChanged(QProcess::ProcessState state)
 {
-   qWarning() << (QString(state));
+    qWarning() << (QString(state));
 }
 
 void GNUNetLauncher::connectSignals()
@@ -121,26 +125,11 @@ void GNUNetLauncher::connectSignals()
 void GNUNetLauncher::setEnvironment()
 {
     env = QProcessEnvironment::systemEnvironment();
-    env.insert("PATH", env.value("Path") + ";C:\\sbuild\\mingw\\bin" +";C:\\sbuild\\mingw\\lib\\gnunet\\libexec" + ";C:\\sbuild\\mingw\\lib\\gnunet");
+    env.insert("PATH", env.value("Path") + ";C:\\sbuild\\mingw\\bin" +
+               ";C:\\sbuild\\mingw\\lib\\gnunet\\libexec" +
+               ";C:\\sbuild\\mingw\\lib\\gnunet");
 }
 
-bool GNUNetLauncher::startArm()
-{
-    QStringList arguments;
-    arguments << "-s";
-
-    m_armProcess->setProcessEnvironment(env);
-    m_armProcess->start("gnunet-arm.exe", arguments);
-    m_armProcess->waitForStarted(5000);
-
-   // connect(m_armProcess, &QProcess::stateChanged, this, &GNUNetLauncher::stateChanged);
-    //connect(m_armProcess, &QProcess::error, this, &GNUNetLauncher::errorHandler);
-   // connect(m_armProcess, &QProcess::finished, this, &GNUNetLauncher::finished);
-
-   // connect(m_armProcess,SIGNAL(error(QProcess::ProcessError)),this, SLOT(errorHandler(QProcess::ProcessError)));
-   // connect(m_armProcess,SIGNAL(finished(int , QProcess::ExitStatus)),this, SLOT(finished(int , QProcess::ExitStatus)));
-
-}
 
 
 void GNUNetLauncher::CoreError ( QProcess::ProcessError error )

@@ -29,16 +29,17 @@
 
 
 class FileSharing;
+class Publish;
 class NetworkManager;
 class SearchModel;
 class NetworkPeersModel;
-//class ServiceStatus;
 class Downloads;
 class GNUNet : public ServiceObject
 {
     Q_OBJECT
     Q_PROPERTY(FileSharing * filesharing READ filesharing CONSTANT)
     Q_PROPERTY(NetworkManager* network READ network CONSTANT)
+    Q_PROPERTY(Publish* publish READ publish CONSTANT)
     Q_PROPERTY(GNUNET_CONFIGURATION_Handle * config READ config)
 
     Q_PROPERTY(bool connected READ isConnected WRITE setConnected NOTIFY connectedChanged)
@@ -54,6 +55,10 @@ public:
 
     NetworkManager* network() const
     { return m_network; }
+
+    Publish* publish() const
+    { return m_publish; }
+
 
     GNUNET_CONFIGURATION_Handle* config() const
     { return m_config; }
@@ -79,35 +84,73 @@ public:
         emit connectedPeersChanged(connected);
     }
 
-
-    static void mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
-                                 const struct GNUNET_CONFIGURATION_Handle *cfg);
-    static void keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
-
-signals:
-    void connectedChanged(bool connected);
-    void connectedPeersChanged(int connected);
-public slots:
-    void Start();
-
-public:
+    GNUNET_CRYPTO_EccPublicKeyBinaryEncoded myPublicKey() const;
+    void setMyPublicKey(const GNUNET_CRYPTO_EccPublicKeyBinaryEncoded &myPublicKey);
 
 
-    int m_numEstimateNodes;
-
-
-    void StartServices();
-
-    void mainLoop(char *const*args, const char *cfgfile, const GNUNET_CONFIGURATION_Handle *cfg);
 
 private:
-    void ProcessEvents();
-    FileSharing* m_filesharing;
-    NetworkManager*  m_network;
-    int m_connectedPeers;
-    static struct GNUNET_CONFIGURATION_Handle *m_config;
 
+    /**
+      Static Definitions
+     */
+    static void mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
+                                 const struct GNUNET_CONFIGURATION_Handle *cfg);
+
+    static void keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
+
+public:
+    void armConnectionStateChange(int connected);
+
+signals:
+    void gnunetStarted();
+    void gnunetConnected();
+    void connectedChanged(bool connected);
+    void connectedPeersChanged(int connected);
+
+public slots:
+    void start();
+
+private slots:
+    void startServices();
+
+private:
+
+    /**
+     * Pointer to GNUnet filesharing.
+     */
+    FileSharing* m_filesharing;
+
+    /**
+     * Pointer to network manager class.
+     */
+    NetworkManager*  m_network;
+
+    /**
+     * Pointer to the Publish class.
+     */
+    Publish* m_publish;
+
+    /**
+     * Represent the number of connected peers
+     */
+    int m_connectedPeers;
+
+    /**
+     * @brief m_config
+     */
+    struct GNUNET_CONFIGURATION_Handle *m_config;
+
+    /**
+     * @brief m_connected
+     */
     bool m_connected;
+
+    /**
+     * @brief m_numEstimateNodes
+     */
+    int m_numEstimateNodes;
+
     /**
      * Handle for ARM monitoring.
      */
@@ -121,14 +164,19 @@ private:
     /**
      * My peer identity.
      */
-    static struct GNUNET_PeerIdentity m_myPeerIdentity;
+    struct GNUNET_PeerIdentity m_myPeerIdentity;
 
     /**
      * My public key.
      */
-    static struct GNUNET_CRYPTO_EccPublicKeyBinaryEncoded m_myPublicKey;
+    struct GNUNET_CRYPTO_EccPublicKeyBinaryEncoded m_myPublicKey;
 
 
+
+
+
+    void processEvents();
+    void mainLoop(char *const*args, const char *cfgfile, const GNUNET_CONFIGURATION_Handle *cfg);
 
 };
 

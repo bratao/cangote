@@ -24,30 +24,12 @@ Item{
 
     TableView
     {
-        //anchors.fill: parent
-        id: list
+        id: networkTable
         anchors.fill: parent
 
         model:Cangote.models.networkModel
 
 
-        itemDelegate: Item {
-
-            MouseArea {
-                anchors.fill:  parent
-                acceptedButtons: Qt.RightButton
-                onPressed: {
-                    contextMenu.popup(mouseX,mouseY,0, parent)
-                    list.currentRow = rowIndex
-                }
-            }
-            Text {
-                anchors.fill:  parent
-                anchors.verticalCenter: parent.verticalCenter
-                elide: Text.ElideRight
-                text: itemValue
-             }
-         }
         TableViewColumn {
             role: "connected"
             width: 10
@@ -59,7 +41,7 @@ Item{
                     width: 12
                     height: 12
                     radius: 10
-                    color: itemValue ? "green" : "red"
+                    color: styleData.value ? "green" : "red"
                 }
 
             }
@@ -75,7 +57,11 @@ Item{
             width: 120
             delegate:Item{
                 Text {
-                    text: Utils.friendlyUnit(itemValue,true)
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: Utils.friendlyUnit(styleData.value,true)
+                    renderType: Text.NativeRendering
                 }
             }
         }
@@ -85,7 +71,11 @@ Item{
             width: 120
             delegate:Item{
                 Text {
-                    text: Utils.friendlyUnit(itemValue,true)
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: Utils.friendlyUnit(styleData.value,true)
+                    renderType: Text.NativeRendering
                 }
             }
         }
@@ -100,7 +90,11 @@ Item{
             width: 120
             delegate:Item{
                 Text {
-                    text: Utils.friendlyUnit(itemValue,false)
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: Utils.friendlyUnit(styleData.value,true)
+                    renderType: Text.NativeRendering
                 }
             }
         }
@@ -110,7 +104,11 @@ Item{
             width: 120
             delegate:Item{
                 Text {
-                    text: Utils.friendlyUnit(itemValue,false)
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: Utils.friendlyUnit(styleData.value,true)
+                    renderType: Text.NativeRendering
                 }
             }
         }
@@ -119,6 +117,22 @@ Item{
             role: "transport"
             title: "Transport"
             width: 120
+        }
+    }
+
+    MouseArea {
+        anchors.fill: networkTable
+        hoverEnabled: true
+        acceptedButtons: Qt.RightButton
+        onClicked: {
+
+            var index = networkTable.rowAt(mouse.x, mouse.y)
+            if (index !== -1){
+                networkTable.forceActiveFocus()
+                networkTable.currentRow = index
+            }
+
+            contextMenu.popup()
         }
     }
 

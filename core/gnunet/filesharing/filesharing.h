@@ -37,6 +37,8 @@ class FileSharing : public ServiceObject
 
     Q_PROPERTY(Downloads * downloads READ downloads CONSTANT)
     Q_PROPERTY(SharedFiles * sharedFiles READ sharedFiles CONSTANT)
+    Q_PROPERTY(GNUNET_FS_Handle * fsHandle READ fsHandle CONSTANT)
+
 
 public:
     explicit FileSharing( QObject *parent = 0);
@@ -49,38 +51,10 @@ public:
     SharedFiles* sharedFiles() const
     { return m_sharedFiles; }
 
-    ////////////FILESHARING/////////////////////////
-    void *
-    GNUNET_fs_event_handler (void *cls,
-                             const struct GNUNET_FS_ProgressInfo *info);
+    GNUNET_FS_Handle* fsHandle() const
+    { return m_fs; }
 
-    ////////SEARCH//////////
-    SearchResult *setup_inner_search(struct GNUNET_FS_SearchContext *sc,
-                                     SearchResult *parent);
-    Search*
-    setup_search_tab (struct GNUNET_FS_SearchContext *sc,
-                      const struct GNUNET_FS_Uri *query);
-    SearchResult *
-    process_search_result (Search *search,
-                           SearchResult *parent,
-                           const struct GNUNET_FS_Uri *uri,
-                           const struct GNUNET_CONTAINER_MetaData *meta,
-                           struct GNUNET_FS_SearchResult *result,
-                           uint32_t applicability_rank);
-    void
-    update_search_result (SearchResult *sr,
-                          const struct GNUNET_CONTAINER_MetaData *meta,
-                          int applicability_rank,
-                          int availability_rank,
-                          int availability_certainty);
-    void
-    close_search_tab (Search *tab);
-    void
-    free_search_result (SearchResult *sr);
 
-    void
-    handle_search_error (struct SearchTab *tab,
-                         const char *emsg);
     static void *
     GNUNET_fs_event_handler_callback (void *cls,
                                       const struct GNUNET_FS_ProgressInfo *info);
@@ -88,8 +62,7 @@ public:
 
     void start(GNUNET_CONFIGURATION_Handle *config);
     void downloadFromSearch(Search *search);
-    //ServiceStatus *getStatus();
-   Q_INVOKABLE void search(QString term, int anonLevel);
+    Q_INVOKABLE void search(QString term, int anonLevel);
     void ProcessEvents();
 signals:
     void searchSignal(QString term, int anonLevel);
@@ -98,12 +71,56 @@ private slots:
     void downloadFromSearch(SearchResult *searchResult);
     void searchSlot(QString terms, int anonLevel);
 private:
+
+
+
+
+
+
+
+private:
+    ////////////FILESHARING/////////////////////////
+    void *
+    eventHandler (void *cls,
+                  const struct GNUNET_FS_ProgressInfo *info);
+
+    ////////SEARCH//////////
+    SearchResult *setupInnerSearch(struct GNUNET_FS_SearchContext *sc,
+                                   SearchResult *parent);
+
+    Search*
+    setupSearch (struct GNUNET_FS_SearchContext *sc,
+                 const struct GNUNET_FS_Uri *query);
+
+    SearchResult *
+    processSearch (Search *search,
+                   SearchResult *parent,
+                   const struct GNUNET_FS_Uri *uri,
+                   const struct GNUNET_CONTAINER_MetaData *meta,
+                   struct GNUNET_FS_SearchResult *result,
+                   uint32_t applicability_rank);
+    void
+    updateSearch (SearchResult *sr,
+                  const struct GNUNET_CONTAINER_MetaData *meta,
+                  int applicability_rank,
+                  int availability_rank,
+                  int availability_certainty);
+    void
+    closeSearch (Search *tab);
+
+    void
+    freeSearch (SearchResult *sr);
+
+    void
+    searchError (struct SearchTab *tab,
+                 const char *emsg);
+
     /**
      * Handle for file-sharing operations.
      */
-    static struct GNUNET_FS_Handle *fs;
+    struct GNUNET_FS_Handle *m_fs;
 
-    struct GNUNET_CONFIGURATION_Handle *config;
+    struct GNUNET_CONFIGURATION_Handle *m_config;
 
     SearchModel* m_search;
     Downloads* m_downloads;

@@ -21,6 +21,7 @@
 #include "gnunet.h"
 #include "filesharing/filesharing.h"
 #include "network/NetworkManager.h"
+#include "filesharing/publish/publish.h"
 //#include "core/servicestatus.h"
 #include "core/gnunet/filesharing/transfer/downloads.h"
 
@@ -30,17 +31,11 @@
 
 
 
-//Initialize static
-GNUNET_CONFIGURATION_Handle * GNUNet::m_config;
-
-
-
 GNUNet::GNUNet(QObject *parent) :
     ServiceObject(parent)
 {
 
     m_connected = false;
-    //status = new ServiceStatus();
 
 }
 
@@ -69,25 +64,51 @@ void GNUNet::keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext
     Q_ASSERT(cls);
 
     //Process the events
-    gnunetInstance->ProcessEvents();
+    gnunetInstance->processEvents();
     gnunetInstance->filesharing()->ProcessEvents();
 
     //Call again in 500 millisecond.
     GNUNET_SCHEDULER_add_delayed (GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_MILLISECONDS, 500), &keepaliveTask, gnunetInstance);
 }
 
+static void
+armConnectionStateChangeCallback (void *cls,
+                             int connected)
+{
+    char *service_list;
+    GNUNet* gnunetInstance = (GNUNet*)cls;
+    Q_ASSERT(cls);
+
+
+    gnunetInstance->armConnectionStateChange(connected);
+
+}
+
+static void
+serviceStatusChange (void *cls,
+                       const char *service,
+                       enum GNUNET_ARM_ServiceStatus status)
+{
+    /* Very crude, we can probably do better.
+   * Maybe keep a list of running services, and modify it in response
+   * to service status changes, then update the indicator,
+   * without requesting a list from ARM every goddamned time?
+   */
+    /* GNUNET_ARM_request_service_list (arm,
+                   SERVICE_LIST_TIMEOUT,
+                   &service_list_callback, cls);*/
+}
 
 
 
-void GNUNet::Start()
+
+void GNUNet::start()
 {
 
-    //TODO: Remove this sleep. Its here because we need so time after starting the process.
-    //If we start too fast, we lose some messages.
-    sleep(2);
 
-    m_filesharing = new FileSharing();
-    m_network = new NetworkManager();
+    m_filesharing = new FileSharing(this);
+    m_network = new NetworkManager(this);
+    m_publish = new Publish(this);
 
     connect(m_network, &NetworkManager::connectedPeersChanged, this, &GNUNet::setConnectedPeers, Qt::QueuedConnection);
 
@@ -139,13 +160,12 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
             GNUNET_CONFIGURATION_get_value_filename (m_config, "PEER", "PRIVATE_KEY",
                                                      &fn))
     {
-        FPRINTF (stderr, _("Could not find option `%s:%s' in configuration.\n"),
-                 "GNUNETD", "HOSTKEYFILE");
+        qWarning() << QString("Could not find option `GNUNETD:HOSTKEYFILE' in configuration.\n");
         return;
     }
     if (NULL == (priv = GNUNET_CRYPTO_ecc_key_create_from_file (fn)))
     {
-        FPRINTF (stderr, _("Loading hostkey from `%s' failed.\n"), fn);
+        qWarning() << QString("Loading hostkey from %1 failed.\n").arg(fn);
         GNUNET_free (fn);
         return;
     }
@@ -160,72 +180,62 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
     GNUNET_SCHEDULER_add_now ( keepaliveTask, this);
 
 
+    //Start arm
+    m_arm = GNUNET_ARM_connect (m_config, &armConnectionStateChangeCallback, this);
+    m_armon = GNUNET_ARM_monitor (m_config, serviceStatusChange, this);
 
-    StartServices();
+
+    //Start the services when arm is connected
+    connect(this,&GNUNet::gnunetConnected, this, &GNUNet::startServices);
 
 
 }
 
-static void
-arm_connection_state_change (void *cls,
-                             int connected)
+void GNUNet::armConnectionStateChange (int connected)
 {
-    char *service_list;
-    GNUNet* gnunetInstance = (GNUNet*)cls;
-    Q_ASSERT(cls);
-
 
     if (connected)
     {
 
-        gnunetInstance->setConnected(true);
-        /*
-    service_list = format_service_list (0, NULL);
-    GNUNET_FS_GTK_update_connection_indicator (cls, TRUE, service_list);
-    GNUNET_free_non_null (service_list);
-    GNUNET_ARM_request_service_list (arm, SERVICE_LIST_TIMEOUT,
-                     &service_list_callback, cls);*/
+        setConnected(true);
+
+        emit gnunetConnected();
+
+        //TODO: Implement working services list retrival.
     }
     else
     {
-        gnunetInstance->setConnected(false);
-        /*GNUNET_FS_GTK_update_connection_indicator (cls, FALSE,
-          _("Can't connect to the Automatic Restart Manager service."));*/
+        setConnected(false);
+        qWarning() << tr("Failed to connect to GNUNet arm");
     }
 
 }
 
-static void
-service_status_change (void *cls,
-                       const char *service,
-                       enum GNUNET_ARM_ServiceStatus status)
-{
-    /* Very crude, we can probably do better.
-   * Maybe keep a list of running services, and modify it in response
-   * to service status changes, then update the indicator,
-   * without requesting a list from ARM every goddamned time?
-   */
-    /* GNUNET_ARM_request_service_list (arm,
-                   SERVICE_LIST_TIMEOUT,
-                   &service_list_callback, cls);*/
-}
 
 
-
-
-void GNUNet::StartServices()
+void GNUNet::startServices()
 {
     m_network->start(m_config);
     m_filesharing->start(m_config);
 
-    //Start arm
-    m_arm = GNUNET_ARM_connect (m_config, &arm_connection_state_change, this);
-    m_armon = GNUNET_ARM_monitor (m_config, service_status_change, this);
+
+
+    emit gnunetStarted();
 }
 
-void GNUNet::ProcessEvents()
+void GNUNet::processEvents()
 {
     QCoreApplication::processEvents();
     m_filesharing->ProcessEvents();
 }
 
+
+GNUNET_CRYPTO_EccPublicKeyBinaryEncoded GNUNet::myPublicKey() const
+{
+    return m_myPublicKey;
+}
+
+void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EccPublicKeyBinaryEncoded &myPublicKey)
+{
+    m_myPublicKey = myPublicKey;
+}

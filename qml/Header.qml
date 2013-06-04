@@ -1,6 +1,7 @@
-import QtQuick 2.0
+import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
+import QtQuick.Controls.Private 1.0
 
 import Cangote 1.0
 
@@ -8,7 +9,16 @@ import Cangote 1.0
 ToolBar {
     id:toolbar
     height: 40
+
+    style: ToolBarStyle{
+        padding.left: 0
+        padding.right: 0
+        padding.top: 0
+        padding.bottom: 0
+    }
+
     BorderImage {
+
 
         border.bottom: 1
         anchors.fill: parent
@@ -40,8 +50,7 @@ ToolBar {
             }
 
             style: TextFieldStyle {
-                leftMargin: 30
-                rightMargin: 25
+                padding { top: 4 ; left: 30 ; right: 25 ; bottom:4 }
 
                 background: BorderImage {
                     border.left: 14
@@ -64,6 +73,8 @@ ToolBar {
                 anchors.right: parent.right
                 iconName: "images/toolbar/search-clear"
                 anchors.rightMargin: 6
+                height: 15
+                width: 15
                 visible: searchField.text.length
                 onClicked: searchField.text = ""
             }

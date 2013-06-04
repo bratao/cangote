@@ -154,6 +154,11 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 
     SearchResult* newresult = m_model->addResult();
 
+    if(newresult == NULL)
+    {
+        qWarning() << "Fail creating a search";
+        return NULL;
+    }
 
 
     newresult->setApplicabilityRank(applicability_rank,false);
@@ -173,7 +178,6 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 
 
     return newresult;
-
 
 
 }

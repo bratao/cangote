@@ -68,7 +68,7 @@ Button {
             height: button.height ? button.height : implicitHeight
         }
 
-        backgroundColor: button.enabled ? "white" : "#999999"
+      //  backgroundColor: button.enabled ? "white" : "#999999"
 //        text.font.pixelSize: 12
 //        text.color: button.enabled ? "white" : "#999999"
 //        text.style: button.enabled ? Text.Sunken : Text.Normal

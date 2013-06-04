@@ -5,9 +5,12 @@ import Cangote 1.0
 Item {
     property string searchTerm
     property var searchModel
+
+    //Tooltip support.
     property bool needTooltip: false
     property real tooltipX: 0
     property real tooltipY: 0
+    property int tooltipIndex: -1
     anchors.fill: parent
 
     id: resultPage
@@ -28,88 +31,118 @@ Item {
     //The tooltip
     Tooltip {
         id: tooltip
-        states: State {
-            name: "inuse"
-            when: needTooltip
-            PropertyChanges {
-                target: tooltip
-                visible: true
-                x: tooltipX
-                y: tooltipY
+        x: tooltipX
+        y: tooltipY
+        states: [
+            State {
+                name: "inuse"
+                when: needTooltip
+                PropertyChanges {
+                    target: tooltip
+                    visible: true
+                    opacity:0.7
+
+                }
+            },
+            State {
+                name: "notinuse"
+                when: !needTooltip
+                PropertyChanges {
+                    target: tooltip
+                    visible: false
+                    opacity:0.0
+                }
             }
-        }
+        ]
+
+            transitions: Transition {
+                to: "inuse"
+                PropertyAnimation {target: tooltip; property: "opacity"; duration: 2000; easing.type: Easing.InCirc }
+
+            }
     }
 
 
-    TableView
-    {
-        id: searchResultList
-        anchors.fill: parent
-        model: searchModel
+            TableView
+            {
+                id: searchResultList
+                anchors.fill: parent
+                model: searchModel
 
 
-        onActivated:
-        {
-            model.getResult(currentRow).download()
-            //result.download()
-            console.log("TODO: Double clicked.")
-        }
+                onActivated:
+                {
+                    model.getResult(currentRow).download()
+                    console.log("TODO: Double clicked.")
+                }
 
-        itemDelegate: Item {
-            id: item
 
+                TableViewColumn
+                {
+                    title: "Name"
+                    role: "filename"
+                }
+
+                TableViewColumn
+                {
+                    title: "Size"
+                    role: "filesize"
+                    delegate:Item{
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: styleData.textColor
+                            elide: styleData.elideMode
+                            text: Utils.friendlyUnit(styleData.value,false)
+                            renderType: Text.NativeRendering
+                        }
+                    }
+                }
+
+            }
             MouseArea {
                 id: ma
-                anchors.fill:  parent
-                acceptedButtons:  Qt.RightButton
-                propagateComposedEvents: true
+                anchors.fill: searchResultList
                 hoverEnabled: true
+                acceptedButtons: Qt.RightButton
 
                 onMouseXChanged: {
-                    tooltipX= ma.mapToItem(resultPage,mouseX,0).x
-                    tooltipY= ma.mapToItem(resultPage,0,mouseY).y
+                    var index = searchResultList.rowAt(mouse.x, mouse.y)
+                    if (index !== -1){
+                        if(index !== tooltipIndex )
+                        {
+                           tooltipIndex = index
+                           needTooltip = false
+                        }
+
+                        tooltipX= ma.mapToItem(resultPage,mouseX,0).x
+                        tooltipY= ma.mapToItem(resultPage,0,mouseY).y
+                        tooltip.searchTerm = index
+                        needTooltip = ma.containsMouse
+
+                    }
+                    else
+                    {
+                        needTooltip = false
+                    }
                 }
 
                 onHoveredChanged: {
-                    needTooltip=ma.containsMouse
-                    tooltipX= ma.mapToItem(resultPage,mouseX,0).x
-                    tooltipY= ma.mapToItem(resultPage,0,mouseY).y
-                    tooltip.searchTerm = itemValue
+                    needTooltip= ma.containsMouse
                 }
 
-                onPressed: {
-                    contextMenu.popup(mouseX,mouseY,0, parent)
-                    searchResultList.currentRow = rowIndex
 
+                onClicked: {
+
+                    var index = searchResultList.rowAt(mouse.x, mouse.y)
+                    if (index !== -1){
+
+
+                        searchResultList.forceActiveFocus()
+                        searchResultList.currentRow = index
+                    }
+
+                    contextMenu.popup()
                 }
             }
-            Text {
-                anchors.fill:  parent
-                anchors.verticalCenter: parent.verticalCenter
-                elide: Text.ElideRight
-                text: itemValue
-            }
-        }
-
-
-
-        TableViewColumn
-        {
-            title: "Name"
-            role: "filename"
-        }
-
-        TableViewColumn
-        {
-            title: "Size"
-            role: "filesize"
-            delegate:Item{
-                Text {
-                    text: Utils.friendlyUnit(itemValue,false)
-                }
-            }
-        }
 
     }
-
-}

@@ -32,16 +32,26 @@ public:
     ~GNUNetLauncher();
     
     
-    void startServices();
-    void stopServices();
-    void setEnvironment();
-    bool startResolver();
-    void connectSignals();
-    
-    void relaunchServices();
+    void relaunchServices()
+    {
+        emit relaunchServicesSignal();
+    }
+    void stop()
+    {
+        emit stopSignal();
+    }
+
+
 signals:
-    
+    void relaunchServicesSignal();
+    void stopSignal();
+
 public slots:
+    void start();
+    void stopSlot();
+
+private slots:
+    void relaunchServicesSlot();
     void CoreError(QProcess::ProcessError error);
     void finished(int exitCode, QProcess::ExitStatus exitStatus);
     void errorHandler(QProcess::ProcessError error);
@@ -57,6 +67,12 @@ private:
 
     
     void cleanOldProcesses();
+
+    void setEnvironment();
+    bool startResolver();
+    void connectSignals();
+
+
 };
 
 #endif // GNUNETLAUNCHER_H

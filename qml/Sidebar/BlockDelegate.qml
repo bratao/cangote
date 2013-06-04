@@ -79,6 +79,8 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 5
             iconName: "images/toolbar/search-clear"
+            height: 15
+            width: 15
             visible: true
             onClicked: {
                 console.log("clicked !")

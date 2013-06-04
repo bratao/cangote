@@ -18,22 +18,23 @@
      Boston, MA 02111-1307, USA.
 */
 
-#include "PublishFileModel.h"
-
-
-PublishFileModel::PublishFileModel(QObject *parent) :
+#include "PublishModel.h"
+#include "core/gnunet/filesharing/publish/publish.h"
+#include "core/gnunet/filesharing/publish/publishfile.h"
+PublishModel::PublishModel(QObject *parent) :
     QAbstractListModel(parent)
 {
 
+    connect(this, &PublishModel::addFileSignal, this, &PublishModel::addFileSlot);
 
 
 }
-int PublishFileModel::rowCount(const QModelIndex& parent) const
+int PublishModel::rowCount(const QModelIndex& parent) const
 {
     return m_data.size();
 }
 
-QVariant PublishFileModel::data(const QModelIndex& index, int role) const
+QVariant PublishModel::data(const QModelIndex& index, int role) const
 {
 
     //Search* search = m_data[index.row()];
@@ -42,13 +43,13 @@ QVariant PublishFileModel::data(const QModelIndex& index, int role) const
     switch(role)
     {
 
-    case TERM:
+    case NAME:
         //return search->getTerm();
         break;
-    case NUM_RESULTS:
+    case PATH:
         return 0;//search->num_results;
         break;
-    case SEARCH:
+    case TYPE:
         //return search;
         break;
     default:
@@ -60,11 +61,11 @@ QVariant PublishFileModel::data(const QModelIndex& index, int role) const
 }
 
 
-QHash<int, QByteArray> PublishFileModel::roleNames() const {
+QHash<int, QByteArray> PublishModel::roleNames() const {
     QHash<int, QByteArray> roles;
-    roles[TERM]                   = "term";
-    roles[NUM_RESULTS]            = "numResults";
-    roles[SEARCH]                 = "Search";
+    roles[NAME]                   = "name";
+    roles[PATH]                   = "path";
+    roles[TYPE]                   = "type";
 
 
 
@@ -72,16 +73,35 @@ QHash<int, QByteArray> PublishFileModel::roleNames() const {
 }
 
 
-PublishFile*  PublishFileModel::addFile(QString path )
+PublishFile*  PublishModel::addFile(QString path )
 {
 
+    PublishFile* file = new PublishFile();
+
+    emit addFileSignal(file);
+
     return NULL;
+
+}
+
+PublishFile*  PublishModel::addFileSlot(PublishFile* file)
+{
+    int count = m_data.count();
+
+    beginInsertRows(QModelIndex(), count, count);
+
+    m_data.append(file);
+    //connect(download, &DownloadItem::modifiedSignal,this, &DownloadsModel::resultModifiedSlot);
+    //download->setIndex(count);
+
+    endInsertRows();
+
+
 }
 
 
 
-
-PublishFile* PublishFileModel::getPublishedFile(int index)
+PublishFile* PublishModel::getPublishedFile(int index)
 {
     if ((index < 0) || (index >= m_data.count()))
         return NULL;
@@ -91,7 +111,8 @@ PublishFile* PublishFileModel::getPublishedFile(int index)
 
 }
 
-int PublishFileModel::getCount()
+int PublishModel::getCount()
 {
     return m_data.count();
 }
+

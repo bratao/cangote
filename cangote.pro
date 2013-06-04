@@ -14,8 +14,8 @@ QMAKE_LFLAGS_RELEASE =
 
 }
 win32 {
-   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lgnunetarm -lws2_32 -lintl -lextractor
-    INCLUDEPATH += C:/sbuild/mingw/include
+   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunethello -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lgnunetarm -lws2_32 -lintl -lextractor
+    INCLUDEPATH += C:/sbuild_old/mingw/include
 }
 
 RC_ICONS = asserts\CangoteHead.ico
@@ -47,8 +47,10 @@ SOURCES += \
     models/SharedFilesModel.cpp \
     preferences/preferences.cpp \
     utils/utils.cpp \
-    models/PublishFileModel.cpp \
-    core/publish/publishfile.cpp
+    core/gnunet/network/gnunettransportplugins.cpp \
+    core/gnunet/filesharing/publish/publish.cpp \
+    models/PublishModel.cpp \
+    core/gnunet/filesharing/publish/publishfile.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -116,5 +118,8 @@ HEADERS += \
     models/SharedFilesModel.h \
     preferences/preferences.h \
     utils/utils.h \
-    models/PublishFileModel.h \
-    core/publish/publishfile.h
+    core/gnunet/network/gnunettransportplugins.h \
+    core/publish/publishfiles.h \
+    core/gnunet/filesharing/publish/publish.h \
+    models/PublishModel.h \
+    core/gnunet/filesharing/publish/publishfile.h

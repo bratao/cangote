@@ -40,9 +40,6 @@
 #include "models/models.h"
 
 
-//Initialize statics
-GNUNET_FS_Handle * FileSharing::fs;
-
 
 FileSharing::FileSharing(QObject *parent) :
     ServiceObject(parent)
@@ -63,7 +60,7 @@ void FileSharing::start(struct GNUNET_CONFIGURATION_Handle *config)
 {
 
 
-    this->config = config;
+    this->m_config = config;
 
     unsigned int dl_parallel = 128;
     unsigned int req_parallel = 100000;
@@ -71,7 +68,7 @@ void FileSharing::start(struct GNUNET_CONFIGURATION_Handle *config)
 
     /* initialize file-sharing */
 
-    fs = GNUNET_FS_start (config, "gnunet-qt",
+    m_fs = GNUNET_FS_start (config, "gnunet-qt",
                           GNUNET_fs_event_handler_callback, NULL,
                           (GNUNET_FS_Flags)(GNUNET_FS_FLAGS_PERSISTENCE | GNUNET_FS_FLAGS_DO_PROBES),
                           GNUNET_FS_OPTIONS_DOWNLOAD_PARALLELISM,
@@ -80,7 +77,7 @@ void FileSharing::start(struct GNUNET_CONFIGURATION_Handle *config)
                           (unsigned int) req_parallel,
                           GNUNET_FS_OPTIONS_END);
 
-    if (fs == NULL)
+    if (m_fs == NULL)
     {
         qWarning("Fs failed");
         //status->setErrorState("FS failed to start");
@@ -88,7 +85,7 @@ void FileSharing::start(struct GNUNET_CONFIGURATION_Handle *config)
     else
     {
         //status->setOkState();
-        m_sharedFiles->init(fs);
+        m_sharedFiles->init(m_fs);
     }
 }
 
@@ -96,7 +93,7 @@ void *
 FileSharing::GNUNET_fs_event_handler_callback (void *cls,
                                                const struct GNUNET_FS_ProgressInfo *info)
 {
-    return theApp->gnunet()->filesharing()->GNUNET_fs_event_handler(cls,info);
+    return theApp->gnunet()->filesharing()->eventHandler(cls,info);
 }
 
 
@@ -126,7 +123,7 @@ FileSharing::GNUNET_fs_event_handler_callback (void *cls,
  *                model at 'iter')
  */
 struct SearchResult *
-        FileSharing::setup_inner_search (struct GNUNET_FS_SearchContext *sc,
+        FileSharing::setupInnerSearch (struct GNUNET_FS_SearchContext *sc,
                                          struct SearchResult *parent)
 {
 
@@ -144,7 +141,7 @@ struct SearchResult *
  * @return search tab handle
  */
 Search*
-        FileSharing::setup_search_tab (struct GNUNET_FS_SearchContext *sc,
+        FileSharing::setupSearch (struct GNUNET_FS_SearchContext *sc,
                                        const struct GNUNET_FS_Uri *query)
 {
 
@@ -188,7 +185,7 @@ Search*
  * @param emsg the error message
  */
 void
-FileSharing::handle_search_error (struct SearchTab *tab,
+FileSharing::searchError (struct SearchTab *tab,
                                   const char *emsg)
 {
     /*
@@ -215,7 +212,7 @@ FileSharing::handle_search_error (struct SearchTab *tab,
  *                model at 'iter')
  */
 struct SearchResult *
-        FileSharing::process_search_result (Search* search,
+        FileSharing::processSearch (Search* search,
                                             struct SearchResult *parent,
                                             const struct GNUNET_FS_Uri *uri,
                                             const struct GNUNET_CONTAINER_MetaData *meta,
@@ -253,7 +250,7 @@ struct SearchResult *
  * @param applicability_rank updated applicability information
  */
 void
-FileSharing::update_search_result (SearchResult *sr,
+FileSharing::updateSearch (SearchResult *sr,
                                    const struct GNUNET_CONTAINER_MetaData *meta,
                                    int applicability_rank,
                                    int availability_rank,
@@ -288,7 +285,7 @@ FileSharing::update_search_result (SearchResult *sr,
  * @param tab search tab to close
  */
 void
-FileSharing::close_search_tab (struct Search *tab)
+FileSharing::closeSearch (struct Search *tab)
 {
 
     tab->close();
@@ -305,7 +302,7 @@ FileSharing::close_search_tab (struct Search *tab)
  * @param sr the search result to clean up
  */
 void
-FileSharing::free_search_result (struct SearchResult *sr)
+FileSharing::freeSearch (struct SearchResult *sr)
 {
 
     if (NULL == sr)
@@ -332,7 +329,7 @@ FileSharing::free_search_result (struct SearchResult *sr)
 
 
 void *
-FileSharing::GNUNET_fs_event_handler (void *cls,
+FileSharing::eventHandler (void *cls,
                                       const struct GNUNET_FS_ProgressInfo *info)
 {
     void *ret;
@@ -453,25 +450,25 @@ FileSharing::GNUNET_fs_event_handler (void *cls,
         //
     case GNUNET_FS_STATUS_SEARCH_START:
         if (NULL != info->value.search.pctx)
-            return setup_inner_search (info->value.search.sc,
+            return setupInnerSearch (info->value.search.sc,
                                               (SearchResult*)info->value.search.pctx);
-        return (void*)setup_search_tab (info->value.search.sc, info->value.search.query);
+        return (void*)setupSearch (info->value.search.sc, info->value.search.query);
     case GNUNET_FS_STATUS_SEARCH_RESUME:
-        ret = (void*)setup_search_tab (info->value.search.sc, info->value.search.query);
+        ret = (void*)setupSearch (info->value.search.sc, info->value.search.query);
         if (info->value.search.specifics.resume.message)
-            handle_search_error ((SearchTab*)ret,
+            searchError ((SearchTab*)ret,
                                  info->value.search.specifics.resume.message);
         return ret;
     case GNUNET_FS_STATUS_SEARCH_RESUME_RESULT:
         ret =
-                process_search_result ((Search*)info->value.search.cctx, (SearchResult*)info->value.search.pctx,
+                processSearch ((Search*)info->value.search.cctx, (SearchResult*)info->value.search.pctx,
                                        info->value.search.specifics.resume_result.uri,
                                        info->value.search.specifics.resume_result.meta,
                                        info->value.search.specifics.resume_result.
                                        result,
                                        info->value.search.specifics.resume_result.
                                        applicability_rank);
-        update_search_result ((SearchResult*)ret,
+        updateSearch ((SearchResult*)ret,
                               info->value.search.specifics.resume_result.
                               meta,
                               info->value.search.specifics.resume_result.
@@ -482,10 +479,10 @@ FileSharing::GNUNET_fs_event_handler (void *cls,
                               availability_certainty);
         return ret;
     case GNUNET_FS_STATUS_SEARCH_SUSPEND:
-        close_search_tab ((Search*)info->value.search.cctx);
+        closeSearch ((Search*)info->value.search.cctx);
         return NULL;
     case GNUNET_FS_STATUS_SEARCH_RESULT:
-        return process_search_result ((Search*)info->value.search.cctx,
+        return processSearch ((Search*)info->value.search.cctx,
                                       (SearchResult*)info->value.search.pctx,
                                       info->value.search.specifics.result.uri,
                                       info->value.search.specifics.result.meta,
@@ -496,7 +493,7 @@ FileSharing::GNUNET_fs_event_handler (void *cls,
         GNUNET_break (0);
         break;
     case GNUNET_FS_STATUS_SEARCH_UPDATE:
-        update_search_result ((SearchResult*)info->value.search.specifics.update.cctx,
+        updateSearch ((SearchResult*)info->value.search.specifics.update.cctx,
                               info->value.search.specifics.update.meta,
                               info->value.search.specifics.update.
                               applicability_rank,
@@ -506,7 +503,7 @@ FileSharing::GNUNET_fs_event_handler (void *cls,
                               availability_certainty);
         return info->value.search.specifics.update.cctx;
     case GNUNET_FS_STATUS_SEARCH_ERROR:
-        handle_search_error ((SearchTab*)info->value.search.cctx,
+        searchError ((SearchTab*)info->value.search.cctx,
                              info->value.search.specifics.error.message);
         return info->value.search.cctx;
     case GNUNET_FS_STATUS_SEARCH_PAUSED:
@@ -514,13 +511,13 @@ FileSharing::GNUNET_fs_event_handler (void *cls,
     case GNUNET_FS_STATUS_SEARCH_CONTINUED:
         return info->value.search.cctx;
     case GNUNET_FS_STATUS_SEARCH_RESULT_STOPPED:
-        free_search_result ((SearchResult*)info->value.search.specifics.result_stopped.cctx);
+        freeSearch ((SearchResult*)info->value.search.specifics.result_stopped.cctx);
         return NULL;
     case GNUNET_FS_STATUS_SEARCH_RESULT_SUSPEND:
-        free_search_result ((SearchResult*)info->value.search.specifics.result_suspend.cctx);
+        freeSearch ((SearchResult*)info->value.search.specifics.result_suspend.cctx);
         return NULL;
     case GNUNET_FS_STATUS_SEARCH_STOPPED:
-        close_search_tab ((Search*)info->value.search.cctx);
+        closeSearch ((Search*)info->value.search.cctx);
         return NULL;
         /*
 case GNUNET_FS_STATUS_UNINDEX_START:
@@ -583,7 +580,7 @@ void FileSharing::searchSlot(QString terms, int anonLevel)
 
     /* start search */
     //qWarning("FIX ME !! IMPLEMENT FS_SEARCH !");
-    GNUNET_FS_search_start (fs,
+    GNUNET_FS_search_start (m_fs,
                             uri, anonLevel,
                             GNUNET_FS_SEARCH_OPTION_NONE, NULL);
     GNUNET_FS_uri_destroy (uri);
@@ -602,7 +599,7 @@ void FileSharing::downloadFromSearch(SearchResult* searchResult)
     //TODO: Pass a download context
 
 
-    dc= GNUNET_FS_download_start (fs,
+    dc= GNUNET_FS_download_start (m_fs,
                                   searchResult->getUri(),
                                   searchResult->getMeta() /* meta data */,
                                   searchResult->getFilename().toUtf8(), NULL /* tempname */ ,

@@ -27,6 +27,7 @@ class SearchModel;
 class NetworkPeersModel;
 class DownloadsModel;
 class SharedFilesModel;
+class PublishModel;
 class Models : public QObject
 {
     Q_OBJECT
@@ -34,6 +35,8 @@ class Models : public QObject
     Q_PROPERTY(NetworkPeersModel * networkModel READ networkModel NOTIFY networkModelChanged)
     Q_PROPERTY(DownloadsModel * downloadsModel READ downloadsModel NOTIFY downloadsModelChanged)
     Q_PROPERTY(SharedFilesModel * sharedModel READ sharedModel NOTIFY sharedModelChanged)
+
+    Q_PROPERTY(PublishModel * publishModel READ publishModel NOTIFY publishModelChanged)
 
 public:
     explicit Models(QObject *parent = 0);
@@ -51,11 +54,15 @@ public:
     SharedFilesModel* sharedModel() const
     { return m_shared; }
 
+    PublishModel* publishModel() const
+    { return m_publish; }
+
 signals:
     void searchModelChanged(SearchModel*);
     void networkModelChanged(NetworkPeersModel*);
     void downloadsModelChanged(DownloadsModel*);
     void sharedModelChanged(SharedFilesModel*);
+    void publishModelChanged(PublishModel*);
 public slots:
 
 private:
@@ -63,8 +70,10 @@ private:
     NetworkPeersModel* m_network;
     DownloadsModel* m_downloads;
     SharedFilesModel* m_shared;
+    PublishModel* m_publish;
 
 };
 
 #endif // MODELS_H
+
 

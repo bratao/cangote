@@ -37,5 +37,7 @@
 #include <gnunet/gnunet_nse_service.h>
 #include <gnunet/gnunet_core_service.h>
 #include <gnunet/gnunet_arm_service.h>
+#include <gnunet/gnunet_transport_plugin.h>
+#include <gnunet/gnunet_hello_lib.h>
 
 #endif // GNUNET_INCLUDES_H

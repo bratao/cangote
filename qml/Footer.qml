@@ -1,7 +1,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Private 1.0
-
+import QtQuick.Layouts 1.0
 import Cangote 1.0
 
 Rectangle {
@@ -37,7 +37,7 @@ Rectangle {
     }
 
 
-    Row{
+    RowLayout{
         anchors.verticalCenter: parent.verticalCenter
         Rectangle{
             id:statusIcon
@@ -45,7 +45,7 @@ Rectangle {
             property int mouseX: ma.mouseX
             property int mouseY: ma.mouseY
             height: 15
-            width: 150
+            width: 15
             radius: 20
             color: Cangote.connected ? "green": "red"
 
@@ -61,7 +61,15 @@ Rectangle {
         }
 
         Text{
-            text: qsTr("Connected to: ") + Cangote.connectedPeers + qsTr(" peers")
+            text: qsTr("Connected to: ") + Cangote.connectedPeers + qsTr(" peers") +
+                  "(" + Cangote.estimatedNodes + ")"
+            renderType: Text.NativeRendering
+        }
+
+        Text{
+            text: qsTr("In: ") + Cangote.incomingBand + qsTr(" K/b ") +
+                  qsTr("Out: ") + Cangote.outgoingBand + qsTr(" K/b ")
+            renderType: Text.NativeRendering
         }
     }
 

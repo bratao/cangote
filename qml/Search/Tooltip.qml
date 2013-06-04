@@ -14,4 +14,7 @@ Rectangle {
         anchors.centerIn: parent
         text: searchTerm
     }
+
+
+
 }

@@ -64,31 +64,6 @@ Item
         model:Cangote.models.downloadsModel
 
 
-        itemDelegate: Item {
-
-            MouseArea {
-                anchors.fill:  parent
-                acceptedButtons: Qt.RightButton
-                onPressed: {
-                    contextMenu.popup(mouseX,mouseY,0, parent)
-                    transfersList.currentRow = rowIndex
-                }
-            }
-            Text {
-                anchors.fill:  parent
-                anchors.verticalCenter: parent.verticalCenter
-                elide: Text.ElideRight
-                text: itemValue
-             }
-         }
-
-
-
-
-
-
-
-
         TableViewColumn{
             title: "Name"
             role: "name"
@@ -99,7 +74,7 @@ Item
             role: "size"
             delegate:Item{
                 Text {
-                    text: Utils.friendlyUnit(itemValue,false)
+                    text: Utils.friendlyUnit(styleData.value,false)
                 }
             }
         }
@@ -113,7 +88,7 @@ Item
                     anchors.fill: parent
                     minimumValue: 0
                     maximumValue: 100
-                    value: itemValue
+                    value: styleData.value
                 }
             }
         }
@@ -149,6 +124,21 @@ Item
         TableViewColumn{
             title: "Time Elapsed"
             role: "timeElapsed"
+        }
+    }
+    MouseArea {
+        anchors.fill: transfersList
+        hoverEnabled: true
+        acceptedButtons: Qt.RightButton
+        onClicked: {
+
+            var index = transfersList.rowAt(mouse.x, mouse.y)
+            if (index !== -1){
+                transfersList.forceActiveFocus()
+                transfersList.currentRow = index
+            }
+
+            contextMenu.popup()
         }
     }
 

@@ -10,6 +10,8 @@
 #include "core/gnunet/network/NetworkManager.h"
 #include "core/gnunet/filesharing/search/search.h"
 #include "core/gnunet/filesharing/filesharing.h"
+#include "core/gnunet/filesharing/publish/publish.h"
+#
 
 #include "models/SearchModel.h"
 #include "models/models.h"
@@ -17,6 +19,7 @@
 #include "models/NetworkPeersModel.h"
 #include "models/DownloadsModel.h"
 #include "models/SharedFilesModel.h"
+#include "models/PublishModel.h"
 
 #include "core/gnunet/filesharing/search/searchresult.h"
 
@@ -83,6 +86,7 @@ void Cangote::registerQmlTypes()
 
     qmlRegisterUncreatableType<FileSharing>(URI, 1, 0, "FileSharing", QLatin1String("Use calling the gnunet method."));
     qmlRegisterUncreatableType<Search>(URI, 1, 0, "Search", QLatin1String("Use calling the gnunet method."));
+    qmlRegisterUncreatableType<Publish>(URI, 1, 0, "Publish", QLatin1String("Use calling the gnunet method."));
 
     //Register models
     qmlRegisterUncreatableType<Models>(URI, 1, 0, "Models", QLatin1String("Use calling the gnunet method."));
@@ -91,9 +95,11 @@ void Cangote::registerQmlTypes()
     qmlRegisterUncreatableType<DownloadsModel>(URI, 1, 0, "DownloadsModel", QLatin1String("Use calling the gnunet method."));
     qmlRegisterUncreatableType<SharedFilesModel>(URI, 1, 0, "SharedFilesModel", QLatin1String("Use calling the gnunet method."));
     qmlRegisterUncreatableType<NetworkPeersModel>(URI, 1, 0, "NetworkPeersModel", QLatin1String("Use calling the gnunet method."));
+    qmlRegisterUncreatableType<PublishModel>(URI, 1, 0, "PublishModel", QLatin1String("Use calling the gnunet method."));
 
 
     qmlRegisterUncreatableType<SearchResult>(URI, 1, 0, "SearchResult", QLatin1String("Use calling the gnunet method."));
+
 
 }
 

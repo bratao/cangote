@@ -18,19 +18,29 @@ CangoteCore::CangoteCore(QObject *parent) :
     theApp = this;
     m_connected = false;
     m_connectedPeers = 0;
-    m_launcher = new GNUNetLauncher(this);
+    m_numEstimateNodes = 0;
+    m_outgoingBand = 0;
+    m_incomingBand = 0;
+    m_launcher = new GNUNetLauncher();
 
     m_models = new Models(this);
 
 
-    startGNUNet();
+    //Launcher services
+    startLauncher();
 
 
-
+    //Timer to try to connect to arm
     m_armConnectTimer = new QTimer(this);
     connect(m_armConnectTimer, SIGNAL(timeout()), this, SLOT(armTimeOut()));
 
+    //The processing timer
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(process()));
+    m_timer->start(1000);
 
+    //Finally start gnunet
+    startGNUNet();
 
 }
 
@@ -38,8 +48,14 @@ CangoteCore::CangoteCore(QObject *parent) :
 
 CangoteCore::~CangoteCore()
 {
+    m_launcher->stop();
 }
 
+void CangoteCore::process()
+{
+    //TODO: Timer !
+
+}
 
 void CangoteCore::armTimeOut()
 {
@@ -54,6 +70,22 @@ void CangoteCore::armTimeOut()
 
 }
 
+void CangoteCore::startLauncher()
+{
+    //New thread where the will be run on.
+    m_launcherThread = new QThread();
+
+    m_launcher->moveToThread(m_launcherThread);
+
+    // Call the start function after our thread is ready to run
+    m_launcher->connect(m_launcherThread,
+                    SIGNAL(started()),
+                    SLOT(start()));
+
+    m_launcherThread->start();
+
+
+}
 
 void CangoteCore::startGNUNet()
 {
@@ -68,20 +100,24 @@ void CangoteCore::startGNUNet()
     // Call the start function after our thread is ready to run
     m_gnunet->connect(m_gnunetThread,
                     SIGNAL(started()),
-                    SLOT(Start()));
+                    SLOT(start()));
 
     m_gnunetThread->start();
 
     connect(m_gnunet, &GNUNet::connectedChanged, this, &CangoteCore::setConnected, Qt::QueuedConnection);
     connect(m_gnunet, &GNUNet::connectedPeersChanged, this, &CangoteCore::setConnectedPeers, Qt::QueuedConnection);
+    connect(m_gnunet, &GNUNet::gnunetStarted, this, &CangoteCore::gnunetStarted, Qt::QueuedConnection);
 }
 
-void CangoteCore::setConnectedPeers(int connected)
+void CangoteCore::gnunetStarted()
 {
 
-    m_connectedPeers = connected;
-    emit connectedPeersChanged(m_connectedPeers);
+     connect(m_gnunet->network(), &NetworkManager::estimatedNodesChanged, this, &CangoteCore::setEstimatedNodes, Qt::QueuedConnection);
+    connect(m_gnunet->network(), &NetworkManager::outgoingBandChanged, this, &CangoteCore::setOutgoingBand, Qt::QueuedConnection);
+    connect(m_gnunet->network(), &NetworkManager::incomingBandChanged, this, &CangoteCore::setIncomingBand, Qt::QueuedConnection);
+
 }
+
 
 void CangoteCore::setConnected(bool connected)
 {

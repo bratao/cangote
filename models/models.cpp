@@ -23,6 +23,7 @@
 #include "models/NetworkPeersModel.h"
 #include "models/DownloadsModel.h"
 #include "models/SharedFilesModel.h"
+#include "models/PublishModel.h"
 
 Models::Models(QObject *parent) :
     QObject(parent)
@@ -31,6 +32,7 @@ Models::Models(QObject *parent) :
     m_network = new NetworkPeersModel(this);
     m_downloads = new DownloadsModel(this);
     m_shared = new SharedFilesModel(this);
+    m_publish = new PublishModel(this);
 }
 
 Models::~Models()
@@ -52,4 +54,8 @@ Models::~Models()
     delete m_shared;
     m_shared = NULL;
    // emit sharedModelChanged(m_shared);
+
+    delete m_publish;
+    m_publish = NULL;
+    // emit sharedModelChanged(m_shared);
 }

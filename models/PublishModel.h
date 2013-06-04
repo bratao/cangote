@@ -18,19 +18,19 @@
      Boston, MA 02111-1307, USA.
 */
 
-#ifndef PUBLISHFILEMODEL_H
-#define PUBLISHFILEMODEL_H
+#ifndef PUBLISHMODEL_H
+#define PUBLISHMODEL_H
 
 #include <QAbstractListModel>
 
 class PublishFile;
-class PublishFileModel : public QAbstractListModel
+class PublishModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit PublishFileModel(QObject *parent = 0);
+    explicit PublishModel(QObject *parent = 0);
 
-    enum SearchRoles { TERM, NUM_RESULTS, SEARCH, NB_SEARCH_TABS };
+    enum SearchRoles { NAME, PATH, TYPE, NB_SEARCH_TABS };
 
     int getCount();
 
@@ -38,7 +38,11 @@ public:
     PublishFile *getPublishedFile(int index);
 public slots:
 
+signals:
+    void addFileSignal(PublishFile *file);
 
+private slots:
+    PublishFile *addFileSlot(PublishFile *file);
 private:
     int rowCount(const QModelIndex& parent) const;
     QVariant data(const QModelIndex& index, int role) const;
@@ -47,4 +51,4 @@ private:
     
 };
 
-#endif // PUBLISHFILEMODEL_H
+#endif // PUBLISHMODEL_H
