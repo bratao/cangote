@@ -1,6 +1,7 @@
 #include "publish.h"
 #include "cangote.h"
 
+
 #include <QString>
 #include <QFileDialog>
 #include <QFormLayout>
@@ -11,9 +12,16 @@
 
 
 #include "core/cangotecore.h"
+#include "core/status.h"
 #include "models/models.h"
 #include "models/PublishModel.h"
+
 #include "core/gnunet/filesharing/filesharing.h"
+#include "core/gnunet/gnunet.h"
+#include "core/gnunet/filesharing/publish/publishfile.h"
+
+
+
 
 
 
@@ -32,8 +40,8 @@ directoryScanStaticCallback (void *cls,
                              const char *filename, int is_directory,
                              enum GNUNET_FS_DirScannerProgressUpdateReason reason)
 {
-    Publish* publish = (Publish*)cls;
-    publish->directoryScanCallback(filename,is_directory,reason);
+    Publish* publish = ((Publish::AddContext*)cls)->publish;
+    publish->directoryScanCallback((Publish::AddContext*)cls,filename,is_directory,reason);
 
 
 
@@ -46,16 +54,18 @@ Publish::Publish(QObject *parent) :
     m_total = 0;
     m_done=0;
 
+    qRegisterMetaType<GNUNET_TIME_Absolute>("GNUNET_TIME_Absolute");
+
+    //Connect cross-thread signals
+    connect(this,&Publish::addFilesSignal,this,&Publish::addFilesSlot);
+
 
 }
 
+/*
+ * This function must be executed from the GUI thread.
+ */
 void Publish::filePicker()
-{
-    emit filePickerSignal();
-}
-
-
-void Publish::filePickerSlot()
 {
     QStringList fileNames;
 
@@ -98,14 +108,14 @@ void Publish::filePickerSlot()
     anonCombo->addItem("5 - Ultra high");
     anonCombo->addItem("10 - Paranoid");
 
-
+    QLabel* indexLabel = new QLabel(tr("Index:"),&dialog);
     QCheckBox* doIndex = new QCheckBox(tr("Index only"),&dialog);
 
     columnLayout1->addRow(expirationLabel,expirationCombo);
     columnLayout1->addRow(replicationLabel,replicationCombo);
     columnLayout2->addRow(priorityLabel,priorityCombo);
     columnLayout2->addRow(anonLabel,anonCombo);
-    columnLayout2->addRow(anonLabel,doIndex);
+    columnLayout2->addRow(indexLabel,doIndex);
 
     rowLayout->addLayout(columnLayout1);
     rowLayout->addLayout(columnLayout2);
@@ -115,7 +125,7 @@ void Publish::filePickerSlot()
     layout->addLayout(rowLayout,4,0,1,-1);
 
     //Set mode
-    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setViewMode(QFileDialog::Detail);
     dialog.setOption(QFileDialog::DontUseNativeDialog, true);
 
@@ -220,37 +230,47 @@ void Publish::filePickerSlot()
     for(QString fileName : fileNames)
     {
 
-        addFiles(fileName, anonlevel,priority,replication,expiration);
+        addFiles(fileName, anonlevel,priority,replication,expiration, doIndex->isChecked());
     }
     //return fileNames;
 
 }
 
 
-void Publish::addFiles(QString path, int anonlevel, int priority, int replication, GNUNET_TIME_Absolute expiration)
-{
-    char *filename;
-    GNUNET_FS_BlockOptions bo;
-    int do_index;
+/*
+ * This function must be executed from the GNUNET thread.
+ */
 
-    bo.anonymity_level = anonlevel;
-    bo.content_priority = priority;
-    bo.expiration_time = expiration;
-    bo.replication_level = replication;
+
+
+void Publish::addFilesSlot(QString path, int anonlevel, int priority, int replication, GNUNET_TIME_Absolute expiration, bool do_index)
+{
+
+    AddContext* ctx = new AddContext;
+
+    ctx->bo.anonymity_level = anonlevel;
+    ctx->bo.content_priority = priority;
+    ctx->bo.expiration_time = expiration;
+    ctx->bo.replication_level = replication;
+
+    ctx->do_index = do_index;
 
     //TODO, CREATE an progress window
 
     /* actually start the scan */
-    m_ds = GNUNET_FS_directory_scan_start (path.toLatin1().constData(),
-                                           GNUNET_NO, NULL,
-                                           &directoryScanStaticCallback, this);
+
+
+    ctx->publish = this;
+    ctx->m_ds = GNUNET_FS_directory_scan_start (path.toLatin1().constData(),
+                                                GNUNET_NO, NULL,
+                                                &directoryScanStaticCallback, ctx);
 
 
 
 
 }
 
-void Publish::directoryScanCallback(const char *filename, int is_directory,
+void Publish::directoryScanCallback(AddContext* context, const char *filename, int is_directory,
                                     enum GNUNET_FS_DirScannerProgressUpdateReason reason)
 {
 
@@ -264,6 +284,8 @@ void Publish::directoryScanCallback(const char *filename, int is_directory,
     case GNUNET_FS_DIRSCANNER_FILE_START:
     {
         GNUNET_assert (NULL != filename);
+        theApp->status()->setPublishing(true);
+
         if (GNUNET_TIME_absolute_get_duration (last_pulse).rel_value > 100)
         {
 
@@ -288,7 +310,7 @@ void Publish::directoryScanCallback(const char *filename, int is_directory,
     case GNUNET_FS_DIRSCANNER_ALL_COUNTED:
     {
         fraction = (m_total == 0) ? 1.0 : (1.0 * m_done) / m_total;
-        qWarning() << QString("%1/%2 (%3 %)").arg(m_done).arg(m_total).arg(100.0 * fraction);
+        theApp->status()->setPublishingPercentage(100.0 * fraction);
         break;
     }
     case GNUNET_FS_DIRSCANNER_EXTRACT_FINISHED:
@@ -299,7 +321,7 @@ void Publish::directoryScanCallback(const char *filename, int is_directory,
         m_done++;
         GNUNET_assert (m_done <= m_total);
         fraction = (m_total == 0) ? 1.0 : (1.0 * m_done) / m_total;
-        qWarning() << QString("%1/%2 (%3 %)").arg(m_done).arg(m_total).arg(100.0 * fraction);
+        theApp->status()->setPublishingPercentage(100.0 * fraction);
 
         break;
     }
@@ -307,7 +329,7 @@ void Publish::directoryScanCallback(const char *filename, int is_directory,
     {
         qWarning() << QString("Operation failed");
 
-        GNUNET_FS_directory_scan_abort (m_ds);
+        GNUNET_FS_directory_scan_abort (context->m_ds);
         break;
     }
     case GNUNET_FS_DIRSCANNER_FINISHED:
@@ -315,14 +337,24 @@ void Publish::directoryScanCallback(const char *filename, int is_directory,
         struct GNUNET_FS_ShareTreeItem *directory_scan_result;
 
         qWarning() << QString("Scanner has finished.");
-        directory_scan_result = GNUNET_FS_directory_scan_get_result (m_ds);
-        m_ds = NULL;
+        directory_scan_result = GNUNET_FS_directory_scan_get_result (context->m_ds);
+        context->m_ds = NULL;
         GNUNET_FS_share_tree_trim (directory_scan_result);
-        //add_share_items_to_treestore (adcc,
-        //                              directory_scan_result,
-        //                              NULL);
+
+
+        processResults(context,directory_scan_result,NULL);
         GNUNET_FS_share_tree_free (directory_scan_result);
-        //destroy_progress_dialog (adcc);
+
+        if(m_done == m_total)
+        {
+            m_done = 0;
+            m_total = 0;
+            theApp->status()->setPublishing(false);
+        }
+        delete context;
+
+
+
     }
         break;
     default:
@@ -338,8 +370,8 @@ void Publish::directoryScanCallback(const char *filename, int is_directory,
  * @param parent_iter parent of the current entry to add
  */
 void
-Publish::processResults (struct GNUNET_FS_ShareTreeItem *toplevel,
-                         void *parent_iter)
+Publish::processResults (AddContext* context, struct GNUNET_FS_ShareTreeItem *toplevel,
+                         PublishFile * parent)
 {
 
 
@@ -347,11 +379,10 @@ Publish::processResults (struct GNUNET_FS_ShareTreeItem *toplevel,
 
     for (item = toplevel; NULL != item; item = item->next)
     {
-        processFile(item, parent_iter);
+        PublishFile * file = processFile(context, item, parent);
         if (item->is_directory == GNUNET_YES){
             qWarning() << "TODO: implement folder support !";
-            //TODO:: FOlder
-            //processResults (item->children_head);
+            processResults (context,item->children_head,file);
         }
     }
 
@@ -371,19 +402,10 @@ Publish::processResults (struct GNUNET_FS_ShareTreeItem *toplevel,
  * @param item_iter entry to set to the added item (OUT)
  */
 
-void
-Publish::processFile (struct GNUNET_FS_ShareTreeItem *item,
-                      void *parent)
+PublishFile*
+Publish::processFile (AddContext* context, struct GNUNET_FS_ShareTreeItem *item,
+                      PublishFile* parent)
 {
-
-
-    //m_model->addFile(file);
-
-
-
-
-
-    char *file_size_fancy;
     struct GNUNET_FS_FileInformation *fi;
 
     uint64_t fsize;
@@ -392,7 +414,7 @@ Publish::processFile (struct GNUNET_FS_ShareTreeItem *item,
 
     if ((item->is_directory != GNUNET_YES) && (GNUNET_OK !=
                                                GNUNET_DISK_file_size (item->filename, &fsize, GNUNET_YES, GNUNET_YES)))
-        return;
+        return NULL;
 
 
     if (item->is_directory == GNUNET_YES)
@@ -405,34 +427,27 @@ Publish::processFile (struct GNUNET_FS_ShareTreeItem *item,
             item->meta = GNUNET_CONTAINER_meta_data_create ();
         GNUNET_FS_meta_data_make_directory (item->meta);
 
-        /*fi = GNUNET_FS_file_information_create_empty_directory (theApp->gnunet()->filesharing()->fsHandle(),
+        fi = GNUNET_FS_file_information_create_empty_directory (theApp->gnunet()->filesharing()->fsHandle(),
                                                                 NULL,
                                                                 item->ksk_uri,
                                                                 item->meta,
-                                                                &adcc->directory_scan_bo,
-                                                                item->filename);*/
-        file_size_fancy = GNUNET_strdup ("-");
+                                                                &context->bo,
+                                                                item->filename);
     }
     else
     {
-        /*fi = GNUNET_FS_file_information_create_from_file (theApp->gnunet()->filesharing()->fsHandle(),
+        fi = GNUNET_FS_file_information_create_from_file (theApp->gnunet()->filesharing()->fsHandle(),
                                                           NULL,
                                                           item->filename,
                                                           item->ksk_uri,
                                                           item->meta,
-                                                          adcc->directory_scan_do_index,
-                                                          &adcc->directory_scan_bo);*/
-        file_size_fancy = GNUNET_STRINGS_byte_size_fancy (fsize);
+                                                          context->do_index,
+                                                          &context->bo);
     }
-    //file_size_fancy
-    //adcc->directory_scan_do_index
-    //item->short_filename
-    //adcc->directory_scan_bo.anonymity_level
-    //adcc->directory_scan_bo.content_priority
-    //adcc->directory_scan_bo.expiration_time.abs_value
-    //adcc->directory_scan_bo.replication_level
 
-    GNUNET_free (file_size_fancy);
+
+    return m_model->add(fi,parent);
+
 }
 
 

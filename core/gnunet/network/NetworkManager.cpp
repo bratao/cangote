@@ -26,7 +26,7 @@
 #include "models/NetworkPeersModel.h"
 #include "models/models.h"
 #include "gnunettransportplugins.h"
-
+#include "core/status.h"
 
 //Struct that join
 struct PeerAddressStringConversionConteiner{
@@ -209,6 +209,11 @@ NetworkManager::NetworkManager(QObject *parent) :
     m_nextBandwidthRetrive = QTime::currentTime();
 
     connect(this,&NetworkManager::putHelloSignal,this,&NetworkManager::putHelloSlot);
+
+    connect(this, &NetworkManager::estimatedNodesChanged, theApp->status(), &Status::setEstimatedNodes, Qt::QueuedConnection);
+    connect(this, &NetworkManager::outgoingBandChanged, theApp->status(), &Status::setOutgoingBand, Qt::QueuedConnection);
+    connect(this, &NetworkManager::incomingBandChanged, theApp->status(), &Status::setIncomingBand, Qt::QueuedConnection);
+
 }
 
 

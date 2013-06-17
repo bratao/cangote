@@ -23,7 +23,7 @@
 
 #include <QAbstractListModel>
 
-class PublishFile;
+class Metadata;
 class PublishModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -34,20 +34,20 @@ public:
 
     int getCount();
 
-    PublishFile* addFile(QString path);
-    PublishFile *getPublishedFile(int index);
+    Metadata* add(struct GNUNET_FS_FileInformation *fi, Metadata *parent);
+    Metadata* getPublishedFile(int index);
 public slots:
 
 signals:
-    void addFileSignal(PublishFile *file);
+    void addFileSignal(Metadata *file);
 
 private slots:
-    PublishFile *addFileSlot(PublishFile *file);
+    Metadata *addFileSlot(Metadata *file);
 private:
     int rowCount(const QModelIndex& parent) const;
     QVariant data(const QModelIndex& index, int role) const;
     QHash<int, QByteArray> roleNames() const;
-    QList<PublishFile*> m_data;
+    QList<Metadata*> m_data;
     
 };
 

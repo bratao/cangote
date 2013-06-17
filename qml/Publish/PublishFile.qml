@@ -12,6 +12,26 @@ Window {
 
     title: "Publish Files"
 
+    Window{
+        id: progressWnd
+        modality :Qt.ApplicationModal
+        width: 300
+        height: 100
+        visible: Cangote.status.isPublishing
+
+        title: "Progress"
+
+        RowLayout{
+            anchors.fill: parent
+
+            ProgressBar{
+                minimumValue: 0
+                maximumValue: 100
+                value: Cangote.status.publishingPercentage
+            }
+        }
+
+    }
 
     Item{
         anchors.fill: parent
@@ -38,12 +58,15 @@ Window {
                         text: "Add File"
 
                         onClicked: {
-                            var file = Utils.openFilePicker();
-                            Cangote.gnunet.publish.addFiles(file);
+                            Cangote.gnunet.publish.filePicker();
                         }
                     }
                     Button{
                         text: "Add Folder"
+
+                        onClicked: {
+                            progressWnd.visible = true
+                        }
                     }
                 }
             }

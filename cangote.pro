@@ -35,7 +35,6 @@ SOURCES += \
     core/gnunet/network/peerbandwidth.cpp \
     core/gnunet/network/peer.cpp \
     core/gnunet/util/helpers.cpp \
-    models/gnunet_fs_search_results_metadata.cpp \
     service.cpp \
     models/NetworkPeersModel.cpp \
     core/gnunet/network/NetworkManager.cpp \
@@ -50,7 +49,9 @@ SOURCES += \
     core/gnunet/network/gnunettransportplugins.cpp \
     core/gnunet/filesharing/publish/publish.cpp \
     models/PublishModel.cpp \
-    core/gnunet/filesharing/publish/publishfile.cpp
+    core/gnunet/filesharing/publish/publishfile.cpp \
+    core/status.cpp \
+    models/MetadataModel.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -106,7 +107,6 @@ HEADERS += \
     core/gnunet/network/peerbandwidth.h \
     core/gnunet/network/peer.h \
     core/gnunet/util/helpers.h \
-    models/gnunet_fs_search_results_metadata.h \
     service.h \
     models/NetworkPeersModel.h \
     core/gnunet/network/NetworkManager.h \
@@ -122,4 +122,6 @@ HEADERS += \
     core/publish/publishfiles.h \
     core/gnunet/filesharing/publish/publish.h \
     models/PublishModel.h \
-    core/gnunet/filesharing/publish/publishfile.h
+    core/gnunet/filesharing/publish/publishfile.h \
+    core/status.h \
+    models/MetadataModel.h

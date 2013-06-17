@@ -61,14 +61,14 @@ Rectangle {
         }
 
         Text{
-            text: qsTr("Connected to: ") + Cangote.connectedPeers + qsTr(" peers") +
-                  "(" + Cangote.estimatedNodes + ")"
+            text: qsTr("Connected to: ") + Cangote.status.connectedPeers + qsTr(" peers") +
+                  "(" + Cangote.status.estimatedNodes + ")"
             renderType: Text.NativeRendering
         }
 
         Text{
-            text: qsTr("In: ") + Cangote.incomingBand + qsTr(" K/b ") +
-                  qsTr("Out: ") + Cangote.outgoingBand + qsTr(" K/b ")
+            text: qsTr("In: ") + Cangote.status.incomingBand + qsTr(" K/b ") +
+                  qsTr("Out: ") + Cangote.status.outgoingBand + qsTr(" K/b ")
             renderType: Text.NativeRendering
         }
     }

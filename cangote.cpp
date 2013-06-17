@@ -5,13 +5,16 @@
 #include "utils/utils.h"
 #include "preferences/preferences.h"
 
+
+
 #include "core/cangotecore.h"
 #include "core/gnunet/gnunet.h"
 #include "core/gnunet/network/NetworkManager.h"
 #include "core/gnunet/filesharing/search/search.h"
 #include "core/gnunet/filesharing/filesharing.h"
 #include "core/gnunet/filesharing/publish/publish.h"
-#
+
+#include "core/status.h"
 
 #include "models/SearchModel.h"
 #include "models/models.h"
@@ -82,6 +85,8 @@ void Cangote::registerQmlTypes()
 
     qmlRegisterUncreatableType<GNUNet>(URI, 1, 0, "GNUNet", QLatin1String("Use the cangote core proprety."));
     qmlRegisterUncreatableType<NetworkManager>(URI, 1, 0, "NetworkManager", QLatin1String("Use calling the gnunet method."));
+
+    qmlRegisterUncreatableType<Status>(URI, 1, 0, "Status", QLatin1String("Use calling the gnunet method."));
 
 
     qmlRegisterUncreatableType<FileSharing>(URI, 1, 0, "FileSharing", QLatin1String("Use calling the gnunet method."));

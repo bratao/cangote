@@ -2,6 +2,7 @@
 #include "cangotecore.h"
 #include "gnunet/gnunet.h"
 #include "models/models.h"
+#include "status.h"
 #include "core/gnunet/launcher/gnunetlauncher.h"
 #include "gnunet/network/NetworkManager.h"
 
@@ -17,13 +18,11 @@ CangoteCore::CangoteCore(QObject *parent) :
 {
     theApp = this;
     m_connected = false;
-    m_connectedPeers = 0;
-    m_numEstimateNodes = 0;
-    m_outgoingBand = 0;
-    m_incomingBand = 0;
+
     m_launcher = new GNUNetLauncher();
 
     m_models = new Models(this);
+
 
 
     //Launcher services
@@ -42,6 +41,9 @@ CangoteCore::CangoteCore(QObject *parent) :
     //Finally start gnunet
     startGNUNet();
 
+    //Start the Status. It need to load after all
+    m_status = new Status(this);
+
 }
 
 
@@ -49,6 +51,7 @@ CangoteCore::CangoteCore(QObject *parent) :
 CangoteCore::~CangoteCore()
 {
     m_launcher->stop();
+    m_models = NULL;
 }
 
 void CangoteCore::process()
@@ -105,18 +108,9 @@ void CangoteCore::startGNUNet()
     m_gnunetThread->start();
 
     connect(m_gnunet, &GNUNet::connectedChanged, this, &CangoteCore::setConnected, Qt::QueuedConnection);
-    connect(m_gnunet, &GNUNet::connectedPeersChanged, this, &CangoteCore::setConnectedPeers, Qt::QueuedConnection);
-    connect(m_gnunet, &GNUNet::gnunetStarted, this, &CangoteCore::gnunetStarted, Qt::QueuedConnection);
-}
-
-void CangoteCore::gnunetStarted()
-{
-
-     connect(m_gnunet->network(), &NetworkManager::estimatedNodesChanged, this, &CangoteCore::setEstimatedNodes, Qt::QueuedConnection);
-    connect(m_gnunet->network(), &NetworkManager::outgoingBandChanged, this, &CangoteCore::setOutgoingBand, Qt::QueuedConnection);
-    connect(m_gnunet->network(), &NetworkManager::incomingBandChanged, this, &CangoteCore::setIncomingBand, Qt::QueuedConnection);
 
 }
+
 
 
 void CangoteCore::setConnected(bool connected)

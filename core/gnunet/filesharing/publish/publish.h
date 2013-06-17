@@ -7,17 +7,24 @@
 #include <QStringList>
 
 #include "core/gnunet/gnunet_includes.h"
+#include "core/gnunet/filesharing/publish/publishfile.h"
 
 class PublishModel;
 class Publish : public QObject
 {
     Q_OBJECT
 
+public:
+    struct AddContext{
+        Publish* publish;
+        GNUNET_FS_DirScanner * m_ds;
+        GNUNET_FS_BlockOptions bo;
+        bool do_index;
+
+    };
 
 
-
-
-
+private:
     enum Expiration{
         SIXMONTHS_EXPIRATION,
         ONEYEAR_EXPIRATION,
@@ -50,31 +57,31 @@ class Publish : public QObject
 
     };
 
+
 public:
     explicit Publish(QObject *parent = 0);
-    
     Q_INVOKABLE void filePicker();
-signals:
-    void filePickerSignal();
-public slots:
-
-
-public:
-    void directoryScanCallback(const char *filename, int is_directory,enum GNUNET_FS_DirScannerProgressUpdateReason reason);
+    void directoryScanCallback(AddContext* context, const char *filename, int is_directory,enum GNUNET_FS_DirScannerProgressUpdateReason reason);
 
 private slots:
-    void filePickerSlot();
+    void addFilesSlot(QString path, int anonlevel, int priority, int replication, GNUNET_TIME_Absolute expiration, bool do_index);
+
+signals:
+    void addFilesSignal(QString path, int anonlevel, int priority, int replication,GNUNET_TIME_Absolute expiration, bool do_index);
+
 private:
     PublishModel* m_model;
-    
-
-
     int m_total;
     int m_done;
-    GNUNET_FS_DirScanner * m_ds;
-    void processResults(GNUNET_FS_ShareTreeItem *toplevel, void *parent_iter);
-    void processFile(GNUNET_FS_ShareTreeItem *item, void *parent);
-    void addFiles(QString path, int anonlevel, int priority, int replication, GNUNET_TIME_Absolute expiration);
+
+    void processResults(AddContext *context, GNUNET_FS_ShareTreeItem *toplevel, PublishFile *parent);
+    PublishFile *processFile(AddContext *context, GNUNET_FS_ShareTreeItem *item, PublishFile *parent);
+    void addFiles(QString path, int anonlevel, int priority, int replication, GNUNET_TIME_Absolute expiration, bool do_index)
+    {
+        emit addFilesSignal(path,anonlevel,priority,replication,expiration,do_index);
+    }
+
+
 };
 
 #endif // PUBLISH_H

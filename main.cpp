@@ -58,24 +58,18 @@ int main(int argc, char *argv[])
 {
 
     QApplication app(argc, argv);
-    QQmlEngine engine;
-    QQmlComponent component(&engine);
 
     qWarning("Starting Cangote p2p");
     Cangote cangote;
 
 
-    component.loadUrl(QUrl::fromLocalFile("../cangote/qml/main.qml"));
-    if ( !component.isReady() ) {
-        qWarning("%s", qPrintable(component.errorString()));
-        return -1;
-    } 
+    QQmlApplicationEngine engine(QUrl::fromLocalFile("../cangote/qml/main.qml"));
+
 
     //Install log processor
     //qInstallMessageHandler(logProcessor);
 
-
-    QObject *topLevel = component.create();
+    QObject *topLevel = engine.rootObjects().value(0);
     theWindow = qobject_cast<QQuickWindow *>(topLevel);
     if ( !theWindow ) {
         qWarning("Error: Your root item has to be a Window.");

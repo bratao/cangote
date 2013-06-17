@@ -18,26 +18,26 @@
      Boston, MA 02111-1307, USA.
 */
 
-#include "PublishModel.h"
+#include "MetadataModel.h"
 #include "core/gnunet/filesharing/publish/publish.h"
 #include "core/gnunet/filesharing/publish/publishfile.h"
-PublishModel::PublishModel(QObject *parent) :
+MetaModel::MetaModel(QObject *parent) :
     QAbstractListModel(parent)
 {
 
-    connect(this, &PublishModel::addFileSignal, this, &PublishModel::addFileSlot);
+    connect(this, &MetaModel::addFileSignal, this, &MetaModel::addFileSlot);
 
 
 }
-int PublishModel::rowCount(const QModelIndex& parent) const
+int MetaModel::rowCount(const QModelIndex& parent) const
 {
     return m_data.size();
 }
 
-QVariant PublishModel::data(const QModelIndex& index, int role) const
+QVariant MetaModel::data(const QModelIndex& index, int role) const
 {
 
-    Metadata* file = m_data[index.row()];
+    PublishFile* file = m_data[index.row()];
 
 
     switch(role)
@@ -61,7 +61,7 @@ QVariant PublishModel::data(const QModelIndex& index, int role) const
 }
 
 
-QHash<int, QByteArray> PublishModel::roleNames() const {
+QHash<int, QByteArray> MetaModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NAME]                   = "name";
     roles[PATH]                   = "path";
@@ -73,10 +73,10 @@ QHash<int, QByteArray> PublishModel::roleNames() const {
 }
 
 
-Metadata*  PublishModel::add(GNUNET_FS_FileInformation *fi, Metadata* parent )
+PublishFile*  MetaModel::add(GNUNET_FS_FileInformation *fi, PublishFile* parent )
 {
 
-    Metadata* file = new Metadata(fi,parent);
+    PublishFile* file = new PublishFile(fi,parent);
 
 
 
@@ -86,7 +86,7 @@ Metadata*  PublishModel::add(GNUNET_FS_FileInformation *fi, Metadata* parent )
 
 }
 
-Metadata*  PublishModel::addFileSlot(Metadata* file)
+void  MetaModel::addFileSlot(PublishFile* file)
 {
     int count = m_data.count();
 
@@ -103,7 +103,7 @@ Metadata*  PublishModel::addFileSlot(Metadata* file)
 
 
 
-Metadata* PublishModel::getPublishedFile(int index)
+PublishFile* MetaModel::getPublishedFile(int index)
 {
     if ((index < 0) || (index >= m_data.count()))
         return NULL;
@@ -113,7 +113,7 @@ Metadata* PublishModel::getPublishedFile(int index)
 
 }
 
-int PublishModel::getCount()
+int MetaModel::getCount()
 {
     return m_data.count();
 }

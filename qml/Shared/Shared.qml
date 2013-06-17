@@ -35,7 +35,7 @@ Item{
         TableViewColumn {
             role: "filename"
             title: "Filename"
-            width: 120
+            width: 350
         }
 
     }
