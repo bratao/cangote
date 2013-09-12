@@ -7,12 +7,14 @@ class CangoteCore;
 class Utils;
 class Preferences;
 class QQuickWindow;
+class QQmlEngine;
 class Cangote : public QObject
 {
     Q_OBJECT
 public:
     explicit Cangote(QObject *parent = 0);
-
+    void registerQmlTypes();
+    void registerImageProvider(QQmlEngine *engine);
 signals:
     
 public slots:
@@ -20,7 +22,7 @@ public slots:
 private:
     CangoteCore *m_core;
 
-    void registerQmlTypes();
+
     
 };
 

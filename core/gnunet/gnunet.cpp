@@ -171,7 +171,7 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
     }
     GNUNET_free (fn);
     GNUNET_CRYPTO_ecc_key_get_public (priv, &m_myPublicKey);
-    GNUNET_CRYPTO_ecc_key_free (priv);
+    GNUNET_free (priv);
     GNUNET_CRYPTO_hash (&m_myPublicKey, sizeof (m_myPublicKey), &m_myPeerIdentity.hashPubKey);
 
 
@@ -230,12 +230,12 @@ void GNUNet::processEvents()
 }
 
 
-GNUNET_CRYPTO_EccPublicKeyBinaryEncoded GNUNet::myPublicKey() const
+GNUNET_CRYPTO_EccPublicKey GNUNet::myPublicKey() const
 {
     return m_myPublicKey;
 }
 
-void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EccPublicKeyBinaryEncoded &myPublicKey)
+void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EccPublicKey &myPublicKey)
 {
     m_myPublicKey = myPublicKey;
 }

@@ -18,41 +18,33 @@
      Boston, MA 02111-1307, USA.
 */
 
-#ifndef METAMODEL_H
-#define METAMODEL_H
+#ifndef KEYWORDMODEL_H
+#define KEYWORDMODEL_H
 
 #include <QAbstractListModel>
 
-typedef struct Metadata{
-    QString name;
-    QString value;
-}Metadata;
-
-class MetaModel : public QAbstractListModel
+class KeywordModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit MetaModel(QObject *parent = 0);
+    explicit KeywordModel(QObject *parent = 0);
 
-    enum MetaRoles { NAME, VALUE };
+    enum KeywordRoles { NAME };
 
     int getCount();
-
-    Metadata* add(QString name, QString value);
-    Metadata* getMetadata(int index);
-public slots:
+    void add(QString name);
 
 signals:
-    void addSignal(Metadata *file);
+    void addSignal(QString name);
 
 private slots:
-    void addSlot(Metadata *metadata);
+    void addSlot(QString name);
 private:
     int rowCount(const QModelIndex& parent) const;
     QVariant data(const QModelIndex& index, int role) const;
     QHash<int, QByteArray> roleNames() const;
-    QList<Metadata*> m_data;
+    QList<QString> m_data;
     
 };
 
-#endif // METAMODEL_H
+#endif // KEYWORDMODEL_H

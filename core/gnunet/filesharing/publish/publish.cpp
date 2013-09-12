@@ -51,14 +51,16 @@ Publish::Publish(QObject *parent) :
     QObject(parent)
 {
     m_model = theApp->models()->publishModel();
-    m_total = 0;
-    m_done=0;
+    m_isProcessing = false;
 
     qRegisterMetaType<GNUNET_TIME_Absolute>("GNUNET_TIME_Absolute");
 
     //Connect cross-thread signals
     connect(this,&Publish::addFilesSignal,this,&Publish::addFilesSlot);
+    connect(this,&Publish::publishItemsSignal,this,&Publish::publishItemsSlot);
 
+    m_done =0;
+    m_total = 0;
 
 }
 
@@ -237,11 +239,83 @@ void Publish::filePicker()
 }
 
 
+
+
+/**
+ * The user pushed the 'execute' button.  Start the publishing
+ * operation.
+ *
+ */
+void
+Publish::publishItems()
+{
+    emit publishItemsSignal();
+}
+
+
+/**
+ * Publish Slot
+ *
+ *
+ */
+void
+Publish::publishItemsSlot ()
+{
+
+  const char *namespace_id,*namespace_uid;
+  struct GNUNET_IDENTITY_Ego *ns;
+  struct GNUNET_FS_FileInformation *fi;
+
+  bool do_global;
+  bool do_updateable;
+  bool do_own;
+  bool disable_ads_insertion;
+
+
+  //TODO:: Implement namespace
+  do_global = true;
+  do_updateable = false;
+  do_own = false;
+
+  //TODO:: add disable automatic namespace insertion
+  disable_ads_insertion =  false;
+
+  ns = NULL;
+  namespace_id = NULL;
+  namespace_uid = NULL;
+
+
+
+
+
+  for(int i =0 ; i < m_model->getCount();i++)
+  {
+      PublishFile* file =  m_model->getPublishedFile(i);
+
+      fi = file->getFileInformation();
+      //if (do_global && do_own && !disable_ads_insertion)
+      //  GNUNET_FS_file_information_inspect (fi, insert_advertisement, ctx);
+      GNUNET_FS_publish_start (theApp->gnunet()->filesharing()->fsHandle(),
+                   fi,
+                   (NULL == ns)
+                   ? NULL
+                   : GNUNET_IDENTITY_ego_get_private_key (ns),
+                   namespace_id, namespace_uid,
+                   GNUNET_FS_PUBLISH_OPTION_NONE);
+  }
+
+
+
+
+  //GNUNET_break (GNUNET_YES == close_master_publish_dialog (ctx));
+}
+
+
+
+
 /*
  * This function must be executed from the GNUNET thread.
  */
-
-
 
 void Publish::addFilesSlot(QString path, int anonlevel, int priority, int replication, GNUNET_TIME_Absolute expiration, bool do_index)
 {
@@ -261,22 +335,55 @@ void Publish::addFilesSlot(QString path, int anonlevel, int priority, int replic
 
 
     ctx->publish = this;
-    ctx->m_ds = GNUNET_FS_directory_scan_start (path.toLatin1().constData(),
-                                                GNUNET_NO, NULL,
-                                                &directoryScanStaticCallback, ctx);
+
+
+    AddFile* file = new AddFile;
+    file->context = ctx;
+    file->path = path;
+    m_queue.enqueue(file);
+    m_total++;
+
+    processQueue();
 
 
 
 
 }
 
+/**
+ * @brief This function will process another file in the queue if we are not processing any.
+ */
+void Publish::processQueue(){
+
+
+    if(m_isProcessing)
+        return; //We already processing, return.
+
+    if(m_queue.isEmpty())
+    {
+        m_done = 0;
+        m_total = 0;
+        theApp->status()->setPublishing(false);
+        return;
+    }
+
+    theApp->status()->setPublishing(true);
+    m_isProcessing = true;
+
+
+    AddFile* file = m_queue.dequeue();
+    qWarning() << QString("process queue send '%1'.").arg(file->path);
+    file->context->m_ds = GNUNET_FS_directory_scan_start (file->path.toUtf8().constData(),
+                                                         GNUNET_NO, NULL,
+                                                         &directoryScanStaticCallback, file->context);
+}
+
+
 void Publish::directoryScanCallback(AddContext* context, const char *filename, int is_directory,
                                     enum GNUNET_FS_DirScannerProgressUpdateReason reason)
 {
 
-    //struct AddDirClientContext *adcc = cls;
     static struct GNUNET_TIME_Absolute last_pulse;
-    char *s;
     double fraction;
 
     switch (reason)
@@ -284,9 +391,8 @@ void Publish::directoryScanCallback(AddContext* context, const char *filename, i
     case GNUNET_FS_DIRSCANNER_FILE_START:
     {
         GNUNET_assert (NULL != filename);
-        theApp->status()->setPublishing(true);
 
-        if (GNUNET_TIME_absolute_get_duration (last_pulse).rel_value > 100)
+        if (GNUNET_TIME_absolute_get_duration (last_pulse).rel_value_us > 100000LL)
         {
 
             last_pulse = GNUNET_TIME_absolute_get ();
@@ -296,8 +402,6 @@ void Publish::directoryScanCallback(AddContext* context, const char *filename, i
         {
             qWarning() << QString("Scanning directory '%1'.").arg(filename);
         }
-        else
-            m_total++;
         break;
     }
 
@@ -318,42 +422,35 @@ void Publish::directoryScanCallback(AddContext* context, const char *filename, i
         GNUNET_assert (NULL != filename);
 
         qWarning() << QString("Processed file '%1'").arg(filename);
-        m_done++;
-        GNUNET_assert (m_done <= m_total);
         fraction = (m_total == 0) ? 1.0 : (1.0 * m_done) / m_total;
         theApp->status()->setPublishingPercentage(100.0 * fraction);
-
         break;
     }
     case GNUNET_FS_DIRSCANNER_INTERNAL_ERROR:
     {
         qWarning() << QString("Operation failed");
+        //GNUNET_FS_directory_scan_abort (context->m_ds);
+        m_isProcessing = false;
+        processQueue();
 
-        GNUNET_FS_directory_scan_abort (context->m_ds);
         break;
     }
     case GNUNET_FS_DIRSCANNER_FINISHED:
     {
         struct GNUNET_FS_ShareTreeItem *directory_scan_result;
-
         qWarning() << QString("Scanner has finished.");
         directory_scan_result = GNUNET_FS_directory_scan_get_result (context->m_ds);
         context->m_ds = NULL;
         GNUNET_FS_share_tree_trim (directory_scan_result);
-
-
         processResults(context,directory_scan_result,NULL);
         GNUNET_FS_share_tree_free (directory_scan_result);
 
-        if(m_done == m_total)
-        {
-            m_done = 0;
-            m_total = 0;
-            theApp->status()->setPublishing(false);
-        }
+        m_isProcessing = false;
+        m_done++;
+        processQueue();
+
+
         delete context;
-
-
 
     }
         break;
@@ -410,8 +507,6 @@ Publish::processFile (AddContext* context, struct GNUNET_FS_ShareTreeItem *item,
 
     uint64_t fsize;
 
-
-
     if ((item->is_directory != GNUNET_YES) && (GNUNET_OK !=
                                                GNUNET_DISK_file_size (item->filename, &fsize, GNUNET_YES, GNUNET_YES)))
         return NULL;
@@ -446,7 +541,7 @@ Publish::processFile (AddContext* context, struct GNUNET_FS_ShareTreeItem *item,
     }
 
 
-    return m_model->add(fi,parent);
+    return m_model->add(item->filename,fi,parent);
 
 }
 

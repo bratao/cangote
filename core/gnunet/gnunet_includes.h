@@ -39,5 +39,6 @@
 #include <gnunet/gnunet_arm_service.h>
 #include <gnunet/gnunet_transport_plugin.h>
 #include <gnunet/gnunet_hello_lib.h>
+#include <gnunet/gnunet_identity_service.h>
 
 #endif // GNUNET_INCLUDES_H

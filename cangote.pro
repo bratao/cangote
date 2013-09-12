@@ -51,7 +51,8 @@ SOURCES += \
     models/PublishModel.cpp \
     core/gnunet/filesharing/publish/publishfile.cpp \
     core/status.cpp \
-    models/MetadataModel.cpp
+    models/MetadataModel.cpp \
+    models/KeywordModel.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -82,7 +83,8 @@ OTHER_FILES += \
     qml/Publish/PublishFile.qml \
     qml/preferences/Advanced.qml \
     qml/Network/AddPeer.qml \
-    qml/Search/Tooltip.qml
+    qml/Search/Tooltip.qml \
+    qml/Publish/PublishDetails.qml
 
 RESOURCES += \
     resources.qrc
@@ -124,4 +126,5 @@ HEADERS += \
     models/PublishModel.h \
     core/gnunet/filesharing/publish/publishfile.h \
     core/status.h \
-    models/MetadataModel.h
+    models/MetadataModel.h \
+    models/KeywordModel.h

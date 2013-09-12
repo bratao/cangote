@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QQueue>
 
 #include "core/gnunet/gnunet_includes.h"
 #include "core/gnunet/filesharing/publish/publishfile.h"
@@ -17,11 +18,16 @@ class Publish : public QObject
 public:
     struct AddContext{
         Publish* publish;
-        GNUNET_FS_DirScanner * m_ds;
+        GNUNET_FS_DirScanner* m_ds;
         GNUNET_FS_BlockOptions bo;
         bool do_index;
 
     };
+
+    typedef struct AddFile{
+        AddContext* context;
+        QString path;
+    }AddFile;
 
 
 private:
@@ -61,16 +67,22 @@ private:
 public:
     explicit Publish(QObject *parent = 0);
     Q_INVOKABLE void filePicker();
+    Q_INVOKABLE void publishItems();
     void directoryScanCallback(AddContext* context, const char *filename, int is_directory,enum GNUNET_FS_DirScannerProgressUpdateReason reason);
 
+
 private slots:
+    void publishItemsSlot();
     void addFilesSlot(QString path, int anonlevel, int priority, int replication, GNUNET_TIME_Absolute expiration, bool do_index);
 
 signals:
     void addFilesSignal(QString path, int anonlevel, int priority, int replication,GNUNET_TIME_Absolute expiration, bool do_index);
+    void publishItemsSignal();
 
 private:
     PublishModel* m_model;
+    QQueue<AddFile*> m_queue;
+    bool m_isProcessing;
     int m_total;
     int m_done;
 
@@ -82,6 +94,7 @@ private:
     }
 
 
+    void processQueue();
 };
 
 #endif // PUBLISH_H

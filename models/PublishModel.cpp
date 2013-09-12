@@ -21,9 +21,47 @@
 #include "PublishModel.h"
 #include "core/gnunet/filesharing/publish/publish.h"
 #include "core/gnunet/filesharing/publish/publishfile.h"
+
+
+///Thumbnail START ////
+
+QImage ThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+{
+    /*
+    int width = 100;
+    int height = 50;
+
+    if (size)
+        *size = QSize(width, height);
+
+    QImage image(requestedSize.width() > 0 ? requestedSize.width() : width,
+                 requestedSize.height() > 0 ? requestedSize.height() : height,QImage::Format_ARGB32);
+    image.fill(QColor(id).rgba());
+    */
+
+    QImage image;
+
+    PublishFile* file = theApp->models()->publishModel()->getPublishedFile(id.toInt());
+
+    if (file && file->thumbnail())
+    {
+        image = *file->thumbnail();
+    }
+     return image;
+
+
+
+}
+
+//Thumbnail end
+
+
+
 PublishModel::PublishModel(QObject *parent) :
     QAbstractListModel(parent)
 {
+
+    m_thumbnailProvider = new ThumbnailImageProvider();
 
     connect(this, &PublishModel::addFileSignal, this, &PublishModel::addFileSlot);
 
@@ -37,14 +75,14 @@ int PublishModel::rowCount(const QModelIndex& parent) const
 QVariant PublishModel::data(const QModelIndex& index, int role) const
 {
 
-    Metadata* file = m_data[index.row()];
+    PublishFile* file = m_data[index.row()];
 
 
     switch(role)
     {
 
     case NAME:
-        return file->getFilename();
+        return file->fileName();
         break;
     case PATH:
         return 0;//search->num_results;
@@ -73,10 +111,10 @@ QHash<int, QByteArray> PublishModel::roleNames() const {
 }
 
 
-Metadata*  PublishModel::add(GNUNET_FS_FileInformation *fi, Metadata* parent )
+PublishFile*  PublishModel::add(QString name, GNUNET_FS_FileInformation *fi, PublishFile* parent )
 {
 
-    Metadata* file = new Metadata(fi,parent);
+    PublishFile* file = new PublishFile(name, fi,parent);
 
 
 
@@ -86,7 +124,7 @@ Metadata*  PublishModel::add(GNUNET_FS_FileInformation *fi, Metadata* parent )
 
 }
 
-Metadata*  PublishModel::addFileSlot(Metadata* file)
+PublishFile*  PublishModel::addFileSlot(PublishFile* file)
 {
     int count = m_data.count();
 
@@ -103,7 +141,7 @@ Metadata*  PublishModel::addFileSlot(Metadata* file)
 
 
 
-Metadata* PublishModel::getPublishedFile(int index)
+PublishFile* PublishModel::getPublishedFile(int index)
 {
     if ((index < 0) || (index >= m_data.count()))
         return NULL;

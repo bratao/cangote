@@ -33,78 +33,122 @@ Window {
 
     }
 
-    Item{
+
+    ColumnLayout{
         anchors.fill: parent
-        Column{
-            id: leftColumn
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: rightColumn.left
-            TableView{
-                width: parent.width
-                model: Cangote.models.publishModel
-                TableViewColumn{ role: "name"  ; title: "Name" ; width: 200 }
-            }
+        RowLayout{
+            id: leftLayout
+            anchors.fill: parent
+            ColumnLayout{
+                id: leftColumn
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                TableView{
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: 50
+                    model: Cangote.models.publishModel
+                    TableViewColumn{ role: "name"  ; title: "Name"}
 
-            GroupBox{
-                id: buttonsGroup
-                width: parent.width
-                height:30
-                flat: true
-                RowLayout{
-
-                    Button{
-                        text: "Add File"
-
-                        onClicked: {
-                            Cangote.gnunet.publish.filePicker();
+                    onCurrentRowChanged:
+                    {
+                        var file = Cangote.models.publishModel.getPublishedFile(currentRow)
+                        publishDetails.keywordModel = file.keywordModel
+                        publishDetails.metadataModel = file.metadataModel
+                        if(file.haveThumbnail)
+                        {
+                            publishDetails.thumbnailImage = "image://publishThumbnail/"+ currentRow
+                        }
+                        else
+                        {
+                            publishDetails.thumbnailImage = "" // TODO: No thumbnail image
                         }
                     }
-                    Button{
-                        text: "Add Folder"
 
-                        onClicked: {
-                            progressWnd.visible = true
+                }
+
+                GroupBox{
+                    id: buttonsGroup
+                    flat: true
+                    Layout.fillWidth: true
+                    RowLayout{
+
+                        Button{
+                            text: "Add File"
+
+                            onClicked: {
+                                Cangote.gnunet.publish.filePicker();
+                            }
+                        }
+                        Button{
+                            text: "Add Folder"
+
+                            onClicked: {
+                                progressWnd.visible = true
+                            }
                         }
                     }
                 }
+
+                TabView{
+                    Layout.fillWidth: true
+                    Layout.minimumHeight: 80
+                    Tab{
+                        title:"Publication"
+                    }
+                    Tab{
+                        title:"Namespace"
+
+                        Column {
+                            ExclusiveGroup { id: group }
+                            RadioButton {
+                                text: qsTr("Global Namespace")
+                                exclusiveGroup: group
+                                checked: true
+                            }
+                            RadioButton {
+                                text: qsTr("My own namespace")
+                                exclusiveGroup: group
+                            }
+                        }
+
+                    }
+                }
+
+            }
+            PublishDetails{
+                id: publishDetails
+                Layout.fillWidth: true
+                Layout.fillHeight:  true
+                Layout.minimumWidth:200
             }
 
 
-            GroupBox{
-                title : "Namespace"
-                width: parent.width
-                height: 150
-                Column {
-                    ExclusiveGroup { id: group }
-                    RadioButton {
-                        text: qsTr("Global Namespace")
-                        exclusiveGroup: group
-                        checked: true
+        }
+        Rectangle{
+            Layout.fillWidth: true
+            Layout.minimumHeight: 25
+            RowLayout{
+                anchors.right: parent.right
+                anchors.bottomMargin: 5
+                Button{
+                    text: qsTr("Publish")
+
+                    onClicked: {
+                        Cangote.gnunet.publish.publishItems();
                     }
-                    RadioButton {
-                        text: qsTr("My own namespace")
-                        exclusiveGroup: group
+
+                }
+                Button{
+                    text: qsTr("Cancel")
+
+                    onClicked: {
+                        publishWnd.close()
                     }
                 }
             }
         }
-        Column{
-            id: rightColumn
-            width: 300
-            anchors.right: parent.right
-            TabView{
-                anchors.fill: parent
-                Tab{
-                    title:"Keywords"
-                }
-                Tab{
-                    title:"Sharing"
-                }
-            }
 
-        }
 
     }
 }

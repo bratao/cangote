@@ -84,8 +84,8 @@ public:
         emit connectedPeersChanged(connected);
     }
 
-    GNUNET_CRYPTO_EccPublicKeyBinaryEncoded myPublicKey() const;
-    void setMyPublicKey(const GNUNET_CRYPTO_EccPublicKeyBinaryEncoded &myPublicKey);
+    GNUNET_CRYPTO_EccPublicKey myPublicKey() const;
+    void setMyPublicKey(const GNUNET_CRYPTO_EccPublicKey &myPublicKey);
 
 
 
@@ -169,7 +169,7 @@ private:
     /**
      * My public key.
      */
-    struct GNUNET_CRYPTO_EccPublicKeyBinaryEncoded m_myPublicKey;
+    struct GNUNET_CRYPTO_EccPublicKey m_myPublicKey;
 
 
 

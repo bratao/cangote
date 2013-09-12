@@ -2,7 +2,11 @@
 #include "core/gnunet/gnunet_includes.h"
 
 #include <QImage>
+#include <QDebug>
 
+#include "core/cangotecore.h"
+#include "models/MetadataModel.h"
+#include "models/KeywordModel.h"
 ///////// STATIC FUNCTIONS END/////////////
 
 
@@ -26,13 +30,27 @@ file_information_import_callback (void *cls,
 
 static int
 addMetadataCallBack (void *cls, const char *plugin_name,
-                                           enum EXTRACTOR_MetaType type,
-                                           enum EXTRACTOR_MetaFormat format,
-                                           const char *data_mime_type,
-                                           const char *data, size_t data_len)
+                     enum EXTRACTOR_MetaType type,
+                     enum EXTRACTOR_MetaFormat format,
+                     const char *data_mime_type,
+                     const char *data, size_t data_len)
 {
     PublishFile* publish = (PublishFile*)cls;
 
+    publish->addMetadata(plugin_name,type,format,data_mime_type,data,data_len);
+
+    return 0; // Zero to continue
+}
+
+static int
+addKeywordCallback (void *cls, const char *keyword, int is_mandatory)
+{
+    Q_UNUSED(is_mandatory);
+    PublishFile* publish = (PublishFile*)cls;
+
+    publish->addKeyword(QString(keyword));
+
+    return GNUNET_OK;
 }
 
 ///////// STATIC FUNCTIONS END/////////////
@@ -41,12 +59,24 @@ addMetadataCallBack (void *cls, const char *plugin_name,
 
 
 
-PublishFile::PublishFile(GNUNET_FS_FileInformation *fi, QString filename, PublishFile* parent_file, QObject *parent) :
+PublishFile::PublishFile(QString filename, GNUNET_FS_FileInformation *fi, PublishFile* parent_file, QObject *parent) :
     QObject(parent)
 {
+
+    m_metadataModel = new MetaModel();
+    m_keywordModel = new KeywordModel();
+
+    //Those objects need to live on the main thread.Because QML cannot connect to forgein threads.
+    m_metadataModel->moveToThread(theApp->thread());
+    m_keywordModel->moveToThread(theApp->thread());
+
+
+    m_thumbnail = NULL;
+
     m_fi = fi;
     m_parent = parent_file;
     setFileName(filename);
+    setHaveThumbnail(false);
 
     inpectInfo();
 }
@@ -59,9 +89,9 @@ PublishFile::PublishFile(GNUNET_FS_FileInformation *fi, QString filename, Publis
 void PublishFile::inpectInfo()
 {
     /* import meta data and options */
-    GNUNET_FS_file_information_inspect (fip, &file_information_import_callback, ctx);
+    GNUNET_FS_file_information_inspect (m_fi, &file_information_import_callback, this);
 
-    setDirectory(GNUNET_FS_file_information_is_directory (fip));
+
 }
 
 
@@ -75,28 +105,33 @@ int PublishFile::fileInformationImport ( struct GNUNET_FS_FileInformation *fi,
     Q_UNUSED(client_info);
     Q_UNUSED(fi);
 
-    setExpiration(bo->expiration_time);
+    setExpiration(bo->expiration_time.abs_value_us);
     setAnonLevel(bo->anonymity_level);
     setPriority(bo->content_priority);
     setReplication(bo->replication_level);
     setIndexed(*do_index);
-    setSize(length);
+    setFileSize(length);
+    setDirectory(GNUNET_FS_file_information_is_directory (m_fi));
 
     /* import keywords */
     if (NULL != *uri)
-        GNUNET_FS_uri_ksk_get_keywords (*uri, &add_keyword, ctx->keywords_liststore);
+        GNUNET_FS_uri_ksk_get_keywords (*uri, &addKeywordCallback, this);
 
     /* import meta data */
     if (NULL != meta)
     {
         GNUNET_CONTAINER_meta_data_iterate (meta,
-                                            &GNUNET_FS_GTK_add_meta_data_to_list_store,
-                                            ctx->meta_liststore);
-        pixbuf = GNUNET_FS_GTK_get_thumbnail_from_meta_data (meta);
-        if (pixbuf != NULL)
+                                            &addMetadataCallBack,
+                                            this);
+        m_thumbnail = getThumbnail (meta);
+        if (m_thumbnail == NULL)
         {
-            qWarning()<< "Create the thumbnail support";
+            setHaveThumbnail(false);
         }
+        else{
+            setHaveThumbnail(true);
+        }
+
     }
 
 
@@ -106,7 +141,6 @@ int PublishFile::fileInformationImport ( struct GNUNET_FS_FileInformation *fi,
 /**
  * Add meta data to list store.
  *
- * @param cls closure (the GtkListStore)
  * @param plugin_name name of the plugin that produced this value;
  *        special values can be used (i.e. '<zlib>' for zlib being
  *        used in the main libextractor library and yielding
@@ -121,19 +155,31 @@ int PublishFile::fileInformationImport ( struct GNUNET_FS_FileInformation *fi,
  */
 int
 PublishFile::addMetadata (const char *plugin_name,
-                                           enum EXTRACTOR_MetaType type,
-                                           enum EXTRACTOR_MetaFormat format,
-                                           const char *data_mime_type,
-                                           const char *data, size_t data_len)
+                          EXTRACTOR_MetaType type,
+                          EXTRACTOR_MetaFormat format,
+                          const char *data_mime_type,
+                          const char *data, size_t data_len)
 {
 
-    type
-    format
-    EXTRACTOR_metatype_to_string (type)
-            data, data_len
-
-    return 0; // Zero to continue
+    QString name = QString(EXTRACTOR_metatype_to_string (type));
+    QString value = QString(data);
+    m_metadataModel->add(name,value);
 }
+
+
+/**
+ * Add each of the keywords to the keyword list store.
+ *
+ * @param keyword the keyword
+ * @param is_mandatory is the keyword mandatory (in a search)
+ */
+void
+PublishFile::addKeyword (QString keyword)
+{
+
+    m_keywordModel->add(keyword);
+}
+
 
 /**
  * Obtain pixbuf from thumbnail data in meta data.
@@ -153,8 +199,14 @@ PublishFile::getThumbnail (const GNUNET_CONTAINER_MetaData *meta)
         return NULL;
 
     QImage* image = new QImage();
-    image->loadFromData(thumb,ts);
+    if(!image->loadFromData(thumb,ts))
+    {
+        delete image;
+        image = NULL;
+    }
 
     GNUNET_free (thumb);
+
+
     return image;
 }

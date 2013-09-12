@@ -22,11 +22,30 @@
 #define PUBLISHMODEL_H
 
 #include <QAbstractListModel>
+#include <QQuickImageProvider>
+#include <QImage>
+#include "core/cangotecore.h"
+#include "models.h"
 
-class Metadata;
+
+
+class QQuickImageProvider;
+class ThumbnailImageProvider : public QQuickImageProvider
+{
+public:
+    ThumbnailImageProvider()
+        : QQuickImageProvider(QQuickImageProvider::Image)
+    {
+    }
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+};
+
+class PublishFile;
 class PublishModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(ThumbnailImageProvider* thumbnailProvider READ thumbnailProvider CONSTANT)
 public:
     explicit PublishModel(QObject *parent = 0);
 
@@ -34,20 +53,26 @@ public:
 
     int getCount();
 
-    Metadata* add(struct GNUNET_FS_FileInformation *fi, Metadata *parent);
-    Metadata* getPublishedFile(int index);
+
+    ThumbnailImageProvider* thumbnailProvider() const
+    { return m_thumbnailProvider; }
+
+
+    PublishFile* add(QString name, struct GNUNET_FS_FileInformation *fi, PublishFile *parent);
+    Q_INVOKABLE PublishFile* getPublishedFile(int index);
 public slots:
 
 signals:
-    void addFileSignal(Metadata *file);
+    void addFileSignal(PublishFile *file);
 
 private slots:
-    Metadata *addFileSlot(Metadata *file);
+    PublishFile *addFileSlot(PublishFile *file);
 private:
     int rowCount(const QModelIndex& parent) const;
     QVariant data(const QModelIndex& index, int role) const;
     QHash<int, QByteArray> roleNames() const;
-    QList<Metadata*> m_data;
+    QList<PublishFile*> m_data;
+    ThumbnailImageProvider* m_thumbnailProvider;
     
 };
 

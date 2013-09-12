@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine(QUrl::fromLocalFile("../cangote/qml/main.qml"));
 
+    cangote.registerImageProvider(&engine);
+
 
     //Install log processor
     //qInstallMessageHandler(logProcessor);

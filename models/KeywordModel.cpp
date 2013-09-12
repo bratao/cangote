@@ -18,35 +18,33 @@
      Boston, MA 02111-1307, USA.
 */
 
-#include "MetadataModel.h"
-
-MetaModel::MetaModel(QObject *parent) :
+#include "KeywordModel.h"
+#include "core/gnunet/filesharing/publish/publish.h"
+#include "core/gnunet/filesharing/publish/publishfile.h"
+KeywordModel::KeywordModel(QObject *parent) :
     QAbstractListModel(parent)
 {
 
-    connect(this, &MetaModel::addSignal, this, &MetaModel::addSlot);
+    connect(this, &KeywordModel::addSignal, this, &KeywordModel::addSlot);
 
 
 }
-int MetaModel::rowCount(const QModelIndex& parent) const
+int KeywordModel::rowCount(const QModelIndex& parent) const
 {
     return m_data.size();
 }
 
-QVariant MetaModel::data(const QModelIndex& index, int role) const
+QVariant KeywordModel::data(const QModelIndex& index, int role) const
 {
 
-    Metadata* metadata = m_data[index.row()];
+    QString value = m_data[index.row()];
 
 
     switch(role)
     {
 
     case NAME:
-        return metadata->name;
-        break;
-    case VALUE:
-        return metadata->value;//search->num_results;
+        return value;
         break;
     default:
         return QVariant::Invalid;
@@ -57,39 +55,30 @@ QVariant MetaModel::data(const QModelIndex& index, int role) const
 }
 
 
-QHash<int, QByteArray> MetaModel::roleNames() const {
+QHash<int, QByteArray> KeywordModel::roleNames() const {
     QHash<int, QByteArray> roles;
-    roles[NAME]                 = "name";
-    roles[VALUE]                = "value";
-
+    roles[NAME]                   = "name";
 
 
     return roles;
 }
 
 
-Metadata *MetaModel::add(QString name, QString value )
+void KeywordModel::add(QString name)
 {
 
-    Metadata* metadata = new Metadata;
-    metadata->name = name;
-    metadata->value = value;
+    emit addSignal(name);
 
-    emit addSignal(metadata);
-
-    return metadata;
 
 }
 
-void  MetaModel::addSlot(Metadata* metadata)
+void  KeywordModel::addSlot(QString name)
 {
     int count = m_data.count();
 
     beginInsertRows(QModelIndex(), count, count);
 
-    m_data.append(metadata);
-    //connect(download, &DownloadItem::modifiedSignal,this, &DownloadsModel::resultModifiedSlot);
-    //download->setIndex(count);
+    m_data.append(name);
 
     endInsertRows();
 
@@ -98,17 +87,7 @@ void  MetaModel::addSlot(Metadata* metadata)
 
 
 
-Metadata* MetaModel::getMetadata(int index)
-{
-    if ((index < 0) || (index >= m_data.count()))
-        return NULL;
-
-
-    return m_data.at(index);
-
-}
-
-int MetaModel::getCount()
+int KeywordModel::getCount()
 {
     return m_data.count();
 }

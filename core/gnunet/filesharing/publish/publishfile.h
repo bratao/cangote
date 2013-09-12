@@ -2,7 +2,14 @@
 #define PUBLISHFILE_H
 
 #include <QObject>
+#include <QStringList>
+#include <QStringListModel>
+#include "core/gnunet/gnunet_includes.h"
+#include "models/MetadataModel.h"
+#include "models/KeywordModel.h"
 
+
+class KeyworkModel;
 class PublishFile : public QObject
 {
     Q_OBJECT
@@ -15,6 +22,11 @@ class PublishFile : public QObject
     Q_PROPERTY(unsigned int expiration READ expiration WRITE setExpiration NOTIFY expirationChanged)
     Q_PROPERTY(int replication READ replication WRITE setReplication NOTIFY replicationChanged)
 
+    Q_PROPERTY(KeywordModel* keywordModel READ keywordModel CONSTANT)
+    Q_PROPERTY(MetaModel* metadataModel READ metadataModel CONSTANT)
+
+    Q_PROPERTY(QImage* thumbnail READ thumbnail CONSTANT)
+    Q_PROPERTY(bool haveThumbnail READ haveThumbnail WRITE setHaveThumbnail NOTIFY haveThumbnailChanged)
 
 
 public:
@@ -30,9 +42,9 @@ public:
     int fileSize() const
     { return m_filesize; }
 
-    void setFileName(int size)
+    void setFileSize(int size)
     {
-        m_filename = size;
+        m_filesize = size;
         emit fileSizeChanged(size);
     }
 
@@ -91,13 +103,40 @@ public:
     }
 
 
+    KeywordModel* keywordModel() const
+    { return m_keywordModel; }
+
+
+
+    MetaModel* metadataModel() const
+    { return m_metadataModel; }
+
+
+    QImage* thumbnail() const
+    { return m_thumbnail; }
+
+    int haveThumbnail() const
+    { return m_haveThumbnail; }
+
+    void setHaveThumbnail(bool haveThumbnail)
+    {
+        m_haveThumbnail = haveThumbnail;
+        emit haveThumbnailChanged(haveThumbnail);
+    }
+
+    GNUNET_FS_FileInformation* getFileInformation(){
+        return m_fi;
+    }
+
 
 
 public:
-    explicit PublishFile(GNUNET_FS_FileInformation *fi, QString filename, PublishFile* parent_file, QObject *parent = 0);
+    explicit PublishFile(QString filename,struct GNUNET_FS_FileInformation *fi, PublishFile* parent_file, QObject *parent = 0);
     
-    QString getFilename();
-    int fileInformationImport(GNUNET_FS_FileInformation *fi, uint64_t length, GNUNET_CONTAINER_MetaData *meta, GNUNET_FS_Uri **uri, GNUNET_FS_BlockOptions *bo, int *do_index, void **client_info);
+    int fileInformationImport(struct GNUNET_FS_FileInformation *fi, uint64_t length,struct GNUNET_CONTAINER_MetaData *meta,struct GNUNET_FS_Uri **uri,
+                              struct GNUNET_FS_BlockOptions *bo, int *do_index, void **client_info);
+    void addKeyword(QString keyword);
+    int addMetadata(const char *plugin_name,EXTRACTOR_MetaType type, EXTRACTOR_MetaFormat format, const char *data_mime_type, const char *data, size_t data_len);
 signals:
 
     void fileNameChanged(QString filename);
@@ -108,11 +147,17 @@ signals:
     void expirationChanged(unsigned int expiration);
     void replicationChanged(int replication);
 
+    void thumbnailChanged(QImage* image);
+    void haveThumbnailChanged(bool haveThumbnail);
+
 
     
 public slots:
 
 private:
+    MetaModel* m_metadataModel;//This model should exist on the Qml Main thread.
+    KeywordModel* m_keywordModel;//This model should exist on the Qml Main thread.
+
     struct GNUNET_FS_FileInformation *m_fi;
     PublishFile* m_parent;
     QString m_filename;
@@ -123,7 +168,10 @@ private:
     int m_priority;
     unsigned int m_expiration;
     int m_replication;
+    QImage * m_thumbnail;
+    bool m_haveThumbnail;
     QImage *getThumbnail(const struct GNUNET_CONTAINER_MetaData *meta);
+    void inpectInfo();
 };
 
 #endif // PUBLISHFILE_H
