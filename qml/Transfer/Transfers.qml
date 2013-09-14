@@ -74,7 +74,11 @@ Item
             role: "size"
             delegate:Item{
                 Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
                     text: Utils.friendlyUnit(styleData.value,false)
+                    renderType: Text.NativeRendering
                 }
             }
         }

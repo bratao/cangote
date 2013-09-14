@@ -302,9 +302,12 @@ Publish::publishItemsSlot ()
                    : GNUNET_IDENTITY_ego_get_private_key (ns),
                    namespace_id, namespace_uid,
                    GNUNET_FS_PUBLISH_OPTION_NONE);
+
+
   }
 
 
+  m_model->clean();
 
 
   //GNUNET_break (GNUNET_YES == close_master_publish_dialog (ctx));

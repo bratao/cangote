@@ -99,7 +99,9 @@ void createTray()
 
 void logProcessor(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
+    Q_UNUSED(context);
     QFile file(QDate::currentDate().toString("cangote_dd_MM_yyyy.log"));
+
 
     Q_ASSERT(file.open(QIODevice::Append | QIODevice::Text));
 
@@ -108,10 +110,10 @@ void logProcessor(QtMsgType type, const QMessageLogContext &context, const QStri
 
     switch (type)
     {
-    case QtDebugMsg:	out << "[Debug] "; break;
-    case QtWarningMsg:  out << "[Warning] "; break;
-    case QtCriticalMsg: out << "[Critical] "; break;
-    case QtFatalMsg:    out << "[Fatal] "; break;
+        case QtDebugMsg:	out << "[Debug] "; break;
+        case QtWarningMsg:  out << "[Warning] "; break;
+        case QtCriticalMsg: out << "[Critical] "; break;
+        case QtFatalMsg:    out << "[Fatal] "; break;
     }
 
     out << msg << '\n';

@@ -27,6 +27,7 @@ class SharedFile : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString filename READ filename WRITE setFilename NOTIFY filenameChanged)
+    Q_PROPERTY(uint64_t size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QString hash READ hash WRITE setHash NOTIFY hashChanged)
 public:
@@ -58,10 +59,19 @@ public:
         emit hashChanged(hash);
     }
 
+    uint64_t size() const
+    { return m_size; }
+    void setSize(uint64_t size)
+    {
+        m_size = size;
+        emit sizeChanged(size);
+    }
+
 signals:
     void filenameChanged(QString);
     void pathChanged(QString);
     void hashChanged(QString);
+    void sizeChanged(uint64_t);
 public slots:
 
 
@@ -69,6 +79,7 @@ private:
     QString m_filename;
     QString m_path;
     QString m_hash;
+    uint64_t m_size;
     
 };
 

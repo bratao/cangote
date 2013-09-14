@@ -156,3 +156,10 @@ int PublishModel::getCount()
     return m_data.count();
 }
 
+int PublishModel::clean()
+{
+  beginResetModel();
+  m_data.clear();
+  endResetModel();
+}
+

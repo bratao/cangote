@@ -44,6 +44,7 @@ public:
     void mark_download_completed(DownloadItem *de, qint64 size);
     void setDownloadActive(DownloadItem *de);
     void setDownloadInactive(DownloadItem *de);
+    void *eventHandler(void *cls, const struct GNUNET_FS_ProgressInfo *info);
 signals:
     
 public slots:

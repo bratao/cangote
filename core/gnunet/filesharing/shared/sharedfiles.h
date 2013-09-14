@@ -24,6 +24,7 @@
 #include <QObject>
 
 class SharedFilesModel;
+class SharedFile;
 class SharedFiles : public QObject
 {
     Q_OBJECT
@@ -33,6 +34,7 @@ public:
     void init();
     void init(struct GNUNET_FS_Handle *fs);
     void addNewFiles(const char *filename, const struct GNUNET_HashCode *file_id);
+    void *eventHandler(void *cls, const struct GNUNET_FS_ProgressInfo *info);
 signals:
     
 public slots:
@@ -41,6 +43,11 @@ private:
     struct GNUNET_FS_Handle * m_fs;
     SharedFilesModel* m_model;
     
+    SharedFile *setup_publish(struct GNUNET_FS_PublishContext *pc, const char *filename, uint64_t fsize, struct PublishEntry *parent);
+    void handle_publish_error(struct PublishEntry *pe, const char *emsg);
+    void handle_publish_completed(struct PublishEntry *pe, const struct GNUNET_FS_Uri *uri);
+    void mark_publish_progress(struct PublishEntry *pe, uint64_t size, uint64_t completed);
+    void handle_publish_stop(struct PublishEntry *pe);
 };
 
 #endif // SHAREDFILES_H

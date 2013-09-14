@@ -84,8 +84,8 @@ public:
         emit connectedPeersChanged(connected);
     }
 
-    GNUNET_CRYPTO_EccPublicKey myPublicKey() const;
-    void setMyPublicKey(const GNUNET_CRYPTO_EccPublicKey &myPublicKey);
+    GNUNET_CRYPTO_EccPublicSignKey myPublicKey() const;
+    void setMyPublicKey(const GNUNET_CRYPTO_EccPublicSignKey &myPublicKey);
 
 
 
@@ -97,7 +97,7 @@ private:
     static void mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
                                  const struct GNUNET_CONFIGURATION_Handle *cfg);
 
-    static void keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
+    static void keepaliveTaskCallback (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
 
 public:
     void armConnectionStateChange(int connected);
@@ -169,7 +169,7 @@ private:
     /**
      * My public key.
      */
-    struct GNUNET_CRYPTO_EccPublicKey m_myPublicKey;
+    struct GNUNET_CRYPTO_EccPublicSignKey m_myPublicKey;
 
 
 

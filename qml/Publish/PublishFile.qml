@@ -136,6 +136,7 @@ Window {
 
                     onClicked: {
                         Cangote.gnunet.publish.publishItems();
+                        publishWnd.close()
                     }
 
                 }

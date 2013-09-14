@@ -249,7 +249,7 @@ void NetworkManager::putHelloSlot (QString helloUrl)
 
 
 
-    GNUNET_CRYPTO_EccPublicKey mypublickey = theApp->gnunet()->myPublicKey();
+    GNUNET_CRYPTO_EccPublicSignKey mypublickey = theApp->gnunet()->myPublicKey();
 
     int ret = GNUNET_HELLO_parse_uri(put_uri, &mypublickey, &hello, &m_gnunetTransportPlugins->GPI_plugins_find);
 

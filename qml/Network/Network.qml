@@ -93,7 +93,7 @@ Item{
                     anchors.verticalCenter: parent.verticalCenter
                     color: styleData.textColor
                     elide: styleData.elideMode
-                    text: Utils.friendlyUnit(styleData.value,true)
+                    text: Utils.friendlyUnit(styleData.value,false)
                     renderType: Text.NativeRendering
                 }
             }
@@ -107,7 +107,7 @@ Item{
                     anchors.verticalCenter: parent.verticalCenter
                     color: styleData.textColor
                     elide: styleData.elideMode
-                    text: Utils.friendlyUnit(styleData.value,true)
+                    text: Utils.friendlyUnit(styleData.value,false)
                     renderType: Text.NativeRendering
                 }
             }

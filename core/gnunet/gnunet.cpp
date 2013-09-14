@@ -19,35 +19,31 @@
 */
 
 #include "gnunet.h"
-#include "filesharing/filesharing.h"
+#include "core/gnunet/filesharing/transfer/downloads.h"
 #include "network/NetworkManager.h"
 #include "filesharing/publish/publish.h"
-//#include "core/servicestatus.h"
-#include "core/gnunet/filesharing/transfer/downloads.h"
+#include "filesharing/filesharing.h"
 
 #include <math.h>
 #include <QElapsedTimer>
 #include <QWaitCondition>
 
 
-
-GNUNet::GNUNet(QObject *parent) :
-    ServiceObject(parent)
-{
-
-    m_connected = false;
-
-}
-
+/***********************************
+ * START STATIC CALLBACKS
+ ***********************************/
 
 /**
- * Static callback. Is the first function executed when GNUNet is running.
+ * Static function.
+ * The first function executed when GNUNet is running.
  */
 void GNUNet::mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
                               const struct GNUNET_CONFIGURATION_Handle *cfg)
 {
+    //Retrive our main funtion
     GNUNet* gnunetInstance = (GNUNet*)cls;
     Q_ASSERT(gnunetInstance);
+
 
     //Call our main loop
     gnunetInstance->mainLoop(args,cfgfile,cfg);
@@ -56,26 +52,28 @@ void GNUNet::mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
 
 
 /**
- * Static function to process our messages.Is needed as the GNUNet loop locks our internal qt Loop.
+ * Static function
+ * Called to process our internal messages
  */
-void GNUNet::keepaliveTask (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc)
+void GNUNet::keepaliveTaskCallback (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc)
 {
-    GNUNet* gnunetInstance = (GNUNet*)cls;
+    Q_UNUSED(tc);
+
+    //Retrive our main funtion
     Q_ASSERT(cls);
+    GNUNet* gnunetInstance = (GNUNet*)cls;
 
     //Process the events
     gnunetInstance->processEvents();
-    gnunetInstance->filesharing()->ProcessEvents();
 
     //Call again in 500 millisecond.
-    GNUNET_SCHEDULER_add_delayed (GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_MILLISECONDS, 500), &keepaliveTask, gnunetInstance);
+    GNUNET_SCHEDULER_add_delayed (GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_MILLISECONDS, 500), &keepaliveTaskCallback, gnunetInstance);
 }
 
-static void
-armConnectionStateChangeCallback (void *cls,
-                             int connected)
+
+static void armConnectionStateChangeCallback (void *cls,
+                                              int connected)
 {
-    char *service_list;
     GNUNet* gnunetInstance = (GNUNet*)cls;
     Q_ASSERT(cls);
 
@@ -86,21 +84,33 @@ armConnectionStateChangeCallback (void *cls,
 
 static void
 serviceStatusChange (void *cls,
-                       const char *service,
-                       enum GNUNET_ARM_ServiceStatus status)
+                     const char *service,
+                     enum GNUNET_ARM_ServiceStatus status)
 {
-    /* Very crude, we can probably do better.
-   * Maybe keep a list of running services, and modify it in response
-   * to service status changes, then update the indicator,
-   * without requesting a list from ARM every goddamned time?
-   */
-    /* GNUNET_ARM_request_service_list (arm,
-                   SERVICE_LIST_TIMEOUT,
-                   &service_list_callback, cls);*/
+    Q_UNUSED(cls);
+    Q_UNUSED(service);
+    Q_UNUSED(status);
+
+    //TODO:: Monitor services status change (#12)
+
 }
 
+/***********************************
+ * END STATIC CALLBACKS
+ ***********************************/
 
 
+GNUNet::GNUNet(QObject *parent) :
+    ServiceObject(parent)
+{
+
+    m_connected = false;
+
+}
+
+/**
+ * Start GNUnet
+ */
 
 void GNUNet::start()
 {
@@ -117,36 +127,32 @@ void GNUNet::start()
         GNUNET_GETOPT_OPTION_END
     };
 
-    char *const argv[] = {
-        "cangote",
+    const char *const argv[] = {
+        "Cangote",
         // "-L", "DEBUG",
         NULL
     };
 
-
-
-    char * teste = "cangote";
-    int argc = (sizeof (argv) / sizeof (char *)) - 1;
-    int ret =
-            GNUNET_PROGRAM_run ((sizeof (argv) / sizeof (char *)) - 1,argv,
-                                //GNUNET_PROGRAM_run ( 1, (char * const*)teste,
-                                "cangote", "cangote help", options,
-                                mainLoopCallback, this);
-
+    GNUNET_PROGRAM_run ((sizeof (argv) / sizeof (char *)) - 1,(char *const*)argv,
+                        "Cangote", "cangote helper", options,
+                        mainLoopCallback, this);
 
 
 }
 
-QElapsedTimer timer;
-
-
 /**
- * Is the first function executed when GNUNet is running.
+ * It's the first function executed when GNUNet is running.
  */
 void GNUNet::mainLoop(char *const *args, const char *cfgfile,
                       const struct GNUNET_CONFIGURATION_Handle *cfg)
 {
-    char *fn;
+    Q_UNUSED(args);
+    Q_UNUSED(cfgfile);
+    Q_UNUSED(cfg);
+
+
+
+    char *privateKeyFileName;
     struct GNUNET_CRYPTO_EccPrivateKey *priv;
 
     //Create our configuration
@@ -155,29 +161,29 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
 
     //Get my information
 
-    /* load private key */
+    //load private key
     if (GNUNET_OK !=
             GNUNET_CONFIGURATION_get_value_filename (m_config, "PEER", "PRIVATE_KEY",
-                                                     &fn))
+                                                     &privateKeyFileName))
     {
         qWarning() << QString("Could not find option `GNUNETD:HOSTKEYFILE' in configuration.\n");
         return;
     }
-    if (NULL == (priv = GNUNET_CRYPTO_ecc_key_create_from_file (fn)))
+    if (NULL == (priv = GNUNET_CRYPTO_ecc_key_create_from_file (privateKeyFileName)))
     {
-        qWarning() << QString("Loading hostkey from %1 failed.\n").arg(fn);
-        GNUNET_free (fn);
+        qWarning() << QString("Loading hostkey from %1 failed.\n").arg(privateKeyFileName);
+        GNUNET_free (privateKeyFileName);
         return;
     }
-    GNUNET_free (fn);
-    GNUNET_CRYPTO_ecc_key_get_public (priv, &m_myPublicKey);
+    GNUNET_free (privateKeyFileName);
+    GNUNET_CRYPTO_ecc_key_get_public_for_signature(priv, &m_myPublicKey);
     GNUNET_free (priv);
     GNUNET_CRYPTO_hash (&m_myPublicKey, sizeof (m_myPublicKey), &m_myPeerIdentity.hashPubKey);
 
 
 
     //A update function to process our messages
-    GNUNET_SCHEDULER_add_now ( keepaliveTask, this);
+    GNUNET_SCHEDULER_add_now ( keepaliveTaskCallback, this);
 
 
     //Start arm
@@ -191,6 +197,9 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
 
 }
 
+/**
+ * Signal that a change in our connection happened
+ */
 void GNUNet::armConnectionStateChange (int connected)
 {
 
@@ -198,9 +207,7 @@ void GNUNet::armConnectionStateChange (int connected)
     {
 
         setConnected(true);
-
         emit gnunetConnected();
-
         //TODO: Implement working services list retrival.
     }
     else
@@ -211,7 +218,9 @@ void GNUNet::armConnectionStateChange (int connected)
 
 }
 
-
+/**
+ * Start the services such as filesharing
+ */
 
 void GNUNet::startServices()
 {
@@ -223,6 +232,9 @@ void GNUNet::startServices()
     emit gnunetStarted();
 }
 
+/**
+ * Process our internal pending messages.
+ */
 void GNUNet::processEvents()
 {
     QCoreApplication::processEvents();
@@ -230,12 +242,12 @@ void GNUNet::processEvents()
 }
 
 
-GNUNET_CRYPTO_EccPublicKey GNUNet::myPublicKey() const
+GNUNET_CRYPTO_EccPublicSignKey GNUNet::myPublicKey() const
 {
     return m_myPublicKey;
 }
 
-void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EccPublicKey &myPublicKey)
+void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EccPublicSignKey &myPublicKey)
 {
     m_myPublicKey = myPublicKey;
 }

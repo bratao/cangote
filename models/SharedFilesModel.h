@@ -36,11 +36,12 @@ public:
     enum SearchRoles { FILENAME, FILESIZE ,AVAILIABILITY, APPLICABILITYTRANK, NB_SEARCH_COLUMNS };
 
 
-    void addFile(QString filename, QString filehash);
+    SharedFile *addFile(QString filename, QString filehash);
+    SharedFile *addFile(QString filename, uint64_t filesize);
 signals:
-     void addFileSignal(QString filename, QString filehash);
+     void addFileSignal(SharedFile *file);
 private slots:
-    void addFileSlot(QString filename, QString filehash);
+    void addFileSlot(SharedFile *file);
 
 private:
     QList<SharedFile*> m_data;

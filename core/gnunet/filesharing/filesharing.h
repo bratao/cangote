@@ -122,7 +122,7 @@ private:
 
     struct GNUNET_CONFIGURATION_Handle *m_config;
 
-    SearchModel* m_search;
+    SearchModel* m_searchModel;
     Downloads* m_downloads;
     SharedFiles* m_sharedFiles;
 

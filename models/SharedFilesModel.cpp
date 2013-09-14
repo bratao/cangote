@@ -23,7 +23,7 @@
 SharedFilesModel::SharedFilesModel(QObject *parent) :
     QAbstractListModel(parent)
 {
-    connect(this,&SharedFilesModel::addFileSignal,this,&SharedFilesModel::addFileSlot);
+    connect(this,&SharedFilesModel::addFileSignal,this,&SharedFilesModel::addFileSlot, Qt::BlockingQueuedConnection);
 }
 
 int SharedFilesModel::rowCount(const QModelIndex& parent) const
@@ -50,17 +50,35 @@ QVariant SharedFilesModel::data(const QModelIndex& index, int role) const
 }
 
 
-void SharedFilesModel::addFile(QString filename, QString filehash)
+SharedFile* SharedFilesModel::addFile(QString filename, QString filehash)
 {
-    emit addFileSignal(filename, filehash);
+    SharedFile* file = new SharedFile();
+    file->moveToThread(this->thread());
+    //file->setParent(this);
+    file->setFilename(filename);
+    file->setHash(filehash);
+    emit addFileSignal(file);
+
+    return file;
+}
+
+SharedFile* SharedFilesModel::addFile(QString filename, uint64_t filesize)
+{
+    SharedFile* file = new SharedFile();
+    file->moveToThread(this->thread());
+    //file->setParent(this);
+    file->setFilename(filename);
+    file->setSize(filesize);
+    emit addFileSignal(file);
+
+    return file;
 }
 
 
-void SharedFilesModel::addFileSlot(QString filename, QString filehash)
+void SharedFilesModel::addFileSlot(SharedFile* file)
 {
-    SharedFile* file = new SharedFile(this);
-    file->setFilename(filename);
-    file->setHash(filehash);
+
+
 
     int count = m_data.count();
 

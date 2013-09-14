@@ -60,6 +60,7 @@ public:
 
     PublishFile* add(QString name, struct GNUNET_FS_FileInformation *fi, PublishFile *parent);
     Q_INVOKABLE PublishFile* getPublishedFile(int index);
+    int clean();
 public slots:
 
 signals:

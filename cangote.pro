@@ -2,7 +2,7 @@ QT += widgets qml quick
 TARGET = cangote
 CONFIG+=qml_debug
 
-#QMAKE_CXXFLAGS+=-Wall -Wextra #-Werror
+QMAKE_CXXFLAGS+=-Wall -Wextra #-Werror
 QMAKE_CXXFLAGS_RELEASE += -g
 QMAKE_CXXFLAGS += -std=c++11
 QMAKE_CFLAGS_RELEASE += -g
@@ -10,11 +10,11 @@ QMAKE_LFLAGS_RELEASE =
 
 
 !win32 {
-   LIBS += -L/home/bratao/gnunet/gnunet-bin/lib -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lextractor
+   LIBS += -L/home/bratao/gnunet/gnunet-bin/lib -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunetidentity -lgnunettransport -lgnunetats -lgnunetnse -lextractor
 
 }
 win32 {
-   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunethello -lgnunetcore -lgnunettransport -lgnunetats -lgnunetnse -lgnunetarm -lws2_32 -lintl -lextractor
+   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunethello -lgnunetcore -lgnunetidentity -lgnunettransport -lgnunetats -lgnunetnse -lgnunetarm -lws2_32 -lintl -lextractor
     INCLUDEPATH += C:/sbuild_old/mingw/include
 }
 
@@ -22,8 +22,10 @@ RC_ICONS = asserts\CangoteHead.ico
 
 SOURCES += \
     main.cpp \
-    core/cangotecore.cpp \
+    service.cpp \
     cangote.cpp \
+    core/cangotecore.cpp \
+    core/status.cpp \
     core/gnunet/gnunet.cpp \
     core/gnunet/filesharing/search/searchresult.cpp \
     core/gnunet/filesharing/search/search.cpp \
@@ -31,28 +33,28 @@ SOURCES += \
     core/gnunet/filesharing/transfer/downloads.cpp \
     core/gnunet/filesharing/transfer/downloaditem.cpp \
     core/gnunet/filesharing/filesharing.cpp \
+    core/gnunet/filesharing/shared/sharedfile.cpp \
+    core/gnunet/filesharing/publish/publish.cpp \
+    core/gnunet/filesharing/publish/publishfile.cpp \
     core/gnunet/launcher/gnunetlauncher.cpp \
     core/gnunet/network/peerbandwidth.cpp \
     core/gnunet/network/peer.cpp \
-    core/gnunet/util/helpers.cpp \
-    service.cpp \
-    models/NetworkPeersModel.cpp \
+    core/gnunet/network/gnunettransportplugins.cpp \
     core/gnunet/network/NetworkManager.cpp \
+    core/gnunet/util/helpers.cpp \
+    models/NetworkPeersModel.cpp \
     models/SearchModel.cpp \
     models/SearchResultModel.cpp \
-    core/gnunet/filesharing/shared/sharedfile.cpp \
     models/DownloadsModel.cpp \
     models/models.cpp \
     models/SharedFilesModel.cpp \
-    preferences/preferences.cpp \
-    utils/utils.cpp \
-    core/gnunet/network/gnunettransportplugins.cpp \
-    core/gnunet/filesharing/publish/publish.cpp \
     models/PublishModel.cpp \
-    core/gnunet/filesharing/publish/publishfile.cpp \
-    core/status.cpp \
     models/MetadataModel.cpp \
-    models/KeywordModel.cpp
+    models/KeywordModel.cpp \
+    preferences/preferences.cpp \
+    utils/utils.cpp
+
+
 
 OTHER_FILES += \
     qml/main.qml \
