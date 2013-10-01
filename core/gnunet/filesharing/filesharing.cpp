@@ -22,7 +22,10 @@
 #include <QObject>
 #include <QDebug>
 
+
+#include "cangote.h"
 #include "filesharing.h"
+#include "preferences/preferences.h"
 
 #include "core/cangotecore.h"
 #include "core/gnunet/gnunet.h"
@@ -571,10 +574,10 @@ void FileSharing::downloadFromSearch(SearchResult* searchResult)
   //TODO: Pass a download context
 
 
-  dc= GNUNET_FS_download_start (m_fs,
+  dc = GNUNET_FS_download_start (m_fs,
                                 searchResult->getUri(),
                                 searchResult->getMeta() /* meta data */,
-                                searchResult->getFilename().toUtf8(), NULL /* tempname */ ,
+                                 (thePrefs->getDownloadDirectory() +"/" + QString(searchResult->fileName())).toUtf8(), NULL /* tempname */ ,
                                 0 /* offset */ ,
                                 searchResult->getFilesize(),
                                 anonLevel, opt,

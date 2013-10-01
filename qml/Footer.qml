@@ -4,9 +4,9 @@ import QtQuick.Controls.Private 1.0
 import QtQuick.Layouts 1.0
 import Cangote 1.0
 
-Rectangle {
+StatusBar {
     height: 20
-    color : "lightgrey"
+    //color : "lightgrey"
 
     property bool needTooltip: statusIcon.hovered
       property real tooltipX: statusIcon.mouseX

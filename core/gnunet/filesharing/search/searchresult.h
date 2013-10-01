@@ -29,6 +29,44 @@ class Search;
 class SearchResult : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
+
+
+
+public:
+
+
+    /**
+     * @brief name , Fancy name to present
+     * @return
+     */
+    QString name() const
+    { return m_name; }
+    void setName(QString name)
+    {
+        m_name = name;
+        emit nameChanged(name);
+    }
+
+    /**
+     * @brief fileName , the filename as it should be downloaded on disk
+     * @return
+     */
+    QString fileName() const
+    { return m_filename; }
+    void setFileName(QString filename)
+    {
+        m_filename = filename;
+        emit fileNameChanged(filename);
+    }
+
+signals:
+    void nameChanged(QString);
+    void fileNameChanged(QString);
+
+
 public:
     explicit SearchResult(QObject *m_parent = 0);
 
@@ -40,7 +78,6 @@ public:
     void setAvailabilityCertainty(int availability_certainty, bool notifyModified =true);
     void modified();
     int getPercentAvail();
-    void setFilename(QString m_filename, bool notifyModified =true);
     void setFilesize(unsigned int m_fileSize, bool notifyModified =true);
     void setOwner(Search *m_owner, bool notifyModified =true);
     void setParent(SearchResult *m_parent, bool notifyModified =true);
@@ -49,7 +86,6 @@ public:
     void setResult(GNUNET_FS_SearchResult *m_result, bool notifyModified =true);
     QPersistentModelIndex *getIndex();
     void setIndex(QPersistentModelIndex *m_index, bool notifyModified =true);
-    QString getFilename();
     unsigned int getFilesize();
     int getApplicabilityRank();
     GNUNET_CONTAINER_MetaData *getMeta();
@@ -58,10 +94,12 @@ public:
 private:
 
     QString m_filename;
+    QString m_name;
+    QString m_hash;
     void* m_preview;
     unsigned int m_fileSize;
     QPersistentModelIndex* m_index;
-    class Search* m_owner;
+    Search* m_owner;
     struct GNUNET_FS_SearchResult *m_result;
     SearchResult *m_parent;
     const struct GNUNET_FS_Uri* m_uri;
@@ -70,6 +108,7 @@ private:
     int availability_rank;
     int availability_certainty;
 
+    void checkDownloaded();
 signals:
         void modifiedSignal(int m_index);
         void requestDownload(SearchResult* m_result);

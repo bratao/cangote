@@ -50,9 +50,13 @@ public:
     QVariant data(const QModelIndex& index, int role) const;
 
 
+    Q_INVOKABLE DownloadItem *get(int index);
+    int get(QString hash);
 private:
     QHash<int, QByteArray> roleNames() const;
     QList<DownloadItem*> m_data;
+
+    QHash<QString, int> m_hashData;
     
  };
 

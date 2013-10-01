@@ -111,16 +111,39 @@ DownloadItem* DownloadsModel::addDownload(DownloadItem *pde, struct GNUNET_FS_Do
                                           qint64 completed )
 {
 
-    //Convert
-    QString strUri;
-    char* tempuri = GNUNET_FS_uri_to_string (uri);
-    strUri = strUri.fromUtf8(tempuri);
 
-    DownloadItem* download = new DownloadItem(strUri);
+    //Convert uri to Key
+    GNUNET_HashCode hashcode;
+    GNUNET_FS_uri_to_key(uri,&hashcode);
+
+    //Get as QString
+    const char * hash = GNUNET_h2s_full(&hashcode);
+    QString strHash = QString(hash);
+
+
+
+    DownloadItem* download = new DownloadItem(strHash);
 
     download->setParent(pde);
     download->setContext(dc);
-    download->setFilename(filename);
+    char* fancyName =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
+                                                                 EXTRACTOR_METATYPE_PACKAGE_NAME,
+                                                                 EXTRACTOR_METATYPE_TITLE,
+                                                                 EXTRACTOR_METATYPE_BOOK_TITLE,
+                                                                 EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
+                                                                 EXTRACTOR_METATYPE_FILENAME,
+                                                                 EXTRACTOR_METATYPE_DESCRIPTION,
+                                                                 EXTRACTOR_METATYPE_SUMMARY,
+                                                                 EXTRACTOR_METATYPE_ALBUM,
+                                                                 EXTRACTOR_METATYPE_COMMENT,
+                                                                 EXTRACTOR_METATYPE_SUBJECT,
+                                                                 EXTRACTOR_METATYPE_KEYWORDS,
+                                                                 -1);
+
+
+    download->setPath(filename);
+
+    download->setFilename(QString(fancyName));
     download->setMetadata(meta);
     download->setSize(size);
     download->setCompleted(completed);
@@ -162,6 +185,8 @@ void DownloadsModel::addDownloadSlot(DownloadItem* download)
 
     beginInsertRows(QModelIndex(), count, count);
 
+    m_hashData.insert(download->getHash(),count);
+
     m_data.append(download);
     connect(download, &DownloadItem::modifiedSignal,this, &DownloadsModel::resultModifiedSlot);
     download->setIndex(count);
@@ -175,3 +200,29 @@ void DownloadsModel::resultModifiedSlot(int indexRow)
 {
     emit dataChanged(index(indexRow,0), index(indexRow,0));
 }
+
+DownloadItem* DownloadsModel::get(int index)
+{
+    if ((index < 0) || (index >= m_data.count()))
+        return NULL;
+
+
+    return m_data.at(index);
+
+}
+
+/**
+ * @brief Get index for specified hash
+ * @param hash
+ * @return -1 for not found, >0 otherwise.
+ */
+int DownloadsModel::get(QString hash)
+{
+
+    if(m_hashData.contains(hash))
+        return m_hashData[hash];
+    else
+        return -1;
+
+}
+

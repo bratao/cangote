@@ -17,9 +17,12 @@
      Free Software Foundation, Inc., 59 Temple Place - Suite 330,
      Boston, MA 02111-1307, USA.
 */
-
-//#include "core/cangote.h"
 #include "searchresult.h"
+
+#include "cangote.h"
+#include "core/cangotecore.h"
+#include "models/models.h"
+#include "models/DownloadsModel.h"
 
 
 SearchResult::SearchResult(QObject *parent) :
@@ -100,20 +103,6 @@ void SearchResult::setFilesize(unsigned int fileSize, bool notifyModified)
 }
 
 
-
-void SearchResult::setFilename(QString filename, bool notifyModified)
-{
-    m_filename = filename;
-    if(notifyModified)
-        modified();
-}
-
-QString SearchResult::getFilename()
-{
-    return m_filename;
-}
-
-
 unsigned int SearchResult::getFilesize()
 {
     return m_fileSize;
@@ -159,6 +148,17 @@ void SearchResult::setPreview(void* preview, bool notifyModified)
 void SearchResult::setUri(GNUNET_FS_Uri * uri, bool notifyModified)
 {
     this->m_uri = uri;
+
+    //Convert uri to Key
+    GNUNET_HashCode hashcode;
+    GNUNET_FS_uri_to_key(uri,&hashcode);
+
+    //Get as QString
+    const char * hash = GNUNET_h2s_full(&hashcode);
+    m_hash = QString(hash);
+
+    checkDownloaded();
+
     if(notifyModified)
         modified();
 }
@@ -192,20 +192,17 @@ QPersistentModelIndex* SearchResult::getIndex()
     return m_index;
 }
 
+/**
+ * @brief Check if this file was already downloaded or is downloading.
+ */
+void SearchResult::checkDownloaded(){
+    //TODO:: Implement me
+    if(theApp->models()->downloadsModel()->get(m_hash) != -1)
+        m_name = "DOWNLOADED";
+}
 
 
 void SearchResult::download()
 {
-    //GNUNET_FS_download_start (fs,
-    //                       de->uri,
-    //                       NULL /* meta data */,
-    //                                           de->filename, NULL /* tempname */ ,
-    //                                           0 /* offset */ ,
-    //                                           len,
-    //                       de->anonymity, opt,
-    //                       de,
-    //                                           (NULL != de->pde) ? de->pde->dc : NULL));
-    
-    //gWarn("Download not implemented");
     emit requestDownload(this);
 }

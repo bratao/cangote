@@ -22,18 +22,27 @@
 #define SHAREDFILE_H
 
 #include <QObject>
+#include <utils/utils.h>
+#include "cangote.h"
 
 class SharedFile : public QObject
 {
     Q_OBJECT
+
+
+public:
     Q_PROPERTY(QString filename READ filename WRITE setFilename NOTIFY filenameChanged)
     Q_PROPERTY(uint64_t size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QString hash READ hash WRITE setHash NOTIFY hashChanged)
+    Q_PROPERTY(int progress READ progress WRITE setProgress NOTIFY progressChanged)
+
+
 public:
     explicit SharedFile(QObject *parent = 0);
     
-
+  enum Status { Publishing, Published,Indexed,Unindexing,Unindexed, Error, Unknown };
+  Q_ENUMS(Status)
 
     QString filename() const
     { return m_filename; }
@@ -48,6 +57,8 @@ public:
     void setPath(QString path)
     {
         m_path = path;
+        setFilename(theUtils->getFileName(path));
+
         emit pathChanged(path);
     }
 
@@ -67,20 +78,39 @@ public:
         emit sizeChanged(size);
     }
 
+    int progress() const
+    { return m_progress; }
+    void setProgress(int progress)
+    {
+        m_progress = progress;
+        emit progressChanged(m_index);
+    }
+
+    QString getFancyStatus();
 signals:
     void filenameChanged(QString);
     void pathChanged(QString);
     void hashChanged(QString);
     void sizeChanged(uint64_t);
+    void progressChanged(int index);
+    void statusChanged(int index);
+
 public slots:
 
 
+public:
+    void setStatus(Status status);
+
+    void setIndex(int index);
+    Q_INVOKABLE QString dummy();
 private:
     QString m_filename;
     QString m_path;
     QString m_hash;
     uint64_t m_size;
-    
+    int m_progress;
+    Status m_status;
+    int m_index;
 };
 
 #endif // SHAREDFILE_H

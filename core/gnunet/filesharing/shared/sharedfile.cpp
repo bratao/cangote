@@ -21,7 +21,77 @@
 #include "sharedfile.h"
 
 SharedFile::SharedFile(QObject *parent) :
-    QObject(parent)
+  QObject(parent)
 {
+  m_index = -1;
+  m_size = 0;
+  m_status = Unknown;
 }
 
+/**
+ * @brief Get the status as a string.
+ *        if is an activity, will display the percentage of the activity.
+ * @return The formated status
+ */
+QString SharedFile::getFancyStatus()
+{
+  QString str;
+
+  switch(m_status)
+    {
+    case Publishing:
+      {
+        str = QString("Publishing %1").arg(progress());
+        break;
+      }
+    case Published:
+      {
+        str = "Published";
+        break;
+      }
+    case Indexed:
+      {
+        str = "Indexed";
+        break;
+      }
+    case Unindexing:
+      {
+        str = "Unindexing";
+        break;
+      }
+    case Unindexed:
+      {
+        str = "Unindexed";
+        break;
+      }
+    case Error:
+      {
+        str = "Error";
+        break;
+      }
+    case Unknown:
+      {
+        str = "Unknown";
+        break;
+      }
+
+    }
+  return str;
+}
+
+
+void SharedFile::setStatus(Status status)
+{
+  m_status = status;
+  emit statusChanged(m_index);
+}
+
+void SharedFile::setIndex(int index)
+{
+  m_index = index;
+}
+
+QString SharedFile::dummy()
+{
+    return "c:/teste";
+}

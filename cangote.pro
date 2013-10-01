@@ -52,7 +52,8 @@ SOURCES += \
     models/MetadataModel.cpp \
     models/KeywordModel.cpp \
     preferences/preferences.cpp \
-    utils/utils.cpp
+    utils/utils.cpp \
+    utils/QLogger.cpp
 
 
 
@@ -129,4 +130,5 @@ HEADERS += \
     core/gnunet/filesharing/publish/publishfile.h \
     core/status.h \
     models/MetadataModel.h \
-    models/KeywordModel.h
+    models/KeywordModel.h \
+    utils/QLogger.h

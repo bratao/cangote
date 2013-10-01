@@ -15,6 +15,7 @@
 #include "core/gnunet/filesharing/filesharing.h"
 #include "core/gnunet/filesharing/publish/publish.h"
 #include "core/gnunet/filesharing/publish/publishfile.h"
+#include "core/gnunet/filesharing/transfer/downloaditem.h"
 #include "core/status.h"
 
 #include "models/SearchModel.h"
@@ -97,6 +98,7 @@ void Cangote::registerQmlTypes()
     qmlRegisterUncreatableType<Search>(URI, 1, 0, "Search", QLatin1String("Use calling the gnunet method."));
     qmlRegisterUncreatableType<Publish>(URI, 1, 0, "Publish", QLatin1String("Use calling the gnunet method."));
     qmlRegisterUncreatableType<PublishFile>(URI, 1, 0, "PublishFile", QLatin1String("Use calling the gnunet method."));
+    qmlRegisterUncreatableType<SharedFile>(URI, 1, 0, "SharedFile", QLatin1String("Use calling the gnunet method."));
 
 
     //Register models
@@ -112,6 +114,7 @@ void Cangote::registerQmlTypes()
 
 
     qmlRegisterUncreatableType<SearchResult>(URI, 1, 0, "SearchResult", QLatin1String("Use calling the gnunet method."));
+    qmlRegisterUncreatableType<DownloadItem>(URI, 1, 0, "DownloadItem", QLatin1String("Use calling the gnunet method."));
 
 
 

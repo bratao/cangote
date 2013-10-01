@@ -21,10 +21,10 @@
 #include "downloaditem.h"
 #include "core/gnunet/gnunet_includes.h"
 
-DownloadItem::DownloadItem(QString uri, QObject *parent) :
+DownloadItem::DownloadItem(QString hash, QObject *parent) :
     QObject(parent)
 {
-    m_uri = uri;
+    m_hash = hash;
     m_index = 0;
 
     m_eta = 0;
@@ -223,6 +223,11 @@ void DownloadItem::setDataAdded(int date)
 int DownloadItem::getState()
 {
     return m_state;
+}
+
+QString DownloadItem::getHash()
+{
+    return m_hash;
 }
 
 

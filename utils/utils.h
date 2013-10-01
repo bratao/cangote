@@ -18,7 +18,10 @@ public:
     Q_INVOKABLE QString friendlyUnit(quint32 val, bool is_speed);
     Q_INVOKABLE QStringList openFilePicker();
     Q_INVOKABLE QString openFolderPicker();
-    Q_INVOKABLE void openFile(QString file);
+  Q_INVOKABLE void openFile(QString file);
+  Q_INVOKABLE QString getFileName(QString path);
+  Q_INVOKABLE void openFolder(QString filePath);
+
 };
 
 #endif // UTILS_H

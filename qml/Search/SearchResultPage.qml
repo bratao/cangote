@@ -70,7 +70,7 @@ Item {
                 model: searchModel
 
 
-                onActivated:
+                onDoubleClicked:
                 {
                     model.getResult(currentRow).download()
                     console.log("TODO: Double clicked.")

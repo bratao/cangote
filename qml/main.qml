@@ -42,25 +42,23 @@ ApplicationWindow {
         }
     }
 
-    Header {
+    toolBar: Header {
         id: header
-        anchors.top: parent.top
-        width: parent.width
+        //anchors.top: parent.top
+       // width: parent.width
 
        // onSearchRequested: center.showSearchResults(header.search)
     }
 
     Center {
         id: center
-        width: parent.width
-        anchors.top: header.bottom
-        anchors.bottom: footer.top
+        anchors.fill: parent
     }
 
-    Footer {
+    statusBar: Footer {
         id: footer
-        anchors.bottom: parent.bottom
-        width: parent.width
+        //anchors.bottom: parent.bottom
+        //width: parent.width
     }
 
 

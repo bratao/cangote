@@ -130,7 +130,7 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 
 
 
-    char* desc =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
+    char* fancyName =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
                                                                  EXTRACTOR_METATYPE_PACKAGE_NAME,
                                                                  EXTRACTOR_METATYPE_TITLE,
                                                                  EXTRACTOR_METATYPE_BOOK_TITLE,
@@ -144,12 +144,25 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
                                                                  EXTRACTOR_METATYPE_KEYWORDS,
                                                                  -1);
 
+    char* fileName =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
+                                                                     EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
+                                                                     EXTRACTOR_METATYPE_FILENAME,
+                                                                 EXTRACTOR_METATYPE_PACKAGE_NAME,
+                                                                 EXTRACTOR_METATYPE_TITLE,
+                                                                 EXTRACTOR_METATYPE_BOOK_TITLE,
+                                                                 EXTRACTOR_METATYPE_DESCRIPTION,
+                                                                 EXTRACTOR_METATYPE_SUMMARY,
+                                                                 EXTRACTOR_METATYPE_ALBUM,
+                                                                 EXTRACTOR_METATYPE_COMMENT,
+                                                                 EXTRACTOR_METATYPE_SUBJECT,
+                                                                 EXTRACTOR_METATYPE_KEYWORDS,
+                                                                 -1);
 
 
-    QString filenameStr;
 
+    QString qFancyName = QString::fromUtf8 ( fancyName );
+    QString qFileName = QString::fromUtf8 ( fileName );
 
-    filenameStr = filenameStr.fromUtf8 ( desc );
 
 
     SearchResult* newresult = m_model->addResult();
@@ -162,7 +175,8 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 
 
     newresult->setApplicabilityRank(applicability_rank,false);
-    newresult->setFilename(filenameStr,false);
+    newresult->setName(qFancyName);
+    newresult->setFileName(qFileName);
     newresult->setFilesize(fsize,false);
     //TODO:: We should respect const
     newresult->setMetadata((GNUNET_CONTAINER_MetaData *)meta, false);

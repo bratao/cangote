@@ -1,5 +1,5 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
 import Cangote 1.0
 //import Utils 1.0
 
@@ -8,6 +8,7 @@ Item
     anchors.fill: parent
     id: transfersPage
 
+    property var selectedFile: null
 
 
     Action {
@@ -32,14 +33,14 @@ Item
         id: openFile
         text: "Open File"
         onTriggered: {
-            Utils.openFilePicker();
+            Utils.openFile(selectedFile.path);
         }
     }
 
     Action {
         id: openFolder
         text: "Open Folder"
-        onTriggered: console.log("TODO: Open the transfer folder.")
+        onTriggered: Utils.openFolder(selectedFile.path);
     }
 
 
@@ -137,9 +138,12 @@ Item
         onClicked: {
 
             var index = transfersList.rowAt(mouse.x, mouse.y)
+
             if (index !== -1){
                 transfersList.forceActiveFocus()
-                transfersList.currentRow = index
+                transfersList.selection.clear()
+                transfersList.selection.select(index)
+                selectedFile = Cangote.models.downloadsModel.get(index)
             }
 
             contextMenu.popup()

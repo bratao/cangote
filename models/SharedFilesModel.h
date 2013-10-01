@@ -33,19 +33,24 @@ public:
     explicit SharedFilesModel(QObject *parent = 0);
     int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
     QVariant data(const QModelIndex& index, int role) const;
-    enum SearchRoles { FILENAME, FILESIZE ,AVAILIABILITY, APPLICABILITYTRANK, NB_SEARCH_COLUMNS };
+    enum SearchRoles { NAME,STATUS, SIZE ,PATH, NB_SEARCH_COLUMNS };
 
 
     SharedFile *addFile(QString filename, QString filehash);
     SharedFile *addFile(QString filename, uint64_t filesize);
+
+    Q_INVOKABLE SharedFile *get(int index);
 signals:
      void addFileSignal(SharedFile *file);
 private slots:
     void addFileSlot(SharedFile *file);
+    void fileModifiedSlot(int indexRow);
 
 private:
     QList<SharedFile*> m_data;
     QHash<int, QByteArray> roleNames() const;
+    SharedFile *createFile();
+
 };
 
 #endif // SHAREDFILESMODEL_H

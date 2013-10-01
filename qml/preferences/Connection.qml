@@ -23,7 +23,7 @@ Item {
             spacing: 10
             GroupBox
             {
-                title: "Tcp"
+                title: "Use TCP transport"
                 checkable: true
                 checked: Preferences.tcpEnabled
                 onCheckedChanged: {
@@ -83,7 +83,7 @@ Item {
             }
             GroupBox
             {
-                title: "Udp"
+                title: "Use UDP transport"
                 checkable: true
                 checked: Preferences.udpEnabled
                 onCheckedChanged: {

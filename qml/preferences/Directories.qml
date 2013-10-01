@@ -24,7 +24,7 @@ Item {
                 Row{
                     TextField {
                         id: folderText
-                        text: qsTr("")
+                        text: Preferences.downloadDirectory
                         width: 300
                         height: 25
                         font.pixelSize: 12
@@ -36,7 +36,7 @@ Item {
 
                         onClicked: {
                             var folder =  Utils.openFolderPicker()
-                            folderText.text = folder;
+                            Preferences.downloadDirectory = folder;
                         }
                     }
                 }

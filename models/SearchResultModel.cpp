@@ -49,7 +49,7 @@ QVariant SearchResultsModel::data(const QModelIndex& index, int role) const
        switch(role)
        {
            case FILENAME:
-               return result->getFilename();
+               return result->name();
                break;
            case FILESIZE:
            return result->getFilesize();

@@ -21,87 +21,116 @@
 #include "SharedFilesModel.h"
 
 SharedFilesModel::SharedFilesModel(QObject *parent) :
-    QAbstractListModel(parent)
+  QAbstractListModel(parent)
 {
-    connect(this,&SharedFilesModel::addFileSignal,this,&SharedFilesModel::addFileSlot, Qt::BlockingQueuedConnection);
+  connect(this,&SharedFilesModel::addFileSignal,this,&SharedFilesModel::addFileSlot, Qt::BlockingQueuedConnection);
 }
 
 int SharedFilesModel::rowCount(const QModelIndex& parent) const
 {
-    return m_data.size();
+  return m_data.size();
 }
 
 
 QVariant SharedFilesModel::data(const QModelIndex& index, int role) const
 {
-    SharedFile* file = m_data.at(index.row());
+  SharedFile* file = m_data.at(index.row());
 
-    switch(role)
+  switch(role)
     {
-    case FILENAME:
-        return file->filename();
+    case NAME:
+      return file->filename();
+    case STATUS:
+      return file->getFancyStatus();
+    case SIZE:
+      return file->size();
+    case PATH:
+      return file->path();
 
     default:
-        return QVariant::Invalid;
+      return QVariant::Invalid;
     }
 
 
-    return QVariant::Invalid;
+  return QVariant::Invalid;
+}
+
+
+
+
+SharedFile* SharedFilesModel::createFile()
+{
+  SharedFile* file = new SharedFile();
+  file->moveToThread(this->thread());
+  //Connect to monitor modification
+  connect(file,&SharedFile::progressChanged,this,&SharedFilesModel::fileModifiedSlot);
+  connect(file,&SharedFile::statusChanged,this,&SharedFilesModel::fileModifiedSlot);
+  return file;
+}
+
+
+void SharedFilesModel::fileModifiedSlot(int indexRow){
+  emit dataChanged(index(indexRow,0), index(indexRow,0));
 }
 
 
 SharedFile* SharedFilesModel::addFile(QString filename, QString filehash)
 {
-    SharedFile* file = new SharedFile();
-    file->moveToThread(this->thread());
-    //file->setParent(this);
-    file->setFilename(filename);
-    file->setHash(filehash);
-    emit addFileSignal(file);
+  SharedFile* file = createFile();
+  file->setPath(filename);
+  file->setHash(filehash);
+  emit addFileSignal(file);
 
-    return file;
+  return file;
 }
 
 SharedFile* SharedFilesModel::addFile(QString filename, uint64_t filesize)
 {
-    SharedFile* file = new SharedFile();
-    file->moveToThread(this->thread());
-    //file->setParent(this);
-    file->setFilename(filename);
-    file->setSize(filesize);
-    emit addFileSignal(file);
 
-    return file;
+  SharedFile* file = createFile();
+
+  file->setPath(filename);
+  file->setSize(filesize);
+  emit addFileSignal(file);
+
+  return file;
 }
+
+
 
 
 void SharedFilesModel::addFileSlot(SharedFile* file)
 {
 
+  int count = m_data.count();
 
+  beginInsertRows(QModelIndex(), count, count);
+  file->setIndex(count);
 
-    int count = m_data.count();
+  m_data.append(file);
 
-
-    beginInsertRows(QModelIndex(), count, count);
-
-
-    m_data.append(file);
-
-    endInsertRows();
+  endInsertRows();
 
 }
 
 
 QHash<int, QByteArray> SharedFilesModel::roleNames() const {
-    QHash<int, QByteArray> roles;
-    roles[FILENAME]             = "filename";
-    roles[FILESIZE]             = "filesize";
-    roles[AVAILIABILITY]        = "availiability";
-    roles[APPLICABILITYTRANK]   = "availiabilityRank";
+  QHash<int, QByteArray> roles;
+  roles[NAME]             = "name";
+  roles[STATUS]           = "status";
+  roles[SIZE]             = "size";
+  roles[PATH]             = "path";
 
 
-    return roles;
+  return roles;
 }
 
+SharedFile* SharedFilesModel::get(int index)
+{
+    if ((index < 0) || (index >= m_data.count()))
+        return NULL;
 
+
+    return m_data.at(index);
+
+}

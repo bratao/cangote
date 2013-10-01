@@ -6,6 +6,7 @@
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QLabel>
+#include <QProcess>
 
 
 #include "cangote.h"
@@ -64,5 +65,34 @@ void Utils::openFile(QString file)
     QString path;
     path = QString("file:///") + file;
     QDesktopServices::openUrl(QUrl(path));
+}
+
+void Utils::openFolder(QString filePath)
+{
+#ifdef defined(Q_WS_MAC)
+    QStringList args;
+    args << "-e";
+    args << "tell application \"Finder\"";
+    args << "-e";
+    args << "activate";
+    args << "-e";
+    args << "select POSIX file \""+filePath+"\"";
+    args << "-e";
+    args << "end tell";
+    QProcess::startDetached("osascript", args)
+
+#elif defined(Q_OS_WIN)
+    QStringList args;
+    args << "/select," << QDir::toNativeSeparators(filePath);
+    QProcess::startDetached("explorer", args);
+#endif
+
+ //TODO:: Implement linux suport for opening Folder
+}
+
+QString Utils::getFileName(QString path){
+  QFileInfo fi(path);
+   QString name = fi.fileName();
+   return name;
 }
 
