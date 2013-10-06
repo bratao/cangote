@@ -21,10 +21,85 @@
 #include "SearchModel.h"
 #include "core/gnunet/filesharing/search/search.h"
 #include "models/SearchResultModel.h"
+#include "cangote.h"
+#include "core/cangotecore.h"
+#include "models/models.h"
+
+#include "core/gnunet/filesharing/search/searchresult.h"
+
+
+
+/***
+ * Thumbnail Provider for QML
+ **/
+
+
+QImage SearchResultThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+{
+
+    int width = 200;
+    int height = 100;
+
+    if (size)
+        *size = QSize(width, height);
+
+
+    //Default image
+    QImage image(requestedSize.width() > 0 ? requestedSize.width() : width,
+                 requestedSize.height() > 0 ? requestedSize.height() : height,QImage::Format_ARGB32);
+
+    image.fill(QColor(id).rgba());
+
+
+    QStringList list;
+
+    list = id.split("/");
+
+    Q_ASSERT(list.size() == 2);
+
+
+    int searchId = list[0].toInt();
+    int searchResultId = list[1].toInt();
+
+
+    //Load from file
+    SearchResultsModel* searchResultModel = theApp->models()->searchModel()->getSearch(searchId)->model();
+
+    SearchResult* searchResult = searchResultModel->getResult(searchResultId);
+
+
+    if (searchResult && searchResult->thumbnail())
+    {
+
+        //If we ask for an specified size, do it. Scale to height otherwise.
+        if((requestedSize.width() > 0 )&&(requestedSize.height() > 0)){
+            image = searchResult->thumbnail()->scaled(requestedSize.width() > 0 ? requestedSize.width() : width,
+                                               requestedSize.height() > 0 ? requestedSize.height() : height);
+        }
+        else
+        {
+            image = searchResult->thumbnail()->scaledToHeight(height,Qt::SmoothTransformation);
+        }
+
+    }
+
+     return image;
+
+
+}
+
+//Thumbnail end
+
+
+
+
+
 
 SearchModel::SearchModel(QObject *parent) :
     QAbstractListModel(parent)
 {
+
+    m_thumbnailProvider = new SearchResultThumbnailImageProvider();
 
     // connect signal-slots for decoupling
     connect (this, &SearchModel::addNewSearchSignal, this,
@@ -52,11 +127,9 @@ QVariant SearchModel::data(const QModelIndex& index, int role) const
         return search->getTerm();
         break;
     case NUM_RESULTS:
-        return 0;//search->num_results;
+        return search->numResults();
         break;
-    case SEARCH:
-        //return search;
-        break;
+
     default:
         return QVariant::Invalid;
     }
@@ -70,8 +143,6 @@ QHash<int, QByteArray> SearchModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[TERM]                   = "term";
     roles[NUM_RESULTS]            = "numResults";
-    roles[SEARCH]                 = "Search";
-
 
 
     return roles;
@@ -89,17 +160,27 @@ Search*  SearchModel::addNewSearch(void *sc,QString term )
 void  SearchModel::addNewSearchSlot(Search* search)
 {
 
-    SearchResultsModel* resultModel = new SearchResultsModel(this);
-    search->setModel(resultModel);
+
 
     int count = m_data.count();
 
     beginInsertRows(QModelIndex(), count, count);
 
 
+    SearchResultsModel* resultModel = new SearchResultsModel(this);
+    search->setModel(resultModel);
+    search->setId(count);
+
+
     m_data.append(search);
+    connect(search, &Search::resultsChanged, this, &SearchModel::modifiedSlot);
+
 
     endInsertRows();
+
+    resultModel->setIndex(new QPersistentModelIndex (index(count, 0)));
+
+
 
 
 }
@@ -128,8 +209,11 @@ void  SearchModel::closeSearchSlot(int index)
     endRemoveRows();
 
 
+}
 
-
+void SearchModel::modifiedSlot(int indexRow)
+{
+    emit dataChanged(index(indexRow,0), index(indexRow,0));
 
 
 }

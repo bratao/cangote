@@ -1,5 +1,7 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
+import QtQuick 2.1
+import QtQuick.Controls 1.1
+//import QtQuick.Controls.Private 1.0
+
 import Cangote 1.0
 
 Item {
@@ -40,7 +42,7 @@ Item {
                 PropertyChanges {
                     target: tooltip
                     visible: true
-                    opacity:0.7
+                    opacity:0.8
 
                 }
             },
@@ -55,94 +57,173 @@ Item {
             }
         ]
 
-            transitions: Transition {
-                to: "inuse"
-                PropertyAnimation {target: tooltip; property: "opacity"; duration: 2000; easing.type: Easing.InCirc }
+        transitions: Transition {
+            to: "inuse"
+            PropertyAnimation {target: tooltip; property: "opacity"; duration: 1000; easing.type: Easing.InExpo }
 
-            }
+        }
     }
 
 
-            TableView
+    TableView
+    {
+        id: searchResultList
+        anchors.fill: parent
+        model: searchModel
+        sortIndicatorVisible: true
+        SystemPalette{ id: syspal }
+
+        onDoubleClicked:
+        {
+            model.getResult(currentRow).download()
+        }
+
+        rowDelegate: Rectangle {
+            /*! The background color. */
+            property color backgroundColor: parent.backgroundVisible ? syspal.base : "transparent"
+
+            /*! The alternate background color. */
+            property color alternateBackgroundColor: Qt.darker(syspal.base, 1.06)
+
+            height: 40
+            property color selectedColor: styleData.hasActiveFocus ? "#38d" : "#999"
+            gradient: Gradient {
+                GradientStop {
+                    color: styleData.selected ? Qt.lighter(selectedColor, 1.3) :
+                                                styleData.alternate ? alternateBackgroundColor : backgroundColor
+                    position: 0
+                }
+                GradientStop {
+                    color: styleData.selected ? Qt.lighter(selectedColor, 1.0) :
+                                                styleData.alternate ? alternateBackgroundColor : backgroundColor
+                    position: 1
+                }
+            }
+            Rectangle {
+                anchors.bottom: parent.bottom
+                width: parent.width
+                height: 1
+                color: styleData.selected ? Qt.darker(selectedColor, 1.4) : "transparent"
+            }
+            Rectangle {
+                anchors.top: parent.top
+                width: parent.width ; height: 1
+                color: styleData.selected ? Qt.darker(selectedColor, 1.1) : "transparent"
+            }
+        }
+
+
+
+
+        TableViewColumn
+        {
+            title: "Preview"
+            role: "preview"
+            width: 66
+            resizable:false
+            delegate:Item{
+
+
+                Image {
+                    id: thumbnail
+                    width: 62; height: 35
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    clip: true
+                    source: styleData.value
+                    anchors.centerIn: parent
+                }
+
+                Rectangle{
+                    color: "red"
+                    width: 10
+                    height: 10
+                }
+
+
+            }
+
+        }
+
+        TableViewColumn
+        {
+            title: "Name"
+            role: "filename"
+            width: 400
+            delegate:Item{
+                Text {
+
+                    anchors.fill : parent
+                    verticalAlignment: Qt.AlignVCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: styleData.value
+                    renderType: Text.NativeRendering
+                    wrapMode: TextEdit.WordWrap
+                }
+            }
+        }
+
+        TableViewColumn
+        {
+            title: "Size"
+            role: "filesize"
+            delegate:Item{
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: Utils.friendlyUnit(styleData.value,false)
+                    renderType: Text.NativeRendering
+                }
+            }
+        }
+
+    }
+    MouseArea {
+        id: ma
+        anchors.fill: searchResultList
+        hoverEnabled: true
+        acceptedButtons: Qt.RightButton
+
+        onMouseXChanged: {
+            var index = searchResultList.rowAt(mouse.x, mouse.y)
+            if (index !== -1){
+                if(index !== tooltipIndex )
+                {
+                    tooltipIndex = index
+                    needTooltip = false
+                }
+
+                tooltipX= ma.mapToItem(resultPage,mouseX,0).x
+                tooltipY= ma.mapToItem(resultPage,0,mouseY).y
+                tooltip.searchTerm = index
+                needTooltip = ma.containsMouse
+
+            }
+            else
             {
-                id: searchResultList
-                anchors.fill: parent
-                model: searchModel
-
-
-                onDoubleClicked:
-                {
-                    model.getResult(currentRow).download()
-                    console.log("TODO: Double clicked.")
-                }
-
-
-                TableViewColumn
-                {
-                    title: "Name"
-                    role: "filename"
-                }
-
-                TableViewColumn
-                {
-                    title: "Size"
-                    role: "filesize"
-                    delegate:Item{
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: styleData.textColor
-                            elide: styleData.elideMode
-                            text: Utils.friendlyUnit(styleData.value,false)
-                            renderType: Text.NativeRendering
-                        }
-                    }
-                }
-
+                needTooltip = false
             }
-            MouseArea {
-                id: ma
-                anchors.fill: searchResultList
-                hoverEnabled: true
-                acceptedButtons: Qt.RightButton
+        }
 
-                onMouseXChanged: {
-                    var index = searchResultList.rowAt(mouse.x, mouse.y)
-                    if (index !== -1){
-                        if(index !== tooltipIndex )
-                        {
-                           tooltipIndex = index
-                           needTooltip = false
-                        }
-
-                        tooltipX= ma.mapToItem(resultPage,mouseX,0).x
-                        tooltipY= ma.mapToItem(resultPage,0,mouseY).y
-                        tooltip.searchTerm = index
-                        needTooltip = ma.containsMouse
-
-                    }
-                    else
-                    {
-                        needTooltip = false
-                    }
-                }
-
-                onHoveredChanged: {
-                    needTooltip= ma.containsMouse
-                }
+        onHoveredChanged: {
+            needTooltip= ma.containsMouse
+        }
 
 
-                onClicked: {
+        onClicked: {
 
-                    var index = searchResultList.rowAt(mouse.x, mouse.y)
-                    if (index !== -1){
+            var index = searchResultList.rowAt(mouse.x, mouse.y)
+            if (index !== -1){
 
 
-                        searchResultList.forceActiveFocus()
-                        searchResultList.currentRow = index
-                    }
-
-                    contextMenu.popup()
-                }
+                searchResultList.forceActiveFocus()
+                searchResultList.currentRow = index
             }
 
+            contextMenu.popup()
+        }
     }
+
+}

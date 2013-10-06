@@ -48,6 +48,11 @@ private:
     void mark_publish_progress(SharedFile *pe, uint64_t size, uint64_t completed);
     void handle_publish_stop(SharedFile *pe);
     void handle_publish_completed(SharedFile *pe, struct GNUNET_FS_PublishContext *pc, const struct GNUNET_FS_Uri *uri);
+    SharedFile *unindexResume(struct GNUNET_FS_UnindexContext *uc, const char *filename, uint64_t filesize, uint64_t completed, const char *emsg);
+    void unindexStop(SharedFile *file);
+    void unindexError(SharedFile *file, const char *emsg);
+    void unindexProgress(SharedFile *file, uint64_t completed);
+    void unindexCompleted(SharedFile *file);
 };
 
 #endif // SHAREDFILES_H

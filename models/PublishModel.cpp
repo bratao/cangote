@@ -23,32 +23,45 @@
 #include "core/gnunet/filesharing/publish/publishfile.h"
 
 
-///Thumbnail START ////
+/***
+ * Thumbnail Provider for QML
+ **/
 
-QImage ThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+
+QImage PublishThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    /*
-    int width = 100;
-    int height = 50;
+
+    int width = 200;
+    int height = 100;
 
     if (size)
         *size = QSize(width, height);
 
+
+    //Default image
     QImage image(requestedSize.width() > 0 ? requestedSize.width() : width,
                  requestedSize.height() > 0 ? requestedSize.height() : height,QImage::Format_ARGB32);
+
     image.fill(QColor(id).rgba());
-    */
 
-    QImage image;
-
+    //Load from file
     PublishFile* file = theApp->models()->publishModel()->getPublishedFile(id.toInt());
-
     if (file && file->thumbnail())
     {
-        image = *file->thumbnail();
-    }
-     return image;
 
+        //If we ask for an specified size, do it. Scale to height otherwise.
+        if((requestedSize.width() > 0 )&&(requestedSize.height() > 0)){
+            image = file->thumbnail()->scaled(requestedSize.width() > 0 ? requestedSize.width() : width,
+                                               requestedSize.height() > 0 ? requestedSize.height() : height);
+        }
+        else
+        {
+            image = file->thumbnail()->scaledToHeight(height,Qt::SmoothTransformation);
+        }
+
+    }
+
+     return image;
 
 
 }
@@ -61,7 +74,7 @@ PublishModel::PublishModel(QObject *parent) :
     QAbstractListModel(parent)
 {
 
-    m_thumbnailProvider = new ThumbnailImageProvider();
+    m_thumbnailProvider = new PublishThumbnailImageProvider();
 
     connect(this, &PublishModel::addFileSignal, this, &PublishModel::addFileSlot);
 

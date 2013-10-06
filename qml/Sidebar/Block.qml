@@ -77,13 +77,16 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
+
         boundsBehavior :
             Flickable.StopAtBounds
 
-        delegate: BlockDelegate{}
+        delegate: BlockDelegate{
+
+        }
 
         onCurrentIndexChanged: {
-            block.changed(currentIndex)
+           block.changed(currentIndex)
         }
 
     }

@@ -40,6 +40,7 @@ public:
     SharedFile *addFile(QString filename, uint64_t filesize);
 
     Q_INVOKABLE SharedFile *get(int index);
+    SharedFile *getByFileName(QString filename);
 signals:
      void addFileSignal(SharedFile *file);
 private slots:

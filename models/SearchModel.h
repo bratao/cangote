@@ -22,16 +22,42 @@
 #define GNUNETFSSEARCHMODEL_H
 
 #include <QAbstractListModel>
+#include <QQuickImageProvider>
+
+
+
+/***
+ * Thumbnail Provider for QML
+ **/
+
+class SearchResultThumbnailImageProvider : public QQuickImageProvider
+{
+public:
+    SearchResultThumbnailImageProvider()
+        : QQuickImageProvider(QQuickImageProvider::Image)
+    {
+    }
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+};
+
 
 
 class Search;
 class SearchModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(SearchResultThumbnailImageProvider* thumbnailProvider READ thumbnailProvider CONSTANT)
 public:
     explicit SearchModel(QObject *parent = 0);
 
     enum SearchRoles { TERM, NUM_RESULTS, SEARCH, NB_SEARCH_TABS };
+
+
+    SearchResultThumbnailImageProvider* thumbnailProvider() const
+    { return m_thumbnailProvider; }
+
+
 
     
 
@@ -48,6 +74,7 @@ signals:
     void closeSearchSignal(int index);
 public slots:
 
+    void modifiedSlot(int indexRow);
 private slots:
     void addNewSearchSlot(Search *search);
     void closeSearchSlot(int index);
@@ -56,7 +83,8 @@ private:
     QVariant data(const QModelIndex& index, int role) const;
     QHash<int, QByteArray> roleNames() const;
     QList<Search*> m_data;
-    
+    SearchResultThumbnailImageProvider* m_thumbnailProvider;
+
 };
 
 #endif // GNUNETFSSEARCHMODEL_H

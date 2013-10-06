@@ -31,6 +31,7 @@ class SearchModel;
 class Downloads;
 class Downloads;
 class SharedFiles;
+class SearchManager;
 class FileSharing : public ServiceObject
 {
     Q_OBJECT
@@ -61,15 +62,11 @@ public:
 
 
     void start(GNUNET_CONFIGURATION_Handle *config);
-    void downloadFromSearch(Search *search);
     Q_INVOKABLE void search(QString term, int anonLevel);
     void ProcessEvents();
 signals:
     void searchSignal(QString term, int anonLevel);
 
-private slots:
-    void downloadFromSearch(SearchResult *searchResult);
-    void searchSlot(QString terms, int anonLevel);
 private:
 
 
@@ -84,36 +81,6 @@ private:
     eventHandler (void *cls,
                   const struct GNUNET_FS_ProgressInfo *info);
 
-    ////////SEARCH//////////
-    SearchResult *setupInnerSearch(struct GNUNET_FS_SearchContext *sc,
-                                   SearchResult *parent);
-
-    Search*
-    setupSearch (struct GNUNET_FS_SearchContext *sc,
-                 const struct GNUNET_FS_Uri *query);
-
-    SearchResult *
-    processSearch (Search *search,
-                   SearchResult *parent,
-                   const struct GNUNET_FS_Uri *uri,
-                   const struct GNUNET_CONTAINER_MetaData *meta,
-                   struct GNUNET_FS_SearchResult *result,
-                   uint32_t applicability_rank);
-    void
-    updateSearch (SearchResult *sr,
-                  const struct GNUNET_CONTAINER_MetaData *meta,
-                  int applicability_rank,
-                  int availability_rank,
-                  int availability_certainty);
-    void
-    closeSearch (Search *tab);
-
-    void
-    freeSearch (SearchResult *sr);
-
-    void
-    searchError (struct SearchTab *tab,
-                 const char *emsg);
 
     /**
      * Handle for file-sharing operations.
@@ -122,9 +89,10 @@ private:
 
     struct GNUNET_CONFIGURATION_Handle *m_config;
 
-    SearchModel* m_searchModel;
-    Downloads* m_downloads;
-    SharedFiles* m_sharedFiles;
+
+    Downloads *m_downloads;
+    SharedFiles *m_sharedFiles;
+    SearchManager *m_search;
 
 
 };

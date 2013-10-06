@@ -134,3 +134,17 @@ SharedFile* SharedFilesModel::get(int index)
     return m_data.at(index);
 
 }
+
+SharedFile* SharedFilesModel::getByFileName(QString filename)
+{
+
+    //TODO: Improve lookup performance
+    foreach (SharedFile* file, m_data) {
+        if(file->filename().compare(filename) == 0)
+          return file;
+
+      }
+
+    return NULL;
+
+}

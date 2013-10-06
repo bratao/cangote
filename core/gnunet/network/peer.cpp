@@ -24,6 +24,7 @@
 #include "models/NetworkPeersModel.h"
 #include <QTimer>
 #include <QTime>
+#include <QDebug>
 
 #define TIMER_FREQUENCY 1000
 
@@ -132,8 +133,10 @@ float Peer::getIncomingBandwidth()
     float band = m_bandwidthIncoming->getBandwidth();
 
     //Set to update the calculation in case we have any traffic
-    if ((band > 1) && !m_timer->isActive())
+    if ((band > 1) && !m_timer->isActive()){
+        qWarning() << "Starting incoming timer";
         m_timer->start(TIMER_FREQUENCY);
+    }
 
     return band;
 }
@@ -143,8 +146,10 @@ float Peer::getOutgoingBandwidth()
     float band = m_bandwidthOutgoing->getBandwidth();
 
     //Set to update the calculation in case we have any traffic
-    if ((band > 1) && !m_timer->isActive())
+    if ((band > 1) && !m_timer->isActive()){
+        qWarning() << "Starting outgoing timer";
         m_timer->start(TIMER_FREQUENCY);
+    }
 
     return band;
 }

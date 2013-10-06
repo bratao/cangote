@@ -10,6 +10,7 @@
 
 
 #include "cangote.h"
+#include "core/gnunet/gnunet_includes.h"
 
 Utils::Utils(QObject *parent) :
     QObject(parent)
@@ -69,7 +70,7 @@ void Utils::openFile(QString file)
 
 void Utils::openFolder(QString filePath)
 {
-#ifdef defined(Q_WS_MAC)
+#if defined(Q_WS_MAC)
     QStringList args;
     args << "-e";
     args << "tell application \"Finder\"";
@@ -95,4 +96,35 @@ QString Utils::getFileName(QString path){
    QString name = fi.fileName();
    return name;
 }
+
+
+/**
+ * Obtain pixbuf from thumbnail data in meta data.
+ *
+ * @param meta input meta data
+ * @return NULL on error, otherwise the embedded thumbnail
+ */
+QImage * Utils::getThumbnailFromMetaData (const GNUNET_CONTAINER_MetaData *meta)
+{
+    size_t ts;
+    unsigned char *thumb;
+
+    thumb = NULL;
+    ts = GNUNET_CONTAINER_meta_data_get_thumbnail (meta, &thumb);
+    if (0 == ts)
+        return NULL;
+
+    QImage* image = new QImage();
+    if(!image->loadFromData(thumb,ts))
+    {
+        delete image;
+        image = NULL;
+    }
+
+    GNUNET_free (thumb);
+
+
+    return image;
+}
+
 

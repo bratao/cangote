@@ -25,8 +25,6 @@
 
 
 
-
-
 class SearchResult;
 struct GNUNET_CONTAINER_MetaData;
 class SearchResultsModel : public QAbstractListModel
@@ -34,7 +32,18 @@ class SearchResultsModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    enum SearchRoles { FILENAME, FILESIZE ,AVAILIABILITY, APPLICABILITYTRANK, NB_SEARCH_COLUMNS };
+    enum SearchRoles {PREVIEW, FILENAME, FILESIZE ,AVAILIABILITY, APPLICABILITYTRANK, NB_SEARCH_COLUMNS };
+    Q_PROPERTY(QPersistentModelIndex* index READ getIndex WRITE setIndex)
+
+
+
+    QPersistentModelIndex* getIndex(){
+        return m_index;
+    }
+
+    void setIndex(QPersistentModelIndex* index){
+        m_index = index;
+    }
 
 
 public:
@@ -64,6 +73,8 @@ private:
 
 private:
     QList<SearchResult*> m_data;
+    QPersistentModelIndex* m_index;
+
     
 };
 

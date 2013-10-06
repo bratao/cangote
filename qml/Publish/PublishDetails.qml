@@ -6,6 +6,7 @@ ColumnLayout{
     property var metadataModel
     property var keywordModel
     property var thumbnailImage
+    Layout.fillWidth: true
 
     id: detailsColumn
 

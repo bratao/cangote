@@ -53,7 +53,9 @@ SOURCES += \
     models/KeywordModel.cpp \
     preferences/preferences.cpp \
     utils/utils.cpp \
-    utils/QLogger.cpp
+    utils/QLogger.cpp \
+    utils/update_checker.cpp \
+    core/gnunet/filesharing/search/searchmanager.cpp
 
 
 
@@ -82,7 +84,6 @@ OTHER_FILES += \
     qml/Sidebar/SideBar.qml \
     qml/Sidebar/Block.qml \
     qml/Sidebar/BlockDelegate.qml \
-    qml/Sidebar/MenuButton.qml \
     qml/Publish/PublishFile.qml \
     qml/preferences/Advanced.qml \
     qml/Network/AddPeer.qml \
@@ -131,4 +132,6 @@ HEADERS += \
     core/status.h \
     models/MetadataModel.h \
     models/KeywordModel.h \
-    utils/QLogger.h
+    utils/QLogger.h \
+    utils/update_checker.h \
+    core/gnunet/filesharing/search/searchmanager.h

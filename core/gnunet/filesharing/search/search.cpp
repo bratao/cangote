@@ -32,12 +32,13 @@
 /*
  *
  */
-Search::Search(GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent) :
+Search::Search( GNUNET_FS_SearchContext *sc,QString query_txt, QObject *parent) :
     QObject(parent)
 {
     m_model = NULL;
     m_sc = sc;
     m_query = query_txt;
+
 
     //Trans thread signals
     connect(this,&Search::stopped,this,&Search::stopSlot);
@@ -69,6 +70,7 @@ SearchResult* Search::UpdateResult(SearchResult *sr,
 
 
 }
+
 
 
 SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri *uri,
@@ -131,32 +133,32 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
 
 
     char* fancyName =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
-                                                                 EXTRACTOR_METATYPE_PACKAGE_NAME,
-                                                                 EXTRACTOR_METATYPE_TITLE,
-                                                                 EXTRACTOR_METATYPE_BOOK_TITLE,
-                                                                 EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
-                                                                 EXTRACTOR_METATYPE_FILENAME,
-                                                                 EXTRACTOR_METATYPE_DESCRIPTION,
-                                                                 EXTRACTOR_METATYPE_SUMMARY,
-                                                                 EXTRACTOR_METATYPE_ALBUM,
-                                                                 EXTRACTOR_METATYPE_COMMENT,
-                                                                 EXTRACTOR_METATYPE_SUBJECT,
-                                                                 EXTRACTOR_METATYPE_KEYWORDS,
-                                                                 -1);
+                                                                      EXTRACTOR_METATYPE_PACKAGE_NAME,
+                                                                      EXTRACTOR_METATYPE_TITLE,
+                                                                      EXTRACTOR_METATYPE_BOOK_TITLE,
+                                                                      EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
+                                                                      EXTRACTOR_METATYPE_FILENAME,
+                                                                      EXTRACTOR_METATYPE_DESCRIPTION,
+                                                                      EXTRACTOR_METATYPE_SUMMARY,
+                                                                      EXTRACTOR_METATYPE_ALBUM,
+                                                                      EXTRACTOR_METATYPE_COMMENT,
+                                                                      EXTRACTOR_METATYPE_SUBJECT,
+                                                                      EXTRACTOR_METATYPE_KEYWORDS,
+                                                                      -1);
 
     char* fileName =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
                                                                      EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
                                                                      EXTRACTOR_METATYPE_FILENAME,
-                                                                 EXTRACTOR_METATYPE_PACKAGE_NAME,
-                                                                 EXTRACTOR_METATYPE_TITLE,
-                                                                 EXTRACTOR_METATYPE_BOOK_TITLE,
-                                                                 EXTRACTOR_METATYPE_DESCRIPTION,
-                                                                 EXTRACTOR_METATYPE_SUMMARY,
-                                                                 EXTRACTOR_METATYPE_ALBUM,
-                                                                 EXTRACTOR_METATYPE_COMMENT,
-                                                                 EXTRACTOR_METATYPE_SUBJECT,
-                                                                 EXTRACTOR_METATYPE_KEYWORDS,
-                                                                 -1);
+                                                                     EXTRACTOR_METATYPE_PACKAGE_NAME,
+                                                                     EXTRACTOR_METATYPE_TITLE,
+                                                                     EXTRACTOR_METATYPE_BOOK_TITLE,
+                                                                     EXTRACTOR_METATYPE_DESCRIPTION,
+                                                                     EXTRACTOR_METATYPE_SUMMARY,
+                                                                     EXTRACTOR_METATYPE_ALBUM,
+                                                                     EXTRACTOR_METATYPE_COMMENT,
+                                                                     EXTRACTOR_METATYPE_SUBJECT,
+                                                                     EXTRACTOR_METATYPE_KEYWORDS,
+                                                                     -1);
 
 
 
@@ -190,10 +192,18 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
     newresult->setResult(result,false);
     newresult->modified();
 
+    emit resultsChanged(m_id);
+
 
     return newresult;
 
 
+}
+
+
+void Search::setId(int id)
+{
+    m_id = id;
 }
 
 

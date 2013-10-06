@@ -55,7 +55,7 @@ void GNUNetLauncher::stopSlot()
     QProcess* killArmProcess     = new QProcess(this);
     killArmProcess->setProcessEnvironment(env);
     killArmProcess->start("gnunet-arm.exe -e");
-    killArmProcess->waitForFinished(1000);
+    killArmProcess->waitForFinished(5000);
 
 
 

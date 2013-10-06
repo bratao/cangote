@@ -21,6 +21,7 @@ public:
   Q_INVOKABLE void openFile(QString file);
   Q_INVOKABLE QString getFileName(QString path);
   Q_INVOKABLE void openFolder(QString filePath);
+  QImage *   getThumbnailFromMetaData (const struct GNUNET_CONTAINER_MetaData *meta);
 
 };
 

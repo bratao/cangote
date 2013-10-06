@@ -124,6 +124,8 @@ void Cangote::registerQmlTypes()
 void Cangote::registerImageProvider(QQmlEngine *engine)
 {
     engine->addImageProvider("publishThumbnail",theApp->models()->publishModel()->thumbnailProvider());
+    engine->addImageProvider("searchResultThumbnail",theApp->models()->searchModel()->thumbnailProvider());
+
 
 }
 

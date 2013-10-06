@@ -32,7 +32,6 @@ Item{
             //tab.title = item.myTerm
             tab.active = 1
             tab.item.searchModel = Cangote.models.searchModel.getSearch(index).model
-            console.log("added a new tab")
 
         }
         onItemRemoved: {

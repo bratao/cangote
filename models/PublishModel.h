@@ -29,11 +29,15 @@
 
 
 
+/***
+ * Thumbnail Provider for QML
+ **/
+
 class QQuickImageProvider;
-class ThumbnailImageProvider : public QQuickImageProvider
+class PublishThumbnailImageProvider : public QQuickImageProvider
 {
 public:
-    ThumbnailImageProvider()
+    PublishThumbnailImageProvider()
         : QQuickImageProvider(QQuickImageProvider::Image)
     {
     }
@@ -41,11 +45,18 @@ public:
     QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
 };
 
+
+
+
+/***
+ * Main Class
+ **/
+
 class PublishFile;
 class PublishModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(ThumbnailImageProvider* thumbnailProvider READ thumbnailProvider CONSTANT)
+    Q_PROPERTY(PublishThumbnailImageProvider* thumbnailProvider READ thumbnailProvider CONSTANT)
 public:
     explicit PublishModel(QObject *parent = 0);
 
@@ -54,7 +65,7 @@ public:
     int getCount();
 
 
-    ThumbnailImageProvider* thumbnailProvider() const
+    PublishThumbnailImageProvider* thumbnailProvider() const
     { return m_thumbnailProvider; }
 
 
@@ -73,7 +84,7 @@ private:
     QVariant data(const QModelIndex& index, int role) const;
     QHash<int, QByteArray> roleNames() const;
     QList<PublishFile*> m_data;
-    ThumbnailImageProvider* m_thumbnailProvider;
+    PublishThumbnailImageProvider* m_thumbnailProvider;
     
 };
 

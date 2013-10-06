@@ -25,6 +25,7 @@ SharedFile::SharedFile(QObject *parent) :
 {
   m_index = -1;
   m_size = 0;
+  m_progress = 0;
   m_status = Unknown;
 }
 

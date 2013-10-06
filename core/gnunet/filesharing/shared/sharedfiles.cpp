@@ -26,80 +26,115 @@
 #include "models/SharedFilesModel.h"
 
 SharedFiles::SharedFiles(QObject *parent) :
-  QObject(parent)
+    QObject(parent)
 {
-  m_fs = NULL;
-  m_model = theApp->models()->sharedModel();
+    m_fs = NULL;
+    m_model = theApp->models()->sharedModel();
 }
 
 void * SharedFiles::eventHandler (void *cls,
                                   const struct GNUNET_FS_ProgressInfo *info)
 {
 
-  void *ret;
+    void *ret;
 
-  //Disable -Wswitch error as we handle the other cases in filesharing class.
+    //Disable -Wswitch error as we handle the other cases in filesharing class.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wswitch"
-  switch (info->status)
+    switch (info->status)
     {
 
     case GNUNET_FS_STATUS_PUBLISH_START:
-      {
+    {
 
         return setup_publish (info->value.publish.pc, info->value.publish.filename,
                               info->value.publish.size, (SharedFile*)info->value.publish.pctx);
-      }
+    }
     case GNUNET_FS_STATUS_PUBLISH_RESUME:
-      {
+    {
         ret =
-            setup_publish (info->value.publish.pc, info->value.publish.filename,
-                           info->value.publish.size, (SharedFile*)info->value.publish.pctx);
+                setup_publish (info->value.publish.pc, info->value.publish.filename,
+                               info->value.publish.size, (SharedFile*)info->value.publish.pctx);
         if (NULL == ret)
-          return ret;
+            return ret;
         if (NULL != info->value.publish.specifics.resume.message)
-          {
+        {
             handle_publish_error ((SharedFile*)ret,
                                   info->value.publish.specifics.resume.message);
-          }
+        }
         else if (NULL != info->value.publish.specifics.resume.chk_uri)
-          {
+        {
             handle_publish_completed ((SharedFile*)ret,info->value.publish.pc,
                                       info->value.publish.specifics.resume.chk_uri);
-          }
+        }
         return ret;
-      }
+    }
     case GNUNET_FS_STATUS_PUBLISH_SUSPEND:
-      {
+    {
         handle_publish_stop ((SharedFile*)info->value.publish.cctx);
         return NULL;
-      }
+    }
     case GNUNET_FS_STATUS_PUBLISH_PROGRESS:
-      {
+    {
         mark_publish_progress ((SharedFile*)info->value.publish.cctx,
                                info->value.publish.size,
                                info->value.publish.completed);
         return info->value.publish.cctx;
-      }
+    }
     case GNUNET_FS_STATUS_PUBLISH_ERROR:
-      {
+    {
         handle_publish_error ((SharedFile*)info->value.publish.cctx,
                               info->value.publish.specifics.error.message);
         return info->value.publish.cctx;
-      }
+    }
     case GNUNET_FS_STATUS_PUBLISH_COMPLETED:
-      {
+    {
         handle_publish_completed ((SharedFile*)info->value.publish.cctx, info->value.publish.pc,
                                   info->value.publish.specifics.completed.chk_uri);
         return info->value.publish.cctx;
-      }
+    }
     case GNUNET_FS_STATUS_PUBLISH_STOPPED:
-      {
+    {
         handle_publish_stop ((SharedFile*)info->value.publish.cctx);
         return NULL;
-      }
     }
-  //Enable -Wswitch again
+
+
+
+    case GNUNET_FS_STATUS_UNINDEX_START:
+        return info->value.unindex.cctx;
+    case GNUNET_FS_STATUS_UNINDEX_RESUME:
+        return unindexResume (info->value.unindex.uc,
+                                                     info->value.unindex.filename,
+                                                     info->value.unindex.size,
+                                                     info->value.unindex.completed,
+                                                     info->value.unindex.specifics.resume.message);
+    case GNUNET_FS_STATUS_UNINDEX_SUSPEND:
+        unindexStop ((SharedFile*)info->value.unindex.cctx);
+        return NULL;
+    case GNUNET_FS_STATUS_UNINDEX_PROGRESS:
+        unindexProgress ((SharedFile*)info->value.unindex.cctx,
+                                                info->value.unindex.completed);
+        return info->value.unindex.cctx;
+    case GNUNET_FS_STATUS_UNINDEX_ERROR:
+        unindexError ((SharedFile*)info->value.unindex.cctx,
+                                             info->value.unindex.specifics.error.message);
+        return info->value.unindex.cctx;
+    case GNUNET_FS_STATUS_UNINDEX_COMPLETED:
+        unindexCompleted ((SharedFile*)info->value.unindex.cctx);
+        return info->value.unindex.cctx;
+    case GNUNET_FS_STATUS_UNINDEX_STOPPED:
+        unindexStop ((SharedFile*)info->value.unindex.cctx);
+        return NULL;
+
+
+
+
+
+
+
+    }
+    //Enable -Wswitch again
 #pragma GCC diagnostic pop
 }
 
@@ -108,31 +143,31 @@ static int
 indexedFilesCallback (void *cls, const char *filename, const struct GNUNET_HashCode * file_id)
 {
 
-  SharedFiles* sharedFiles = (SharedFiles*)cls;
+    SharedFiles* sharedFiles = (SharedFiles*)cls;
 
-  if(filename == NULL)
+    if(filename == NULL)
+        return GNUNET_OK;
+
+
+    sharedFiles->addIndexedFile(filename,file_id);
+
     return GNUNET_OK;
-
-
-  sharedFiles->addIndexedFile(filename,file_id);
-
-  return GNUNET_OK;
 }
 
 void SharedFiles::addIndexedFile(const char *filename, const struct GNUNET_HashCode * file_id)
 {
 
-  const char * hash = GNUNET_h2s_full(file_id);
-  QString strHash(hash);
-  SharedFile* file;
+    const char * hash = GNUNET_h2s_full(file_id);
+    QString strHash(hash);
+    SharedFile* file;
 
-  qWarning() << (QString("Sharing: %1 with Hash: %2").arg(filename).arg(strHash));
+    qWarning() << (QString("Sharing: %1 with Hash: %2").arg(filename).arg(strHash));
 
 
-  QString qFilename = QString(filename);
+    QString qFilename = QString(filename);
 
-  file = m_model->addFile(qFilename,strHash);
-  file->setStatus(SharedFile::Indexed);
+    file = m_model->addFile(qFilename,strHash);
+    file->setStatus(SharedFile::Indexed);
 }
 
 
@@ -151,18 +186,18 @@ SharedFiles::setup_publish (struct GNUNET_FS_PublishContext *pc, const char *fil
                             uint64_t fsize, SharedFile *parent)
 {
 
-  qWarning() << (QString("Publishing: %1 with Hash: %2").arg(filename).arg(fsize));
+    qWarning() << (QString("Publishing: %1 with Hash: %2").arg(filename).arg(fsize));
 
-  //TODO: Support recursive download ( #13)
-  Q_UNUSED(parent);
-  Q_UNUSED(pc);
+    //TODO: Support recursive download ( #13)
+    Q_UNUSED(parent);
+    Q_UNUSED(pc);
 
-  QString qFilename =  QString(filename);
+    QString qFilename =  QString(filename);
 
-  SharedFile* file = m_model->addFile(qFilename,fsize);
+    SharedFile* file = m_model->addFile(qFilename,fsize);
 
-  file->setStatus(SharedFile::Publishing);
-  return file;
+    file->setStatus(SharedFile::Publishing);
+    return file;
 
 }
 
@@ -179,7 +214,7 @@ SharedFiles::handle_publish_error (SharedFile *pe,
                                    const char *emsg)
 {
 
-  pe->setStatus(SharedFile::Error);
+    pe->setStatus(SharedFile::Error);
 }
 
 /**
@@ -193,9 +228,9 @@ void
 SharedFiles::handle_publish_completed (SharedFile *pe,struct GNUNET_FS_PublishContext *pc,
                                        const struct GNUNET_FS_Uri *uri)
 {
-  pe->setStatus(SharedFile::Published);
+    pe->setStatus(SharedFile::Published);
 
-  //TODO: Set URI
+    //TODO: Set URI
 }
 
 /**
@@ -207,9 +242,9 @@ SharedFiles::handle_publish_completed (SharedFile *pe,struct GNUNET_FS_PublishCo
 void
 SharedFiles::handle_publish_stop (SharedFile *pe)
 {
-  pe->setStatus(SharedFile::Unknown);
+    pe->setStatus(SharedFile::Unknown);
 
-  //TODO:: Implement STOP support
+    //TODO:: Implement STOP support
 }
 
 /**
@@ -224,19 +259,190 @@ void
 SharedFiles::mark_publish_progress (SharedFile *pe, uint64_t size,
                                     uint64_t completed)
 {
- pe->setProgress(((size > 0) ? (100 * completed / size) : 100));
+    pe->setProgress(((size > 0) ? (100 * completed / size) : 100));
 
 }
 
 
 void SharedFiles::init(GNUNET_FS_Handle * fs)
 {
-  m_fs = fs;
+    m_fs = fs;
 
-  if (NULL == GNUNET_FS_get_indexed_files (m_fs,
-                                           &indexedFilesCallback, this))
+    if (NULL == GNUNET_FS_get_indexed_files (m_fs,
+                                             &indexedFilesCallback, this))
     {
-      m_fs = NULL;
-      return;
+        m_fs = NULL;
+        return;
     }
 }
+
+
+/***
+ *
+ * UNINDEX
+ *
+ */
+
+/**
+ * An unindex operation resumed.
+ * @param uc unindex context with the FS library
+ * @param filename name of file being unindexed
+ * @param filesize size of the file
+ * @param completed how many bytes were done so far
+ * @param emsg NULL if everything is fine, otherwise error message
+ * @return entry for the resumed operation
+ */
+SharedFile *
+SharedFiles::unindexResume (struct GNUNET_FS_UnindexContext *uc,
+				      const char *filename,
+				      uint64_t filesize,
+				      uint64_t completed,
+				      const char *emsg)
+{
+
+
+  QString qFilename =  QString(filename);
+
+
+
+  SharedFile* file = m_model->getByFileName(qFilename);
+
+  if(!file){
+      qWarning() << tr("File to be unindexed not found");
+      return NULL;
+  }
+
+  file->setStatus(SharedFile::Unindexing);
+
+
+  return file;
+}
+
+
+
+/**
+ * FS notified us that our unindex operation was stopped.
+ *
+ * @param ue operation that stopped
+ */
+void
+SharedFiles::unindexStop (SharedFile *file)
+{
+  /*GtkTreePath *path;
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  if (NULL != ue->rr)
+  {
+    path = gtk_tree_row_reference_get_path (ue->rr);
+    model = gtk_tree_row_reference_get_model (ue->rr);
+    gtk_tree_row_reference_free (ue->rr);
+    ue->rr = NULL;
+    GNUNET_assert (TRUE == gtk_tree_model_get_iter (model,
+                                                    &iter,
+                                                    path));
+    gtk_tree_path_free (path);
+    gtk_list_store_set (GTK_LIST_STORE (model),
+                        &iter,
+                        UNINDEX_MC_UNINDEX_CONTEXT, NULL,
+                        -1);
+  }
+  GNUNET_CONTAINER_DLL_remove (ue_head,
+                               ue_tail,
+                               ue);
+  GNUNET_free_non_null (ue->emsg);
+  GNUNET_free (ue->filename);
+  GNUNET_free (ue);*/
+}
+
+
+/**
+ * FS notified us that our unindex operation had an error.
+ *
+ * @param ue operation that had an error
+ * @param emsg error message
+ */
+void
+SharedFiles::unindexError (SharedFile *file,
+                                     const char *emsg)
+{
+  /*GtkTreePath *path;
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  ue->emsg = GNUNET_strdup (emsg);
+  if (NULL == ue->rr)
+    return;
+  path = gtk_tree_row_reference_get_path (ue->rr);
+  model = gtk_tree_row_reference_get_model (ue->rr);
+  GNUNET_assert (TRUE == gtk_tree_model_get_iter (model,
+                                                  &iter,
+                                                  path));
+  gtk_tree_path_free (path);
+  gtk_list_store_set (GTK_LIST_STORE (model),
+                      &iter,
+                      UNINDEX_MC_BACKGROUND_COLOR, "red",
+                      UNINDEX_MC_ERROR, emsg,
+                      -1);*/
+}
+
+
+/**
+ * FS notified us that our unindex operation made progress
+ *
+ * @param ue operation that made progress
+ * @param completed number of bytes completed now
+ */
+void
+SharedFiles::unindexProgress(SharedFile *file,
+                                        uint64_t completed)
+{
+  /*GtkTreePath *path;
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  ue->progress = (gint) ((100LL * completed) / ue->filesize);
+  if (NULL == ue->rr)
+    return;
+  path = gtk_tree_row_reference_get_path (ue->rr);
+  model = gtk_tree_row_reference_get_model (ue->rr);
+  GNUNET_assert (TRUE == gtk_tree_model_get_iter (model,
+                                                  &iter,
+                                                  path));
+  gtk_tree_path_free (path);
+  gtk_list_store_set (GTK_LIST_STORE (model),
+                      &iter,
+                      UNINDEX_MC_UNINDEX_PROGRESS, ue->progress,
+                      -1);*/
+}
+
+
+/**
+ * FS notified us that our unindex operation completed
+ *
+ * @param ue operation that completed
+ */
+void
+SharedFiles::unindexCompleted (SharedFile *file)
+{
+ /* GtkTreePath *path;
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  if (NULL != ue->rr)
+  {
+    path = gtk_tree_row_reference_get_path (ue->rr);
+    model = gtk_tree_row_reference_get_model (ue->rr);
+    GNUNET_assert (TRUE == gtk_tree_model_get_iter (model,
+                                                    &iter,
+                                                    path));
+    gtk_tree_path_free (path);
+    gtk_list_store_remove (GTK_LIST_STORE (model),
+                           &iter);
+    gtk_tree_row_reference_free (ue->rr);
+    ue->rr = NULL;
+  }
+  GNUNET_FS_unindex_stop (ue->uc);*/
+}
+
+

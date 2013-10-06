@@ -118,6 +118,7 @@ void CangoteCore::setConnected(bool connected)
     m_connected = connected;
     if(connected == false)
     {
+        qWarning() << "Starting Gnunet again;";
         m_armConnectTimer->start(1000);
     }
     else

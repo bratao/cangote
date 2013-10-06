@@ -23,17 +23,19 @@
 
 #include <QObject>
 #include <stdint.h>
+#include "models/SearchResultModel.h"
 
 
 struct GNUNET_FS_SearchContext;
-class SearchResultsModel;
+
 struct SearchResult;
 class Search : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(SearchResultsModel * model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(int numResults READ numResults)
 public:
-    explicit Search(GNUNET_FS_SearchContext *m_sc,QString m_query, QObject *m_parent = 0);
+    explicit Search( GNUNET_FS_SearchContext *m_sc,QString m_query, QObject *m_parent = 0);
 
 
     //Properties definition
@@ -45,6 +47,16 @@ public:
         m_model = model;
         emit modelChanged(model);
     }
+
+
+    int numResults()
+    {
+        if(!m_model)
+            return 0;
+        else
+            return m_model->getSize();
+    }
+
 
 
     SearchResult* AddResult(SearchResult *m_parent, const struct GNUNET_FS_Uri *uri,
@@ -62,15 +74,20 @@ public:
 
 
     QString getTerm();
+    void setId(int id);
 signals:
     void modelChanged(SearchResultsModel*);
     void stopped();
     void closed();
+    void resultsChanged(int id);
+
 private slots:
     void stopSlot();
     void closeSlot();
 
 private:
+
+
 
     //Our model
     SearchResultsModel* m_model;
@@ -88,6 +105,8 @@ private:
 
     //Number of results we got for this search.
     unsigned int m_numResults;
+
+    int m_id;
 
 };
 

@@ -23,6 +23,7 @@
 #include "core/cangotecore.h"
 #include "models/models.h"
 #include "models/DownloadsModel.h"
+#include "utils/utils.h"
 
 
 SearchResult::SearchResult(QObject *parent) :
@@ -34,6 +35,8 @@ SearchResult::SearchResult(QObject *parent) :
     m_fileSize = 0;
     m_meta = NULL;
     m_uri = NULL;
+    m_thumbnail = NULL;
+
 }
 
 
@@ -62,6 +65,12 @@ int SearchResult::getPercentAvail()
 void SearchResult::setMetadata(GNUNET_CONTAINER_MetaData *meta, bool notifyModified)
 {
     this->m_meta = meta;
+
+    /* import meta data */
+    if (NULL != meta)
+    {
+        m_thumbnail = theUtils->getThumbnailFromMetaData( meta);
+    }
     
     if(notifyModified)
         modified();

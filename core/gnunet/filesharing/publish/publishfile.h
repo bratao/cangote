@@ -170,7 +170,6 @@ private:
     int m_replication;
     QImage * m_thumbnail;
     bool m_haveThumbnail;
-    QImage *getThumbnail(const struct GNUNET_CONTAINER_MetaData *meta);
     void inpectInfo();
 };
 

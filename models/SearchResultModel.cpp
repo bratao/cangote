@@ -24,6 +24,9 @@
 //#include "utils/misc.h"
 #include "core/gnunet/filesharing/search/searchresult.h"
 
+
+
+
 SearchResultsModel::SearchResultsModel(QObject *parent) :
     QAbstractListModel(parent)
 {
@@ -32,8 +35,6 @@ SearchResultsModel::SearchResultsModel(QObject *parent) :
     connect(this,&SearchResultsModel::addResultSignal,this, &SearchResultsModel::addResultSlot, Qt::BlockingQueuedConnection);
 
 }
-
-
 
 int SearchResultsModel::rowCount(const QModelIndex& parent) const
 {
@@ -46,30 +47,34 @@ QVariant SearchResultsModel::data(const QModelIndex& index, int role) const
 
     SearchResult* result = m_data[index.row()];
 
-       switch(role)
-       {
-           case FILENAME:
-               return result->name();
-               break;
-           case FILESIZE:
-           return result->getFilesize();
-               break;
-           case AVAILIABILITY:
-           return  result->getPercentAvail();
-               break;
-           case APPLICABILITYTRANK:
-           return result->getApplicabilityRank();
-               break;
-           default:
-                 return QVariant::Invalid;
-       }
+    switch(role)
+    {
+    case PREVIEW:
+        return QString("image://searchResultThumbnail/%1/%2").arg(m_index->row()).arg(index.row());
+        break;
+    case FILENAME:
+        return result->name();
+        break;
+    case FILESIZE:
+        return result->getFilesize();
+        break;
+    case AVAILIABILITY:
+        return  result->getPercentAvail();
+        break;
+    case APPLICABILITYTRANK:
+        return result->getApplicabilityRank();
+        break;
+    default:
+        return QVariant::Invalid;
+    }
 
 
-  return QVariant::Invalid;
+    return QVariant::Invalid;
 }
 
 QHash<int, QByteArray> SearchResultsModel::roleNames() const {
     QHash<int, QByteArray> roles;
+    roles[PREVIEW]             = "preview";
     roles[FILENAME]             = "filename";
     roles[FILESIZE]             = "filesize";
     roles[AVAILIABILITY]        = "availiability";
@@ -125,15 +130,10 @@ void SearchResultsModel::resultModifiedSlot(int indexRow)
 void SearchResultsModel::removeResultSlot(QObject* result)
 {
 
-
     SearchResult* searchResult  = (SearchResult*)result;
-
-        beginRemoveRows(QModelIndex(), searchResult->getIndex()->row(), searchResult->getIndex()->row());
-
-        m_data.removeOne(searchResult);
-
-        endRemoveRows();
-
+    beginRemoveRows(QModelIndex(), searchResult->getIndex()->row(), searchResult->getIndex()->row());
+    m_data.removeOne(searchResult);
+    endRemoveRows();
 
 }
 
@@ -143,7 +143,7 @@ void SearchResultsModel::removeResultSlot(QObject* result)
 SearchResult* SearchResultsModel::getResult(int index)
 {
     if(index >= m_data.count())
-      return NULL;
+        return NULL;
 
     return m_data.at(index);
 }

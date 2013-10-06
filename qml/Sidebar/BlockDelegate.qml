@@ -48,7 +48,7 @@ Item {
             id: playlistImage
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 15
+            anchors.leftMargin: 5
             source: "images/playlist"+ (itemSelected /*&& delegate.ListView.activeFocus*/ ? "-activefocus" : "")
                     + ".png"
         }
@@ -62,7 +62,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.left: playlistImage.right
             anchors.leftMargin: 5
-            anchors.right: closeButton.left
+
             //anchors.rightMargin: closeButton.source.length ? 5 : 0
             verticalAlignment: Text.AlignVCenter
             text: term
@@ -70,6 +70,25 @@ Item {
             style: Text.Raised
             font.pixelSize: 11
             opacity: 0.79
+        }
+
+        Rectangle{
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: playlistText.right
+            color: "lightgray"
+
+            height: 15
+            width: 20
+
+            radius: 5
+
+            Text {
+                id: numberResults
+                text: numResults
+                font.pointSize: 6
+                anchors.centerIn: parent
+
+            }
         }
 
 

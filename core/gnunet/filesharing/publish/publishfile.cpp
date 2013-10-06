@@ -5,6 +5,8 @@
 #include <QDebug>
 
 #include "core/cangotecore.h"
+#include "cangote.h"
+#include "utils/utils.h"
 #include "models/MetadataModel.h"
 #include "models/KeywordModel.h"
 ///////// STATIC FUNCTIONS END/////////////
@@ -123,7 +125,7 @@ int PublishFile::fileInformationImport ( struct GNUNET_FS_FileInformation *fi,
         GNUNET_CONTAINER_meta_data_iterate (meta,
                                             &addMetadataCallBack,
                                             this);
-        m_thumbnail = getThumbnail (meta);
+        m_thumbnail = theUtils->getThumbnailFromMetaData( meta);
         if (m_thumbnail == NULL)
         {
             setHaveThumbnail(false);
@@ -181,32 +183,3 @@ PublishFile::addKeyword (QString keyword)
 }
 
 
-/**
- * Obtain pixbuf from thumbnail data in meta data.
- *
- * @param meta input meta data
- * @return NULL on error, otherwise the embedded thumbnail
- */
-QImage *
-PublishFile::getThumbnail (const GNUNET_CONTAINER_MetaData *meta)
-{
-    size_t ts;
-    unsigned char *thumb;
-
-    thumb = NULL;
-    ts = GNUNET_CONTAINER_meta_data_get_thumbnail (meta, &thumb);
-    if (0 == ts)
-        return NULL;
-
-    QImage* image = new QImage();
-    if(!image->loadFromData(thumb,ts))
-    {
-        delete image;
-        image = NULL;
-    }
-
-    GNUNET_free (thumb);
-
-
-    return image;
-}

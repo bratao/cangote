@@ -32,7 +32,7 @@ class SearchResult : public QObject
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
-
+    Q_PROPERTY(QImage* thumbnail READ thumbnail CONSTANT)
 
 
 public:
@@ -61,6 +61,11 @@ public:
         m_filename = filename;
         emit fileNameChanged(filename);
     }
+
+    QImage* thumbnail() const
+    { return m_thumbnail; }
+
+
 
 signals:
     void nameChanged(QString);
@@ -99,6 +104,7 @@ private:
     void* m_preview;
     unsigned int m_fileSize;
     QPersistentModelIndex* m_index;
+    QImage * m_thumbnail;
     Search* m_owner;
     struct GNUNET_FS_SearchResult *m_result;
     SearchResult *m_parent;
@@ -107,6 +113,7 @@ private:
     unsigned int m_applicabilityRank;
     int availability_rank;
     int availability_certainty;
+
 
     void checkDownloaded();
 signals:
