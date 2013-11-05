@@ -1,6 +1,6 @@
 
-import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
 import "preferences"
 
 
@@ -37,7 +37,7 @@ ApplicationWindow {
             }
         }
         Menu {
-            title: "Help"
+            title: qsTr("Help")
             MenuItem { text: "About..."; enabled: false }
         }
     }

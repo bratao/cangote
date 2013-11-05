@@ -84,8 +84,8 @@ public:
         emit connectedPeersChanged(connected);
     }
 
-    GNUNET_CRYPTO_EccPublicSignKey myPublicKey() const;
-    void setMyPublicKey(const GNUNET_CRYPTO_EccPublicSignKey &myPublicKey);
+    GNUNET_CRYPTO_EddsaPublicKey myPublicKey() const;
+    void setMyPublicKey(const GNUNET_CRYPTO_EddsaPublicKey &myPublicKey);
 
 
 
@@ -161,15 +161,11 @@ private:
      */
     struct GNUNET_ARM_Handle *m_arm;
 
-    /**
-     * My peer identity.
-     */
-    struct GNUNET_PeerIdentity m_myPeerIdentity;
 
     /**
      * My public key.
      */
-    struct GNUNET_CRYPTO_EccPublicSignKey m_myPublicKey;
+    struct GNUNET_CRYPTO_EddsaPublicKey m_myPublicKey;
 
 
 

@@ -29,6 +29,8 @@ class DownloadItem : public QObject
     Q_OBJECT
     Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
+    Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
+    Q_PROPERTY(QString fancyName READ fancyName WRITE setFancyName NOTIFY fancyNameChanged)
 
 
 public:
@@ -37,7 +39,7 @@ public:
     enum State {STATE_ERROR, STATE_STOP ,STATE_PAUSED, STATE_QUEUED,STATE_DOWNLOADING, STATE_COMPLETE, STATE_INVALID};
 
 
-
+  //Index
     int index() const
     { return m_index; }
 
@@ -46,7 +48,7 @@ public:
         m_index = index;
     }
 
-
+  //Path
     QString path() const
     { return m_path; }
 
@@ -56,10 +58,32 @@ public:
         emit pathChanged();
     }
 
+    //FileName
+    QString fileName() const
+    { return m_filename; }
+
+    void setFileName(QString filename)
+    {
+        m_filename = filename;
+        emit fileNameChanged(filename);
+    }
+
+    //FancyName
+    QString fancyName() const
+    { return m_fancyName; }
+
+    void setFancyName(QString fancyName)
+    {
+        m_fancyName = fancyName;
+        emit fancyNameChanged(fancyName);
+    }
+
 
 
 signals:
     void modifiedSignal(int index);
+    void fileNameChanged(QString filename);
+    void fancyNameChanged(QString fancyName);
     void pathChanged();
 public slots:
 
@@ -70,8 +94,6 @@ public:
     qint64 getSize();
     void setMetadata(const struct GNUNET_CONTAINER_MetaData *meta, bool notifyModified = true);
     const GNUNET_CONTAINER_MetaData *getMetadata();
-    void setFilename(QString filename, bool notifyModified = true);
-    Q_INVOKABLE QString getFilename();
     QString getUri();
     void setContext(struct GNUNET_FS_DownloadContext *context, bool notifyModified = true);
     struct GNUNET_FS_DownloadContext *getContext();
@@ -107,6 +129,7 @@ private:
 
     QString m_uri;
     QString m_filename;
+    QString m_fancyName;
     QString m_path;
     QString m_hash;
 

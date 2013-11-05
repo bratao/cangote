@@ -72,46 +72,56 @@ void Publish::filePicker()
     QStringList fileNames;
 
 
-    QFileDialog dialog;
+
+    QDialog* dialog = new QDialog();
+
+    QFileDialog* filePicker = new QFileDialog;
 
     //Add button
     QFormLayout *columnLayout1 = new QFormLayout;
     QFormLayout *columnLayout2 = new QFormLayout;
     QHBoxLayout * rowLayout = new QHBoxLayout;
+    QVBoxLayout * columnLayout = new QVBoxLayout;
 
-    QLabel* expirationLabel = new QLabel(tr("Expiration:"),&dialog);
-    QComboBox* expirationCombo = new QComboBox(&dialog);
+    QLabel* expirationLabel = new QLabel(tr("Expiration:"),filePicker);
+    QComboBox* expirationCombo = new QComboBox(filePicker);
     expirationCombo->addItem("Expire in 6 months");
     expirationCombo->addItem("Expire in 1 year");
     expirationCombo->addItem("Expire in 2 years");
     expirationCombo->addItem("Expire in 5 years");
     expirationCombo->addItem("Expire in 10 years");
+    expirationCombo->setCurrentIndex(1);
 
-    QLabel* replicationLabel = new QLabel(tr("Replication:"),&dialog);
-    QComboBox* replicationCombo = new QComboBox(&dialog);
+    QLabel* replicationLabel = new QLabel(tr("Replication:"),filePicker);
+    QComboBox* replicationCombo = new QComboBox(filePicker);
     replicationCombo->addItem("No replication");
     replicationCombo->addItem("Replicate at least 1 time");
     replicationCombo->addItem("Replicate at least 2 times");
     replicationCombo->addItem("Replicate at least 5 times");
+    replicationCombo->setCurrentIndex(1);
 
-    QLabel* priorityLabel = new QLabel(tr("Priority:"),&dialog);
-    QComboBox* priorityCombo = new QComboBox(&dialog);
+
+    QLabel* priorityLabel = new QLabel(tr("Priority:"),filePicker);
+    QComboBox* priorityCombo = new QComboBox(filePicker);
     priorityCombo->addItem("Low");
     priorityCombo->addItem("Normal");
     priorityCombo->addItem("High");
     priorityCombo->addItem("Highest");
+    priorityCombo->setCurrentIndex(1);
 
 
-    QLabel* anonLabel = new QLabel(tr("Anonymity:"),&dialog);
-    QComboBox* anonCombo = new QComboBox(&dialog);
+    QLabel* anonLabel = new QLabel(tr("Anonymity:"),filePicker);
+    QComboBox* anonCombo = new QComboBox(filePicker);
     anonCombo->addItem("0 - Low");
     anonCombo->addItem("1 - High");
     anonCombo->addItem("2 - Very high");
     anonCombo->addItem("5 - Ultra high");
     anonCombo->addItem("10 - Paranoid");
+    anonCombo->setCurrentIndex(0);
 
-    QLabel* indexLabel = new QLabel(tr("Index:"),&dialog);
-    QCheckBox* doIndex = new QCheckBox(tr("Index only"),&dialog);
+    QLabel* indexLabel = new QLabel(tr("Index:"),filePicker);
+    QCheckBox* doIndex = new QCheckBox(tr("Index only"),filePicker);
+    doIndex->setChecked(true);
 
     columnLayout1->addRow(expirationLabel,expirationCombo);
     columnLayout1->addRow(replicationLabel,replicationCombo);
@@ -119,21 +129,35 @@ void Publish::filePicker()
     columnLayout2->addRow(anonLabel,anonCombo);
     columnLayout2->addRow(indexLabel,doIndex);
 
+
     rowLayout->addLayout(columnLayout1);
     rowLayout->addLayout(columnLayout2);
 
+    columnLayout->addWidget(filePicker);
+    columnLayout->addLayout(rowLayout);
 
-    QGridLayout *layout = (QGridLayout*)dialog.layout();
-    layout->addLayout(rowLayout,4,0,1,-1);
+
+    //QGridLayout *layout = (QGridLayout*)dialog.layout();
+    //layout->addLayout(rowLayout,4,0,1,-1);
+
+    dialog->setLayout(columnLayout);
 
     //Set mode
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setViewMode(QFileDialog::Detail);
-    dialog.setOption(QFileDialog::DontUseNativeDialog, true);
+    filePicker->setFileMode(QFileDialog::ExistingFiles);
+    filePicker->setViewMode(QFileDialog::Detail);
+    filePicker->setOption(QFileDialog::DontUseNativeDialog, true);
 
-    if (dialog.exec())
-        fileNames = dialog.selectedFiles();
+    /*if (filePicker->exec())
+        fileNames = filePicker->selectedFiles();
+    */
 
+
+    QObject::connect(filePicker,&QFileDialog::accepted,dialog,&QDialog::accept );
+    QObject::connect(filePicker,&QFileDialog::rejected,dialog,&QDialog::reject );
+
+
+    if (dialog->exec())
+      fileNames = filePicker->selectedFiles();
 
 
     //Get the values

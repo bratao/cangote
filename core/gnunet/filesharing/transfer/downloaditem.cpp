@@ -77,20 +77,6 @@ QString DownloadItem::getUri()
 }
 
 
-QString DownloadItem::getFilename()
-{
-    return m_filename;
-}
-
-
-void DownloadItem::setFilename(QString filename, bool notifyModified)
-{
-    m_filename = filename;
-
-    if(notifyModified)
-        modified();
-}
-
 const GNUNET_CONTAINER_MetaData* DownloadItem::getMetadata()
 {
     return m_meta;

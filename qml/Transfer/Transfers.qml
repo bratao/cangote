@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import QtQuick.Layouts 1.0
 import Cangote 1.0
 //import Utils 1.0
 
@@ -68,11 +69,34 @@ Item
         TableViewColumn{
             title: "Name"
             role: "name"
+            delegate:Item{
+
+                Image{
+                    id: fileType
+                    width: 16
+                    height: 16
+                    source: "image://downloadsThumbnail/" + styleData.row
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: fileType.right
+                    anchors.right: parent.right
+
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: styleData.value
+                    renderType: Text.NativeRendering
+                }
+            }
+
         }
 
         TableViewColumn{
             title: "Size"
             role: "size"
+            width: 60
+
             delegate:Item{
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
@@ -100,6 +124,7 @@ Item
         TableViewColumn{
             title: "Status"
             role: "status"
+            width: 80
         }
         TableViewColumn{
             title: "Down Speed"
@@ -121,10 +146,30 @@ Item
         TableViewColumn{
             title: "Amount Downloaded"
             role: "amountDownloaded"
+            width: 100
+            delegate:Item{
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: Utils.friendlyUnit(styleData.value,false)
+                    renderType: Text.NativeRendering
+                }
+            }
         }
         TableViewColumn{
             title: "Amount left"
             role: "amoutLeft"
+            width: 100
+            delegate:Item{
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: styleData.textColor
+                    elide: styleData.elideMode
+                    text: Utils.friendlyUnit(styleData.value,false)
+                    renderType: Text.NativeRendering
+                }
+            }
         }
         TableViewColumn{
             title: "Time Elapsed"

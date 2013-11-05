@@ -11,6 +11,6 @@ Label{
 WebView{
        //anchors.fill: parent
        url: "http://www.cangote.org"
-}
-*/
+}*/
+
 

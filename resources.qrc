@@ -4,5 +4,14 @@
         <file>qml/images/qt_icon.png</file>
         <file>asserts/Cangote.ico</file>
         <file>asserts/CangoteHead.ico</file>
+        <file>qml/filetypes/FileTypeAny.png</file>
+        <file>qml/filetypes/FileTypeArchive.png</file>
+        <file>qml/filetypes/FileTypeAudio.png</file>
+        <file>qml/filetypes/FileTypeCDImage.png</file>
+        <file>qml/filetypes/FileTypeDocument.png</file>
+        <file>qml/filetypes/FileTypePicture.png</file>
+        <file>qml/filetypes/FileTypeProgram.png</file>
+        <file>qml/filetypes/FileTypeVideo.png</file>
+        <file>qml/filetypes/text-plain.png</file>
     </qresource>
 </RCC>

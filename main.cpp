@@ -46,7 +46,6 @@
 #include "cangote.h"
 
 
-#define QMLPATH QString("E:\\Projetos\\Meus Projetos\\Cangote\\Software\\Qt Cangote\\cangote\\")
 void createTray();
 void logProcessor(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
@@ -63,7 +62,7 @@ int main(int argc, char *argv[])
     Cangote cangote;
 
 
-    QQmlApplicationEngine engine(QUrl::fromLocalFile("../cangote/qml/main.qml"));
+    QQmlApplicationEngine engine(QUrl::fromLocalFile("qml/main.qml"));
 
     cangote.registerImageProvider(&engine);
 
@@ -83,7 +82,7 @@ int main(int argc, char *argv[])
     createTray();
 
 
-    theWindow->setTitle("Cangote P2P");
+    theWindow->setTitle("Cangote P2P 0.00");
     theWindow->setIcon(QIcon(":/asserts/CangoteHead.ico"));
     theWindow->show();
     return app.exec();

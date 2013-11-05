@@ -53,25 +53,23 @@ Button {
     property int borderRight: 0
 
     style: ButtonStyle {
-        background: BorderImage {
-            source : iconName.length ? (iconName + (hoverEnabled && containsMouse && !button.pressed ? "-hover" : "")
-                                        + (button.pressed ? "-pressed" : "")
-                                        + (button.enabled ? "" : "-disabled")
-                                        + ".png")
-                                     : ""
-            border.top: button.borderTop
-            border.bottom: button.borderBottom
-            border.left: button.borderLeft
-            border.right: button.borderRight
-
-            width: button.width ? button.width : implicitWidth
-            height: button.height ? button.height : implicitHeight
+        background: Item {
+            implicitWidth: img.implicitWidth
+            implicitHeight: img.implicitHeight
+            BorderImage {
+                id: img
+                anchors.centerIn: parent
+                source : iconName.length ? (iconName + (hoverEnabled && control.hovered && !control.pressed ? "-hover" : "")
+                                            + (button.pressed ? "-pressed" : "")
+                                            + (button.enabled ? "" : "-disabled")
+                                            + ".png")
+                                         : ""
+                border.top: button.borderTop
+                border.bottom: button.borderBottom
+                border.left: button.borderLeft
+                border.right: button.borderRight
+            }
         }
-
-      //  backgroundColor: button.enabled ? "white" : "#999999"
-//        text.font.pixelSize: 12
-//        text.color: button.enabled ? "white" : "#999999"
-//        text.style: button.enabled ? Text.Sunken : Text.Normal
-//        text.styleColor: "#222222"
     }
 }
+

@@ -7,6 +7,106 @@ import Cangote 1.0
 
 
 ToolBar {
+
+
+
+    property int searchType: 0
+
+
+
+    Menu {
+        id: contextMenu
+
+        MenuItem {
+            iconSource: "filetypes/FileTypeAny.png"
+
+            action:
+                Action {
+                text: "Any"
+                onTriggered: {
+                    searchType = 0;
+                }
+            }
+        }
+        MenuSeparator { }
+        MenuItem {
+            iconSource: "filetypes/FileTypeAudio.png"
+            action:
+                Action {
+                text: "Audio"
+                onTriggered: {
+                    searchType = 1;
+                }
+            }
+        }
+        MenuItem {
+            iconSource: "filetypes/FileTypeVideo.png"
+            action:
+                Action {
+                text: "Video"
+                onTriggered: {
+                    searchType = 2;
+                }
+            }
+        }
+        MenuItem {
+            iconSource: "filetypes/FileTypePicture.png"
+            action:
+                Action {
+                text: "Picture"
+                onTriggered: {
+                    searchType = 3;
+                }
+            }
+        }
+        MenuItem {
+            iconSource: "filetypes/FileTypeProgram.png"
+            action:
+                Action {
+                text: "Program"
+                onTriggered: {
+                    searchType = 4;
+                }
+            }
+        }
+
+        MenuItem {
+            iconSource: "filetypes/FileTypeDocument.png"
+            action:
+                Action {
+                text: "Documents"
+                onTriggered: {
+                     searchType = 5;
+                }
+            }
+        }
+        MenuItem {
+            iconSource: "filetypes/FileTypeArchive.png"
+            action:
+                Action {
+                text: "Archive"
+                onTriggered: {
+                    searchType = 6;
+                }
+            }
+        }
+        MenuItem {
+            iconSource: "filetypes/FileTypeCDImage.png"
+            action:
+                Action {
+                text: "CD-Image"
+                onTriggered: {
+                    searchType = 7;
+                }
+            }
+        }
+
+
+
+    }
+
+
+
     id:toolbar
     height: 40
 
@@ -50,7 +150,7 @@ ToolBar {
             }
 
             style: TextFieldStyle {
-                padding { top: 4 ; left: 30 ; right: 25 ; bottom:4 }
+                padding { top: 4 ; left: 35 ; right: 25 ; bottom:4 }
 
                 background: BorderImage {
                     border.left: 14
@@ -61,12 +161,70 @@ ToolBar {
                 }
             }
 
-            Image {
-                anchors.verticalCenter: parent.verticalCenter
+
+            Rectangle{
+                id: iconRectangle
+                color: "#F0F0F0"
+                anchors.top: parent.top
+                anchors.topMargin:  4
                 anchors.left: parent.left
                 anchors.leftMargin: 8
-                source: "images/toolbar/search_glass.png"
+                height: 21
+                width: 23
+                Image {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+
+                    source: {
+                        if(searchType === 0)
+                            return "filetypes/FileTypeAny.png"
+                        else if(searchType === 1)
+                            return "filetypes/FileTypeAudio.png"
+                        else if(searchType === 2)
+                            return "filetypes/FileTypeVideo.png"
+                        else if(searchType === 3)
+                            return "filetypes/FileTypePicture.png"
+                        else if(searchType === 4)
+                            return "filetypes/FileTypeProgram.png"
+                        else if(searchType === 5)
+                            return "filetypes/FileTypeDocument.png"
+                        else if(searchType === 6)
+                            return "filetypes/FileTypeArchive.png"
+                        else if(searchType === 7)
+                            return "filetypes/FileTypeCDImage.png"
+
+
+                    }
+                }
+
+                Image {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 17
+                    source: "images/toolbar/search_arrow.png"
+                }
+                MouseArea{
+                    id:ma
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        contextMenu.popup()
+                    }
+
+
+                }
             }
+
+            Rectangle{
+                color: "#C8C8C8"
+                anchors.top: parent.top
+                anchors.topMargin:  3
+                anchors.left: iconRectangle.right
+                height: iconRectangle.height +1
+                width: 1
+            }
+
+
 
             CustomButton {
                 anchors.verticalCenter: parent.verticalCenter
@@ -79,6 +237,18 @@ ToolBar {
                 onClicked: searchField.text = ""
             }
         }
+
+        CustomButton {
+            iconName: "images/toolbar/search-button"
+            height: 34
+            width: 40
+            hoverEnabled: true
+            onClicked: {
+                if(searchField.text.length)
+                    Cangote.gnunet.filesharing.search(searchField.text,0);
+            }
+        }
+
 
         Rectangle{
             color: "grey"

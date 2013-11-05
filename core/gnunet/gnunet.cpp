@@ -153,7 +153,7 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
 
 
     char *privateKeyFileName;
-    struct GNUNET_CRYPTO_EccPrivateKey *priv;
+    GNUNET_CRYPTO_EddsaPrivateKey *priv;
 
     //Create our configuration
     m_config = GNUNET_CONFIGURATION_create ();
@@ -169,17 +169,15 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
         qWarning() << QString("Could not find option `GNUNETD:HOSTKEYFILE' in configuration.\n");
         return;
     }
-    if (NULL == (priv = GNUNET_CRYPTO_ecc_key_create_from_file (privateKeyFileName)))
+    if (NULL == (priv = GNUNET_CRYPTO_eddsa_key_create_from_file( (privateKeyFileName))))
     {
         qWarning() << QString("Loading hostkey from %1 failed.\n").arg(privateKeyFileName);
         GNUNET_free (privateKeyFileName);
         return;
     }
     GNUNET_free (privateKeyFileName);
-    GNUNET_CRYPTO_ecc_key_get_public_for_signature(priv, &m_myPublicKey);
+    GNUNET_CRYPTO_eddsa_key_get_public(priv, &m_myPublicKey);
     GNUNET_free (priv);
-    GNUNET_CRYPTO_hash (&m_myPublicKey, sizeof (m_myPublicKey), &m_myPeerIdentity.hashPubKey);
-
 
 
     //A update function to process our messages
@@ -242,12 +240,12 @@ void GNUNet::processEvents()
 }
 
 
-GNUNET_CRYPTO_EccPublicSignKey GNUNet::myPublicKey() const
+GNUNET_CRYPTO_EddsaPublicKey GNUNet::myPublicKey() const
 {
     return m_myPublicKey;
 }
 
-void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EccPublicSignKey &myPublicKey)
+void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EddsaPublicKey &myPublicKey)
 {
     m_myPublicKey = myPublicKey;
 }

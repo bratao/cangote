@@ -6,7 +6,7 @@ import Cangote 1.0
 
 Item {
     property string searchTerm
-    property var searchModel
+    property var searchResultModel
 
     //Tooltip support.
     property bool needTooltip: false
@@ -59,7 +59,7 @@ Item {
 
         transitions: Transition {
             to: "inuse"
-            PropertyAnimation {target: tooltip; property: "opacity"; duration: 1000; easing.type: Easing.InExpo }
+            PropertyAnimation {target: tooltip; property: "opacity"; duration: 200; easing.type: Easing.InExpo }
 
         }
     }
@@ -69,13 +69,13 @@ Item {
     {
         id: searchResultList
         anchors.fill: parent
-        model: searchModel
+        model: searchResultModel
         sortIndicatorVisible: true
         SystemPalette{ id: syspal }
 
         onDoubleClicked:
         {
-            model.getResult(currentRow).download()
+            searchResultModel.getResult(currentRow).download()
         }
 
         rowDelegate: Rectangle {
@@ -134,10 +134,15 @@ Item {
                     anchors.centerIn: parent
                 }
 
-                Rectangle{
-                    color: "red"
-                    width: 10
-                    height: 10
+                Image {
+                    id: fileType
+                    width: 20; height: 20
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    clip: true
+                    source: styleData.value + "/thumbnail"
+
+                    //anchors.centerIn: parent
                 }
 
 
@@ -198,6 +203,7 @@ Item {
                 tooltipX= ma.mapToItem(resultPage,mouseX,0).x
                 tooltipY= ma.mapToItem(resultPage,0,mouseY).y
                 tooltip.searchTerm = index
+                tooltip.metadata = searchResultModel.getResult(index)
                 needTooltip = ma.containsMouse
 
             }

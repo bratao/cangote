@@ -360,7 +360,7 @@ void SearchManager::downloadFromSearch(SearchResult* searchResult)
   dc = GNUNET_FS_download_start (m_fs,
                                  searchResult->getUri(),
                                  searchResult->getMeta() /* meta data */,
-                                 (thePrefs->getDownloadDirectory() +"/" + QString(searchResult->fileName())).toUtf8(), NULL /* tempname */ ,
+                                 (thePrefs->getDownloadDirectory() +"/" + QString(searchResult->getFileName())).toUtf8(), NULL /* tempname */ ,
                                  0 /* offset */ ,
                                  searchResult->getFilesize(),
                                  anonLevel, opt,

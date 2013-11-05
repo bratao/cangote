@@ -21,10 +21,69 @@
 #include "DownloadsModel.h"
 #include "core/gnunet/gnunet_includes.h"
 #include "core/gnunet/filesharing/transfer/downloaditem.h"
+#include "models/models.h"
+#include "utils/utils.h"
+#include "cangote.h"
+#include "core/cangotecore.h"
+
+
+
+
+/***
+ * Thumbnail Provider for QML
+ **/
+
+
+QImage TransferThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+{
+
+  int width = requestedSize.width() > 0 ? requestedSize.width() : 200;
+  int height = requestedSize.height() > 0 ? requestedSize.height() :100;
+
+  if (size)
+    *size = QSize(width, height);
+
+
+  //Default image
+  QImage image(width,
+               height,QImage::Format_ARGB32);
+
+  image.fill(qRgba(0, 0, 0, 0));
+
+
+
+  int transferId = id.toInt();
+
+
+
+  //Load from file
+  DownloadItem* download = theApp->models()->downloadsModel()->get(transferId);
+
+  Q_ASSERT(download);
+  if(download == NULL)
+    return image;
+
+  QString type = theUtils->getFileExtension(download->fileName());
+
+  return theUtils->getFileTypeImage(type,width,height);
+
+
+
+}
+
+
+
+
+
+
+
 
 DownloadsModel::DownloadsModel(QObject *parent) :
     QAbstractListModel(parent)
 {
+    m_thumbnailProvider = new TransferThumbnailImageProvider();
+
+
     connect(this, &DownloadsModel::addDownloadSignal, this, &DownloadsModel::addDownloadSlot);
 }
 
@@ -48,7 +107,7 @@ QVariant DownloadsModel::data(const QModelIndex& index, int role) const
     switch(role)
     {
     case NAME:
-        return m_data[index.row()]->getFilename();
+        return m_data[index.row()]->fileName();
         break;
     case SIZE:
         return m_data[index.row()]->getSize();
@@ -76,16 +135,16 @@ QVariant DownloadsModel::data(const QModelIndex& index, int role) const
         break;
     }
     case DLSPEED:
-        return m_data[index.row()]->getFilename();
+        return m_data[index.row()]->fileName();
         break;
     case ETA:
-        return m_data[index.row()]->getFilename();
+        return m_data[index.row()]->fileName();
         break;
     case LABEL:
-        return m_data[index.row()]->getFilename();
+        return m_data[index.row()]->fileName();
         break;
     case ADD_DATE:
-        return m_data[index.row()]->getFilename();
+        return m_data[index.row()]->fileName();
         break;
     case AMOUNT_DOWNLOADED:
         return m_data[index.row()]->getCompleted();
@@ -94,7 +153,7 @@ QVariant DownloadsModel::data(const QModelIndex& index, int role) const
         return m_data[index.row()]->getRemainingDownload();
         break;
     case TIME_ELAPSED:
-        return m_data[index.row()]->getFilename();
+        return m_data[index.row()]->fileName();
         break;
     default:
         return QVariant::Invalid;
@@ -106,7 +165,7 @@ QVariant DownloadsModel::data(const QModelIndex& index, int role) const
 
 
 DownloadItem* DownloadsModel::addDownload(DownloadItem *pde, struct GNUNET_FS_DownloadContext *dc,
-                                          const struct GNUNET_FS_Uri *uri, QString filename,
+                                          const struct GNUNET_FS_Uri *uri, QString filePath,
                                           const struct GNUNET_CONTAINER_MetaData *meta, qint64 size,
                                           qint64 completed )
 {
@@ -140,10 +199,25 @@ DownloadItem* DownloadsModel::addDownload(DownloadItem *pde, struct GNUNET_FS_Do
                                                                  EXTRACTOR_METATYPE_KEYWORDS,
                                                                  -1);
 
+    char* fileName =  GNUNET_CONTAINER_meta_data_get_first_by_types (meta,
+                                                                 EXTRACTOR_METATYPE_GNUNET_ORIGINAL_FILENAME,
+                                                                 EXTRACTOR_METATYPE_PACKAGE_NAME,
+                                                                 EXTRACTOR_METATYPE_TITLE,
+                                                                 EXTRACTOR_METATYPE_BOOK_TITLE,
+                                                                 EXTRACTOR_METATYPE_FILENAME,
+                                                                 EXTRACTOR_METATYPE_DESCRIPTION,
+                                                                 EXTRACTOR_METATYPE_SUMMARY,
+                                                                 EXTRACTOR_METATYPE_ALBUM,
+                                                                 EXTRACTOR_METATYPE_COMMENT,
+                                                                 EXTRACTOR_METATYPE_SUBJECT,
+                                                                 EXTRACTOR_METATYPE_KEYWORDS,
+                                                                 -1);
 
-    download->setPath(filename);
 
-    download->setFilename(QString(fancyName));
+
+    download->setPath(filePath);
+    download->setFancyName(QString(fancyName));
+    download->setFileName(QString(fileName));
     download->setMetadata(meta);
     download->setSize(size);
     download->setCompleted(completed);

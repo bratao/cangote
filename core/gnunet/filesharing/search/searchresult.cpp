@@ -30,8 +30,8 @@ SearchResult::SearchResult(QObject *parent) :
     QObject(parent)
 {
     m_index = NULL;
-    availability_certainty = 0;
-    availability_rank = 0;
+    m_availabilityCertainty = 0;
+    m_availabilityRank = 0;
     m_fileSize = 0;
     m_meta = NULL;
     m_uri = NULL;
@@ -50,8 +50,8 @@ int SearchResult::getPercentAvail()
 {
     int percent_avail;
     
-    if (availability_certainty > 0)
-        percent_avail = 50 + (int)(availability_rank * 50.0 / availability_certainty);
+    if (m_availabilityCertainty > 0)
+        percent_avail = 50 + (int)(m_availabilityRank * 50.0 / m_availabilityCertainty);
     // percent_avail = availability_rank;
     else
         percent_avail = 0;
@@ -84,7 +84,7 @@ GNUNET_CONTAINER_MetaData* SearchResult::getMeta()
 
 void SearchResult::setAvailabilityRank(int availability_rank, bool notifyModified)
 {
-    this->availability_rank = availability_rank;
+    this->m_availabilityRank = availability_rank;
     if(notifyModified)
         modified();
     
@@ -141,17 +141,11 @@ void SearchResult::setParent(SearchResult* parent, bool notifyModified)
 
 void SearchResult::setAvailabilityCertainty(int availability_certainty, bool notifyModified)
 {
-    this->availability_certainty = availability_certainty;
+    this->m_availabilityCertainty = availability_certainty;
     if(notifyModified)
         modified();
 }
 
-void SearchResult::setPreview(void* preview, bool notifyModified)
-{
-    this->m_preview = preview;
-    if(notifyModified)
-        modified();
-}
 
 
 void SearchResult::setUri(GNUNET_FS_Uri * uri, bool notifyModified)

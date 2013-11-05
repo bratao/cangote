@@ -31,7 +31,7 @@ Item{
             var tab = tabsView.addTab(item.myTerm, component)
             //tab.title = item.myTerm
             tab.active = 1
-            tab.item.searchModel = Cangote.models.searchModel.getSearch(index).model
+            tab.item.searchResultModel = Cangote.models.searchModel.getSearch(index).model
 
         }
         onItemRemoved: {

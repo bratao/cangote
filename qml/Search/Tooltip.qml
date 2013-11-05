@@ -4,6 +4,7 @@ import QtQuick 2.0
 //The tooltip
 Rectangle {
     property string searchTerm
+    property var metadata: null
 
     width: 300; height: 200
     visible: false

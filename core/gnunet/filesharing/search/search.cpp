@@ -182,11 +182,7 @@ SearchResult* Search::AddResult(SearchResult *parent, const struct GNUNET_FS_Uri
     newresult->setFilesize(fsize,false);
     //TODO:: We should respect const
     newresult->setMetadata((GNUNET_CONTAINER_MetaData *)meta, false);
-    //newresult->setParent(NULL, false);
 
-
-
-    newresult->setPreview(thumb,false);
     //TODO:: We should respect const
     newresult->setUri((GNUNET_FS_Uri *)uri,false);
     newresult->setResult(result,false);

@@ -24,6 +24,7 @@
 #include "cangote.h"
 #include "core/cangotecore.h"
 #include "models/models.h"
+#include "utils/utils.h"
 
 #include "core/gnunet/filesharing/search/searchresult.h"
 
@@ -37,54 +38,68 @@
 QImage SearchResultThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
 
-    int width = 200;
-    int height = 100;
+  int width = requestedSize.width() > 0 ? requestedSize.width() : 200;
+  int height = requestedSize.height() > 0 ? requestedSize.height() :100;
 
-    if (size)
-        *size = QSize(width, height);
-
-
-    //Default image
-    QImage image(requestedSize.width() > 0 ? requestedSize.width() : width,
-                 requestedSize.height() > 0 ? requestedSize.height() : height,QImage::Format_ARGB32);
-
-    image.fill(QColor(id).rgba());
+  if (size)
+    *size = QSize(width, height);
 
 
-    QStringList list;
+  //Default image
+  QImage image(width,
+               height,QImage::Format_ARGB32);
 
-    list = id.split("/");
-
-    Q_ASSERT(list.size() == 2);
-
-
-    int searchId = list[0].toInt();
-    int searchResultId = list[1].toInt();
+  image.fill(qRgba(0, 0, 0, 0));
 
 
-    //Load from file
-    SearchResultsModel* searchResultModel = theApp->models()->searchModel()->getSearch(searchId)->model();
+  QStringList list;
 
-    SearchResult* searchResult = searchResultModel->getResult(searchResultId);
+  list = id.split("/");
 
 
-    if (searchResult && searchResult->thumbnail())
-    {
+  int searchId = list[0].toInt();
+  int searchResultId = list[1].toInt();
 
-        //If we ask for an specified size, do it. Scale to height otherwise.
-        if((requestedSize.width() > 0 )&&(requestedSize.height() > 0)){
-            image = searchResult->thumbnail()->scaled(requestedSize.width() > 0 ? requestedSize.width() : width,
-                                               requestedSize.height() > 0 ? requestedSize.height() : height);
-        }
-        else
-        {
-            image = searchResult->thumbnail()->scaledToHeight(height,Qt::SmoothTransformation);
-        }
+
+  //Load from file
+  SearchResultsModel* searchResultModel = theApp->models()->searchModel()->getSearch(searchId)->model();
+
+  SearchResult* searchResult = searchResultModel->getResult(searchResultId);
+
+  Q_ASSERT(searchResult);
+
+  QString type = theUtils->getFileExtension(searchResult->getFileName());
+
+
+  if((list.size() == 3 )&& (list[2].compare("thumbnail") == 0)){
+
+      return theUtils->getFileTypeImage(type,width,height);
 
     }
+  else
+    {
 
-     return image;
+      if (searchResult->thumbnail())
+        {
 
+          //If we ask for an specified size, do it. Scale to height otherwise.
+          if((requestedSize.width() > 0 )&&(requestedSize.height() > 0)){
+              image = searchResult->thumbnail()->scaled(requestedSize.width() > 0 ? requestedSize.width() : width,
+                                                        requestedSize.height() > 0 ? requestedSize.height() : height);
+            }
+          else
+            {
+              image = searchResult->thumbnail()->scaledToHeight(height,Qt::SmoothTransformation);
+            }
+
+        }
+      else
+        {
+            return QImage(":/qml/filetypes/text-plain.png");
+        }
+
+      return image;
+    }
 
 }
 
@@ -96,65 +111,65 @@ QImage SearchResultThumbnailImageProvider::requestImage(const QString &id, QSize
 
 
 SearchModel::SearchModel(QObject *parent) :
-    QAbstractListModel(parent)
+  QAbstractListModel(parent)
 {
 
-    m_thumbnailProvider = new SearchResultThumbnailImageProvider();
+  m_thumbnailProvider = new SearchResultThumbnailImageProvider();
 
-    // connect signal-slots for decoupling
-    connect (this, &SearchModel::addNewSearchSignal, this,
-             &SearchModel::addNewSearchSlot,Qt::BlockingQueuedConnection);
+  // connect signal-slots for decoupling
+  connect (this, &SearchModel::addNewSearchSignal, this,
+           &SearchModel::addNewSearchSlot,Qt::BlockingQueuedConnection);
 
-    connect (this, &SearchModel::closeSearchSignal, this,
-             &SearchModel::closeSearchSlot,Qt::QueuedConnection);
+  connect (this, &SearchModel::closeSearchSignal, this,
+           &SearchModel::closeSearchSlot,Qt::QueuedConnection);
 
 }
 int SearchModel::rowCount(const QModelIndex& parent) const
 {
-    return m_data.size();
+  return m_data.size();
 }
 
 QVariant SearchModel::data(const QModelIndex& index, int role) const
 {
 
-    Search* search = m_data[index.row()];
+  Search* search = m_data[index.row()];
 
 
-    switch(role)
+  switch(role)
     {
 
     case TERM:
-        return search->getTerm();
-        break;
+      return search->getTerm();
+      break;
     case NUM_RESULTS:
-        return search->numResults();
-        break;
+      return search->numResults();
+      break;
 
     default:
-        return QVariant::Invalid;
+      return QVariant::Invalid;
     }
 
 
-    return QVariant::Invalid;
+  return QVariant::Invalid;
 }
 
 
 QHash<int, QByteArray> SearchModel::roleNames() const {
-    QHash<int, QByteArray> roles;
-    roles[TERM]                   = "term";
-    roles[NUM_RESULTS]            = "numResults";
+  QHash<int, QByteArray> roles;
+  roles[TERM]                   = "term";
+  roles[NUM_RESULTS]            = "numResults";
 
 
-    return roles;
+  return roles;
 }
 
 
 Search*  SearchModel::addNewSearch(void *sc,QString term )
 {
 
-    Search* search = new Search((GNUNET_FS_SearchContext*)sc,term );
-    emit addNewSearchSignal(search);
-    return search;
+  Search* search = new Search((GNUNET_FS_SearchContext*)sc,term );
+  emit addNewSearchSignal(search);
+  return search;
 }
 
 void  SearchModel::addNewSearchSlot(Search* search)
@@ -162,23 +177,23 @@ void  SearchModel::addNewSearchSlot(Search* search)
 
 
 
-    int count = m_data.count();
+  int count = m_data.count();
 
-    beginInsertRows(QModelIndex(), count, count);
-
-
-    SearchResultsModel* resultModel = new SearchResultsModel(this);
-    search->setModel(resultModel);
-    search->setId(count);
+  beginInsertRows(QModelIndex(), count, count);
 
 
-    m_data.append(search);
-    connect(search, &Search::resultsChanged, this, &SearchModel::modifiedSlot);
+  SearchResultsModel* resultModel = new SearchResultsModel(this);
+  search->setModel(resultModel);
+  search->setId(count);
 
 
-    endInsertRows();
+  m_data.append(search);
+  connect(search, &Search::resultsChanged, this, &SearchModel::modifiedSlot);
 
-    resultModel->setIndex(new QPersistentModelIndex (index(count, 0)));
+
+  endInsertRows();
+
+  resultModel->setIndex(new QPersistentModelIndex (index(count, 0)));
 
 
 
@@ -188,32 +203,32 @@ void  SearchModel::addNewSearchSlot(Search* search)
 void SearchModel::closeSearch(int index )
 {
 
-    emit closeSearchSignal(index);
+  emit closeSearchSignal(index);
 
 }
 
 void  SearchModel::closeSearchSlot(int index)
 {
 
-    beginRemoveRows(QModelIndex(), index, index);
+  beginRemoveRows(QModelIndex(), index, index);
 
-    Search* search = getSearch(index);
-    search->stop();
+  Search* search = getSearch(index);
+  search->stop();
 
-    //Model was allocated here because QML can't work with cross-tread models.
-    if(search->model())
-        delete search->model();
+  //Model was allocated here because QML can't work with cross-tread models.
+  if(search->model())
+    delete search->model();
 
-    m_data.removeAt(index);
+  m_data.removeAt(index);
 
-    endRemoveRows();
+  endRemoveRows();
 
 
 }
 
 void SearchModel::modifiedSlot(int indexRow)
 {
-    emit dataChanged(index(indexRow,0), index(indexRow,0));
+  emit dataChanged(index(indexRow,0), index(indexRow,0));
 
 
 }
@@ -221,15 +236,15 @@ void SearchModel::modifiedSlot(int indexRow)
 
 Search* SearchModel::getSearch(int index)
 {
-    if ((index < 0) || (index >= m_data.count()))
-        return NULL;
+  if ((index < 0) || (index >= m_data.count()))
+    return NULL;
 
 
-    return m_data.at(index);
+  return m_data.at(index);
 
 }
 
 int SearchModel::getCount()
 {
-    return m_data.count();
+  return m_data.count();
 }

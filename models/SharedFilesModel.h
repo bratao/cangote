@@ -22,15 +22,39 @@
 #define SHAREDFILESMODEL_H
 
 #include <QAbstractTableModel>
-
+#include <QQuickImageProvider>
 #include "core/gnunet/filesharing/shared/sharedfile.h"
+
+
+/***
+ * Thumbnail Provider for QML
+ **/
+
+class SharedFilesThumbnailImageProvider : public QQuickImageProvider
+{
+public:
+    SharedFilesThumbnailImageProvider()
+        : QQuickImageProvider(QQuickImageProvider::Image)
+    {
+    }
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+};
+
+
 
 class SharedFile;
 class SharedFilesModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(SharedFilesThumbnailImageProvider* thumbnailProvider READ thumbnailProvider CONSTANT)
+
 public:
     explicit SharedFilesModel(QObject *parent = 0);
+
+    SharedFilesThumbnailImageProvider* thumbnailProvider() const
+    { return m_thumbnailProvider; }
+
     int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
     QVariant data(const QModelIndex& index, int role) const;
     enum SearchRoles { NAME,STATUS, SIZE ,PATH, NB_SEARCH_COLUMNS };
@@ -51,6 +75,7 @@ private:
     QList<SharedFile*> m_data;
     QHash<int, QByteArray> roleNames() const;
     SharedFile *createFile();
+    SharedFilesThumbnailImageProvider* m_thumbnailProvider;
 
 };
 

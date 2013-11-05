@@ -19,10 +19,59 @@
 */
 
 #include "SharedFilesModel.h"
+#include "models/models.h"
+#include "utils/utils.h"
+#include "cangote.h"
+#include "core/cangotecore.h"
+
+/***
+ * Thumbnail Provider for QML
+ **/
+
+
+QImage SharedFilesThumbnailImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+{
+
+  int width = requestedSize.width() > 0 ? requestedSize.width() : 200;
+  int height = requestedSize.height() > 0 ? requestedSize.height() :100;
+
+  if (size)
+    *size = QSize(width, height);
+
+
+  //Default image
+  QImage image(width,
+               height,QImage::Format_ARGB32);
+
+  image.fill(qRgba(0, 0, 0, 0));
+
+
+
+  int transferId = id.toInt();
+
+
+
+  //Load from file
+  SharedFile* file = theApp->models()->sharedModel()->get(transferId);
+
+  Q_ASSERT(file);
+  if(file == NULL)
+    return image;
+
+  QString type = theUtils->getFileExtension(file->filename());
+
+  return theUtils->getFileTypeImage(type,width,height);
+
+
+
+}
+
 
 SharedFilesModel::SharedFilesModel(QObject *parent) :
   QAbstractListModel(parent)
 {
+  m_thumbnailProvider = new SharedFilesThumbnailImageProvider();
+
   connect(this,&SharedFilesModel::addFileSignal,this,&SharedFilesModel::addFileSlot, Qt::BlockingQueuedConnection);
 }
 

@@ -249,7 +249,7 @@ void NetworkManager::putHelloSlot (QString helloUrl)
 
 
 
-    GNUNET_CRYPTO_EccPublicSignKey mypublickey = theApp->gnunet()->myPublicKey();
+    GNUNET_CRYPTO_EddsaPublicKey mypublickey = theApp->gnunet()->myPublicKey();
 
     int ret = GNUNET_HELLO_parse_uri(put_uri, &mypublickey, &hello, &m_gnunetTransportPlugins->GPI_plugins_find);
 
@@ -338,9 +338,10 @@ int NetworkManager::incomeMsg (const struct GNUNET_PeerIdentity *
                                message)
 
 {
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-    GNUNET_CRYPTO_hash_to_enc (&other->hashPubKey, &enc);
-    QString peerIdStr((char *)&enc);
+  const char* key = GNUNET_i2s_full (other);
+  QString peerIdStr(key);
+
+
 
     if(!theApp->models()->networkModel())
         return GNUNET_OK;
@@ -377,9 +378,10 @@ int NetworkManager::outcomeMsg (const struct GNUNET_PeerIdentity *
 {
 
 
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-    GNUNET_CRYPTO_hash_to_enc (&other->hashPubKey, &enc);
-    QString peerIdStr((char *)&enc);
+  const char* key = GNUNET_i2s_full (other);
+  QString peerIdStr(key);
+
+
 
 
     if(!theApp->models()->networkModel())
@@ -422,11 +424,9 @@ void
 NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
 {
 
+    const char* key = GNUNET_i2s_full (peerIdent);
+    QString peerIdStr(key);
 
-
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-    GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
-    QString peerIdStr((char *)&enc);
 
     if(!theApp->models()->networkModel())
     {
@@ -467,9 +467,11 @@ NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
 void
 NetworkManager::notifyDisconnect(const struct GNUNET_PeerIdentity *peerIdent)
 {
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-    GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
-    QString peerIdStr((char *)&enc);
+    //struct GNUNET_CRYPTO_HashAsciiEncoded enc;
+
+
+  const char* key = GNUNET_i2s_full (peerIdent);
+  QString peerIdStr(key);
 
     if(!theApp->models() || !theApp->models()->networkModel())
     {
@@ -501,9 +503,9 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
                                        const struct GNUNET_HELLO_Message *hello,
                                        const char *err_msg)
 {
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-    GNUNET_CRYPTO_hash_to_enc (&peer->hashPubKey, &enc);
-    QString peerIdStr((char *)&enc);
+  const char* key = GNUNET_i2s_full (peer);
+  QString peerIdStr(key);
+
 
     if(!theApp->models()->networkModel())
     {
@@ -564,9 +566,9 @@ NetworkManager::gotActiveAddress(const struct GNUNET_PeerIdentity *peerIdent,
         return;
     }
 
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-    GNUNET_CRYPTO_hash_to_enc (&peerIdent->hashPubKey, &enc);
-    QString peerIdStr((char *)&enc);
+    const char* key = GNUNET_i2s_full (peerIdent);
+    QString peerIdStr(key);
+
     Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
     if(peer == NULL)
     {
@@ -598,16 +600,15 @@ NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
                                      const struct GNUNET_ATS_Information *ats,
                                      uint32_t ats_count)
 {
+    const char* key = GNUNET_i2s_full (&address->peer);
+    QString peerId(key);
 
-    Peer *peer;
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-    GNUNET_CRYPTO_hash_to_enc (&address->peer.hashPubKey, &enc);
-    QString peerId((char *)&enc);
+
 
     if(!theApp->models()->networkModel())
         return;
 
-    peer = theApp->models()->networkModel()->getPeer(peerId);
+    Peer *peer = theApp->models()->networkModel()->getPeer(peerId);
 
     if (NULL == peer)
         return;
@@ -655,8 +656,8 @@ NetworkManager::newPeerAddress ( const struct GNUNET_PeerIdentity *peer,
     }
 
 
-    GNUNET_CRYPTO_hash_to_enc (&address->peer.hashPubKey, &enc);
-    QString peerIdStr((char *)&enc);
+    const char* key = GNUNET_i2s_full (&address->peer);
+    QString peerIdStr(key);
 
 
     Peer *peerp = theApp->models()->networkModel()->getPeer(peerIdStr);

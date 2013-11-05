@@ -22,14 +22,42 @@
 #define DOWNLOADMODEL_H
 
 #include <QAbstractListModel>
+#include <QQuickImageProvider>
+
+
+/***
+ * Thumbnail Provider for QML
+ **/
+
+class TransferThumbnailImageProvider : public QQuickImageProvider
+{
+public:
+    TransferThumbnailImageProvider()
+        : QQuickImageProvider(QQuickImageProvider::Image)
+    {
+    }
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+};
+
+
+
 
 class DownloadItem;
 class DownloadsModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(TransferThumbnailImageProvider* thumbnailProvider READ thumbnailProvider CONSTANT)
 public:
     explicit DownloadsModel(QObject *parent = 0);
-    DownloadItem *addDownload(DownloadItem *pde,struct GNUNET_FS_DownloadContext *dc, const struct GNUNET_FS_Uri *uri, QString filename, const struct GNUNET_CONTAINER_MetaData *meta, qint64 size, qint64 completed);
+    DownloadItem *addDownload(DownloadItem *pde,struct GNUNET_FS_DownloadContext *dc, const struct GNUNET_FS_Uri *uri,
+                              QString filePath, const struct GNUNET_CONTAINER_MetaData *meta, qint64 size, qint64 completed);
+
+
+    TransferThumbnailImageProvider* thumbnailProvider() const
+    { return m_thumbnailProvider; }
+
+
 
 
 private:
@@ -57,6 +85,7 @@ private:
     QList<DownloadItem*> m_data;
 
     QHash<QString, int> m_hashData;
+    TransferThumbnailImageProvider* m_thumbnailProvider;
     
  };
 
