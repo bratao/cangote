@@ -280,8 +280,11 @@ DownloadItem* DownloadsModel::get(int index)
     if ((index < 0) || (index >= m_data.count()))
         return NULL;
 
+    DownloadItem* download = m_data.at(index);
+    QQmlEngine::setObjectOwnership(download, QQmlEngine::CppOwnership);
 
-    return m_data.at(index);
+
+    return download;
 
 }
 

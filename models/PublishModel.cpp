@@ -128,12 +128,10 @@ PublishFile*  PublishModel::add(QString name, GNUNET_FS_FileInformation *fi, Pub
 {
 
     PublishFile* file = new PublishFile(name, fi,parent);
-
-
-
+    file->moveToThread(this->thread());
     emit addFileSignal(file);
 
-    return NULL;
+    return file;
 
 }
 
@@ -159,8 +157,11 @@ PublishFile* PublishModel::getPublishedFile(int index)
     if ((index < 0) || (index >= m_data.count()))
         return NULL;
 
+    PublishFile* file = m_data.at(index);
 
-    return m_data.at(index);
+    QQmlEngine::setObjectOwnership(file, QQmlEngine::CppOwnership);
+
+    return file;
 
 }
 

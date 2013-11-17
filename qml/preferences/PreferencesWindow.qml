@@ -22,7 +22,7 @@ Window {
         ListElement{ name: "Directories";     tabId: 1  }
         ListElement{ name: "Connection";      tabId: 2  }
         ListElement{ name: "Network";         tabId: 3  }
-        ListElement{ name: "Advanced";         tabId: 4  }
+        ListElement{ name: "Advanced";        tabId: 4  }
     }
 
 

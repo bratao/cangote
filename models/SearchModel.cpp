@@ -239,8 +239,10 @@ Search* SearchModel::getSearch(int index)
   if ((index < 0) || (index >= m_data.count()))
     return NULL;
 
+  Search* search = m_data.at(index);
+  QQmlEngine::setObjectOwnership(search, QQmlEngine::CppOwnership);
 
-  return m_data.at(index);
+  return search;
 
 }
 

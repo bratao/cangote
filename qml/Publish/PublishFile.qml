@@ -53,15 +53,19 @@ Window {
                     onCurrentRowChanged:
                     {
                         var file = Cangote.models.publishModel.getPublishedFile(currentRow)
-                        publishDetails.keywordModel = file.keywordModel
-                        publishDetails.metadataModel = file.metadataModel
-                        if(file.haveThumbnail)
+                        file.set
+                        publishDetails.keywordModel = file ? file.keywordModel : null
+                        publishDetails.metadataModel = file ? file.metadataModel : null
+                        console.log(file)
+                        if(file && file.haveThumbnail)
                         {
+                            console.log(file)
                             publishDetails.thumbnailImage = "image://publishThumbnail/"+ currentRow
                         }
                         else
                         {
-                            publishDetails.thumbnailImage = "" // TODO: No thumbnail image
+                            console.log("I dont have a file")
+                            publishDetails.thumbnailImage = null // TODO: No thumbnail image
                         }
                     }
 

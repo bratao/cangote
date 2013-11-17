@@ -20,7 +20,9 @@
 
 #include "gnunetlauncher.h"
 #include <QDebug>
-//#include "core/cangote.h"
+#include "cangote.h"
+#include "core/cangotecore.h"
+#include "preferences/preferences.h"
 
 GNUNetLauncher::GNUNetLauncher(QObject *parent) :
     QObject(parent)
@@ -65,16 +67,27 @@ bool GNUNetLauncher::startArm()
 {
     QStringList arguments;
     arguments << "-s";
+    arguments << "-c";
+    arguments << thePrefs->getGNUNetConfig();
 
     m_armProcess->setProcessEnvironment(env);
     m_armProcess->start("gnunet-arm.exe", arguments);
+    m_armProcess->waitForStarted(5000);
 
 
 }
 
 void GNUNetLauncher::cleanOldProcesses()
 {
-    QProcess* killArmProcess     = new QProcess(this);
+  if(m_armProcess)
+  {
+      m_armProcess->kill();
+      delete m_armProcess;
+      m_armProcess =  NULL;
+  }
+
+
+  QProcess* killArmProcess     = new QProcess(this);
 #ifdef Q_OS_WIN
     killArmProcess->setProcessEnvironment(env);
     killArmProcess->start("taskkill -f /IM gnunet-*");
@@ -90,10 +103,8 @@ void GNUNetLauncher::cleanOldProcesses()
 void GNUNetLauncher::relaunchServicesSlot()
 {
 
-    if(m_armProcess)
-    {
-        delete m_armProcess;
-    }
+  qWarning() << tr("Im relaunching ");
+
     m_armProcess = new QProcess(this);
     cleanOldProcesses();
     startArm();
@@ -125,9 +136,7 @@ void GNUNetLauncher::connectSignals()
 void GNUNetLauncher::setEnvironment()
 {
     env = QProcessEnvironment::systemEnvironment();
-    env.insert("PATH", env.value("Path") + ";C:\\sbuild\\mingw\\bin" +
-               ";C:\\sbuild\\mingw\\lib\\gnunet\\libexec" +
-               ";C:\\sbuild\\mingw\\lib\\gnunet");
+    env.insert("PATH", env.value("Path"));
 }
 
 

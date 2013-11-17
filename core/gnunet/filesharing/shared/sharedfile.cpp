@@ -92,7 +92,3 @@ void SharedFile::setIndex(int index)
   m_index = index;
 }
 
-QString SharedFile::dummy()
-{
-    return "c:/teste";
-}

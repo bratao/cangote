@@ -20,7 +20,10 @@ Item {
     Action {
         id: download
         text: "Download"
-        onTriggered: console.log("TODO: Download transfer.")
+        onTriggered: {
+            searchResultModel.getResult(searchResultList.currentRow).download()
+            console.log("TODO: Download transfer.")
+        }
     }
 
 

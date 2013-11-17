@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     createTray();
 
 
-    theWindow->setTitle("Cangote P2P 0.00");
+    theWindow->setTitle(QString("Cangote P2P"));
     theWindow->setIcon(QIcon(":/asserts/CangoteHead.ico"));
     theWindow->show();
     return app.exec();

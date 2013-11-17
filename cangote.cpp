@@ -41,9 +41,10 @@ QQuickWindow* theWindow;
 Cangote::Cangote(QObject *parent) :
     QObject(parent)
 {
-    m_core = new CangoteCore();
-    theUtils = new Utils();
-    thePrefs = new Preferences;
+    thePrefs = new Preferences(this);
+    m_core = new CangoteCore(this);
+    theUtils = new Utils(this);
+
 
     registerQmlTypes();
 }

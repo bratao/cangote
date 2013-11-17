@@ -7,12 +7,10 @@ import Cangote 1.0
 
 
 ToolBar {
-
-
-
     property int searchType: 0
-
-
+    property var searchField: toolbarButtons.searchField
+    id:toolbar
+    height: 40
 
     Menu {
         id: contextMenu
@@ -107,8 +105,7 @@ ToolBar {
 
 
 
-    id:toolbar
-    height: 40
+
 
     style: ToolBarStyle{
         padding.left: 0
@@ -127,6 +124,8 @@ ToolBar {
     Row {
         id:toolbarButtons
         height: 40
+        property var searchField: searchField
+
         TextField {
             id: searchField
             //anchors.bottom: toolbarButtons.bottom
@@ -141,6 +140,7 @@ ToolBar {
             //height: 30
             Keys.onReturnPressed: doSearch()
             Keys.onEnterPressed: doSearch()
+
 
 
             function doSearch() {
@@ -207,6 +207,7 @@ ToolBar {
                     id:ma
                     anchors.fill: parent
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         contextMenu.popup()
                     }
@@ -264,9 +265,9 @@ ToolBar {
             onClicked:
             {
                 var preferences = Qt.createComponent("preferences/PreferencesWindow.qml");
-                var preferencesObj = preferences.createObject();
+                var preferencesWnd = preferences.createObject(toolbar);
 
-                preferencesObj.visible =true
+                preferencesWnd.show();
 
             }
 
@@ -279,9 +280,8 @@ ToolBar {
             onClicked:
             {
                 var publish = Qt.createComponent("Publish/PublishFile.qml");
-                var publishObj = publish.createObject();
-
-                publishObj.visible =true
+                var publishWnd = publish.createObject(toolbar);
+                publishWnd.show();
 
             }
 

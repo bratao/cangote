@@ -11,7 +11,7 @@ Rectangle {
         anchors.fill: parent
 
         function resetSelected() {
-            browserBlock.selected = false
+            //browserBlock.selected = false
             networkBlock.selected = false
             searchBlock.selected = false
             transferBlock.selected = false
@@ -19,7 +19,7 @@ Rectangle {
             searchBlock.itemSelected = -1
             }
 
-
+/*
         Block
         {
             id: browserBlock
@@ -29,7 +29,7 @@ Rectangle {
                 center.source = 0;
                 selected = true;
             }
-        }
+        }*/
         Block
         {
             id: networkBlock
@@ -44,9 +44,11 @@ Rectangle {
         Block
         {
             id: searchBlock
-            title: "Searches"
+            title: "Search"
             model: Cangote.models.searchModel
             onHeaderClicked: {
+                header.searchField.text = ""
+                header.searchField.focus = true
 
             }
             onChanged: {

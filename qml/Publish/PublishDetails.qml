@@ -24,7 +24,7 @@ ColumnLayout{
             fillMode: Image.PreserveAspectFit
             smooth: true
             clip: true
-            source: thumbnailImage
+            source: thumbnailImage ? thumbnailImage : ""
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }

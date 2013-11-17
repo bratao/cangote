@@ -102,7 +102,6 @@ public:
     void setStatus(Status status);
 
     void setIndex(int index);
-    Q_INVOKABLE QString dummy();
 private:
     QString m_filename;
     QString m_path;

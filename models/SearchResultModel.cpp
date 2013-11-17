@@ -20,6 +20,7 @@
 
 
 #include "SearchResultModel.h"
+#include <QQmlEngine>
 #include <sstream>
 //#include "utils/misc.h"
 #include "core/gnunet/filesharing/search/searchresult.h"
@@ -144,6 +145,10 @@ SearchResult* SearchResultsModel::getResult(int index)
 {
     if(index >= m_data.count())
         return NULL;
+
+    SearchResult* searchResult = m_data.at(index);
+
+    QQmlEngine::setObjectOwnership(searchResult, QQmlEngine::CppOwnership);
 
     return m_data.at(index);
 }

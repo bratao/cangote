@@ -180,7 +180,11 @@ SharedFile* SharedFilesModel::get(int index)
         return NULL;
 
 
-    return m_data.at(index);
+    SharedFile* sharedFile = m_data.at(index);
+    QQmlEngine::setObjectOwnership(sharedFile, QQmlEngine::CppOwnership);
+
+
+    return sharedFile;
 
 }
 

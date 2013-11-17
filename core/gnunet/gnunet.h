@@ -44,7 +44,7 @@ class GNUNet : public ServiceObject
 
     Q_PROPERTY(bool connected READ isConnected WRITE setConnected NOTIFY connectedChanged)
     Q_PROPERTY(int connectedPeers READ getConnectedPeers WRITE setConnectedPeers NOTIFY connectedPeersChanged)
-
+    Q_PROPERTY(QString myPublicKeyStr READ myPublicKeyStr WRITE setMyPublicKeyStr NOTIFY myPublicKeyStrChanged)
 
 
 public:
@@ -84,6 +84,15 @@ public:
         emit connectedPeersChanged(connected);
     }
 
+    //Connected peers
+    QString myPublicKeyStr() const
+    { return m_myPublicKeyStr; }
+    void setMyPublicKeyStr(QString key)
+    {
+        m_myPublicKeyStr = key;
+        emit myPublicKeyStrChanged(key);
+    }
+
     GNUNET_CRYPTO_EddsaPublicKey myPublicKey() const;
     void setMyPublicKey(const GNUNET_CRYPTO_EddsaPublicKey &myPublicKey);
 
@@ -107,6 +116,7 @@ signals:
     void gnunetConnected();
     void connectedChanged(bool connected);
     void connectedPeersChanged(int connected);
+    void myPublicKeyStrChanged(QString key);
 
 public slots:
     void start();
@@ -167,6 +177,10 @@ private:
      */
     struct GNUNET_CRYPTO_EddsaPublicKey m_myPublicKey;
 
+    /**
+     * My public key.
+     */
+    QString m_myPublicKeyStr;
 
 
 

@@ -31,11 +31,13 @@ CangoteCore::CangoteCore(QObject *parent) :
 
     //Timer to try to connect to arm
     m_armConnectTimer = new QTimer(this);
-    connect(m_armConnectTimer, SIGNAL(timeout()), this, SLOT(armTimeOut()));
+    m_armConnectTimer->setSingleShot(true);
+    connect(m_armConnectTimer, &QTimer::timeout, this, &CangoteCore::armTimeOut);
+
 
     //The processing timer
     m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(process()));
+    connect(m_timer, &QTimer::timeout, this, &CangoteCore::process);
     m_timer->start(1000);
 
     //Finally start gnunet
@@ -65,10 +67,11 @@ void CangoteCore::armTimeOut()
 
     qWarning() << "Connection lost, trying again in:" << m_armConnectTimer->interval() << "ms \n";
 
-    m_launcher->relaunchServices();
+    if(m_connected == false)
+      m_launcher->relaunchServices();
 
     //Exponential backoff
-    m_armConnectTimer->setInterval(m_armConnectTimer->interval()*2);
+    m_armConnectTimer->start(m_armConnectTimer->interval()*2);
 
 
 }
@@ -81,9 +84,10 @@ void CangoteCore::startLauncher()
     m_launcher->moveToThread(m_launcherThread);
 
     // Call the start function after our thread is ready to run
-    m_launcher->connect(m_launcherThread,
-                    SIGNAL(started()),
-                    SLOT(start()));
+    connect(m_launcherThread,
+                    &QThread::started,
+                    m_launcher,
+                    &GNUNetLauncher::start);
 
     m_launcherThread->start();
 
@@ -101,9 +105,10 @@ void CangoteCore::startGNUNet()
     m_gnunet->moveToThread(m_gnunetThread);
 
     // Call the start function after our thread is ready to run
-    m_gnunet->connect(m_gnunetThread,
-                    SIGNAL(started()),
-                    SLOT(start()));
+    connect(m_gnunetThread,
+                      &QThread::started,
+                      m_gnunet,
+                      &GNUNet::start);
 
     m_gnunetThread->start();
 
@@ -116,12 +121,12 @@ void CangoteCore::startGNUNet()
 void CangoteCore::setConnected(bool connected)
 {
     m_connected = connected;
-    if(connected == false)
+    if((connected == false) && !m_armConnectTimer->isActive())
     {
         qWarning() << "Starting Gnunet again;";
-        m_armConnectTimer->start(1000);
+        m_armConnectTimer->start(4000);
     }
-    else
+    else if (m_armConnectTimer->isActive())
     {
         m_armConnectTimer->stop();
     }

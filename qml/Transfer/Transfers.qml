@@ -21,7 +21,12 @@ Item
     Action {
         id: stop
         text: "Stop"
-        onTriggered: console.log("TODO: Stop the transfer.")
+        onTriggered:
+        {
+            transfersList.name.visible = false;
+            console.log("TODO: Stop the transfer.")
+        }
+
     }
 
     Action {
@@ -67,6 +72,7 @@ Item
 
 
         TableViewColumn{
+            id: name
             title: "Name"
             role: "name"
             delegate:Item{

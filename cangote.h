@@ -2,6 +2,7 @@
 #define CANGOTE_H
 
 #include <QObject>
+#include "config.h"
 
 class CangoteCore;
 class Utils;

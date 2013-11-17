@@ -134,4 +134,9 @@ HEADERS += \
     models/KeywordModel.h \
     utils/QLogger.h \
     utils/update_checker.h \
-    core/gnunet/filesharing/search/searchmanager.h
+    core/gnunet/filesharing/search/searchmanager.h \
+    config.h
+
+qmlfiles.path    = $$OUT_PWD
+qmlfiles.files   = qml
+INSTALLS       += qmlfiles

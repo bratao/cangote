@@ -24,6 +24,10 @@
 #include "filesharing/publish/publish.h"
 #include "filesharing/filesharing.h"
 
+#include "cangote.h"
+#include "core/cangotecore.h"
+#include "preferences/preferences.h"
+
 #include <math.h>
 #include <QElapsedTimer>
 #include <QWaitCondition>
@@ -127,9 +131,15 @@ void GNUNet::start()
         GNUNET_GETOPT_OPTION_END
     };
 
+
+    QString gnunetConfig = thePrefs->getGNUNetConfig();
+    QByteArray byteArray = gnunetConfig.toUtf8();
+    const char* cString = byteArray.constData();
+
+
     const char *const argv[] = {
         "Cangote",
-        // "-L", "DEBUG",
+         "-c", cString,
         NULL
     };
 
@@ -157,7 +167,7 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
 
     //Create our configuration
     m_config = GNUNET_CONFIGURATION_create ();
-    GNUNET_CONFIGURATION_load (m_config, "cangote.conf");
+    GNUNET_CONFIGURATION_load (m_config, cfgfile);
 
     //Get my information
 
@@ -175,9 +185,17 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
         GNUNET_free (privateKeyFileName);
         return;
     }
+
     GNUNET_free (privateKeyFileName);
     GNUNET_CRYPTO_eddsa_key_get_public(priv, &m_myPublicKey);
+
+    char* str = GNUNET_CRYPTO_eddsa_public_key_to_string(&m_myPublicKey);
+    setMyPublicKeyStr(QString(str));
+    GNUNET_free (str);
     GNUNET_free (priv);
+
+
+
 
 
     //A update function to process our messages
