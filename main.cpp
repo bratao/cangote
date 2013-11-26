@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     Cangote cangote;
 
 
-    QQmlApplicationEngine engine(QUrl::fromLocalFile("qml/main.qml"));
+    QQmlApplicationEngine engine(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/qml/main.qml"));
 
     cangote.registerImageProvider(&engine);
 

@@ -28,7 +28,7 @@ Rectangle {
         Row{ Label{ text:"Statistics service port:"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 65536;value: Preferences.statisticsPort;onValueChanged: {Preferences.statisticsPort = value} }  }
         Row{ Label{ text:"Transport service port:"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 65536;value: Preferences.transportPort;onValueChanged: {Preferences.transportPort = value} }  }
         Label{ text:"<b>Filesharing:</b>"; font.pointSize: 11; width: 500;}
-        Row{ Label{ text:"Do we introduce artificial delays:"; font.pointSize: 10; width: 500;} CheckBox{checked: Preferences.fsDelay;onCheckedChanged: {Preferences.fsDelay = value} }  }
+        Row{ Label{ text:"Do we introduce artificial delays:"; font.pointSize: 10; width: 500;} CheckBox{checked: Preferences.fsDelay;onCheckedChanged: {Preferences.fsDelay = checked} }  }
         Row{ Label{ text:"Maximum number of requests this peer tracks :"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 1000000; value: Preferences.fsPendingRequests;onValueChanged: {Preferences.fsPendingRequests = value} }  }
         Row{ Label{ text:"Max Number of requests waiting in the queue towards the datastore:"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 65536; value: Preferences.fsDataStoreQueueSize;onValueChanged: {Preferences.fsDataStoreQueueSize = value} }  }
         Row{ Label{ text:"Maximum frequency to poll the datastore for content for migration:"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 65536; value: Preferences.fsMinMigrationDelay;onValueChanged: {Preferences.fsMinMigrationDelay = value} }  }
@@ -49,7 +49,7 @@ Rectangle {
         Row{ Label{ text:"Internal IP address:"; font.pointSize: 10; width: 500;} TextField{text: Preferences.internalIpv4Address;onTextChanged: {Preferences.internalIpv4Address = text} }  }
         Row{ Label{ text:"Use addresses from the local network interfaces:"; font.pointSize: 10; width: 500;} CheckBox{checked: Preferences.natUseLocalAddresses;onCheckedChanged: {Preferences.natUseLocalAddresses = text} }  }
         Row{ Label{ text:"Use address obtained from a DNS lookup of our hostname:"; font.pointSize: 10; width: 500;} CheckBox{checked: Preferences.natUseHostname;onCheckedChanged: {Preferences.natUseHostname = text} }  }
-        Row{ Label{ text:"Do we use addresses from localhost address ranges? :"; font.pointSize: 10; width: 500;} CheckBox{checked: Preferences.natReturnLocalAddresses;onCheckedChanged: {Preferences.natReturnLocalAddresses = value} }  }
+        Row{ Label{ text:"Do we use addresses from localhost address ranges? :"; font.pointSize: 10; width: 500;} CheckBox{checked: Preferences.natReturnLocalAddresses;onCheckedChanged: {Preferences.natReturnLocalAddresses = checked} }  }
         Row{ Label{ text:"How often do we query the DNS resolver for our hostname :"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 10000; value: Preferences.natHostnameDnsFrequency;onValueChanged: {Preferences.natHostnameDnsFrequency = value} }  }
         Row{ Label{ text:"How often scan for changes in our IP address:"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 10000; value: Preferences.natIfcScanFrequency;onValueChanged: {Preferences.natIfcScanFrequency = value} }  }
         Row{ Label{ text:"How often do we query the DNS resolver:"; font.pointSize: 10; width: 500;} SpinBox{maximumValue : 10000; value: Preferences.natDynDnsFrequency;onValueChanged: {Preferences.natDynDnsFrequency = value} }  }

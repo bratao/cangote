@@ -14,6 +14,7 @@ Status::Status(QObject *parent) :
 
     connect(theApp->gnunet(), &GNUNet::connectedPeersChanged, this, &Status::setConnectedPeers, Qt::QueuedConnection);
     connect(theApp->gnunet(), &GNUNet::gnunetStarted, this, &Status::gnunetStarted, Qt::QueuedConnection);
+    connect(theApp->gnunet(), &GNUNet::myPublicKeyStrChanged, this, &Status::setMyPublicKeyStr, Qt::QueuedConnection);
 }
 
 void Status::gnunetStarted()

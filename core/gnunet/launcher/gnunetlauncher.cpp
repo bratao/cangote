@@ -19,6 +19,7 @@
 */
 
 #include "gnunetlauncher.h"
+#include <QCoreApplication>
 #include <QDebug>
 #include "cangote.h"
 #include "core/cangotecore.h"
@@ -136,7 +137,8 @@ void GNUNetLauncher::connectSignals()
 void GNUNetLauncher::setEnvironment()
 {
     env = QProcessEnvironment::systemEnvironment();
-    env.insert("PATH", env.value("Path"));
+    env.insert("PATH", QCoreApplication::applicationDirPath() + ";" + env.value("PATH"));
+    env.insert("HOME", thePrefs->getFolder() + "/gnunet");
 }
 
 

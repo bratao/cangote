@@ -36,157 +36,164 @@ class NetworkPeersModel;
 class Downloads;
 class GNUNet : public ServiceObject
 {
-    Q_OBJECT
-    Q_PROPERTY(FileSharing * filesharing READ filesharing CONSTANT)
-    Q_PROPERTY(NetworkManager* network READ network CONSTANT)
-    Q_PROPERTY(Publish* publish READ publish CONSTANT)
-    Q_PROPERTY(GNUNET_CONFIGURATION_Handle * config READ config)
+  Q_OBJECT
+  Q_PROPERTY(FileSharing * filesharing READ filesharing CONSTANT)
+  Q_PROPERTY(NetworkManager* network READ network CONSTANT)
+  Q_PROPERTY(Publish* publish READ publish CONSTANT)
+  Q_PROPERTY(GNUNET_CONFIGURATION_Handle * config READ config)
 
-    Q_PROPERTY(bool connected READ isConnected WRITE setConnected NOTIFY connectedChanged)
-    Q_PROPERTY(int connectedPeers READ getConnectedPeers WRITE setConnectedPeers NOTIFY connectedPeersChanged)
-    Q_PROPERTY(QString myPublicKeyStr READ myPublicKeyStr WRITE setMyPublicKeyStr NOTIFY myPublicKeyStrChanged)
+  Q_PROPERTY(bool connected READ isConnected WRITE setConnected NOTIFY connectedChanged)
+  Q_PROPERTY(int connectedPeers READ getConnectedPeers WRITE setConnectedPeers NOTIFY connectedPeersChanged)
+  Q_PROPERTY(QString myPublicKeyStr READ myPublicKeyStr WRITE setMyPublicKeyStr NOTIFY myPublicKeyStrChanged)
+
 
 
 public:
-    explicit GNUNet(QObject *parent = 0);
+  explicit GNUNet(QObject *parent = 0);
+  ~GNUNet();
 
-    FileSharing* filesharing() const
-    { return m_filesharing; }
+  FileSharing* filesharing() const
+  { return m_filesharing; }
 
-    NetworkManager* network() const
-    { return m_network; }
+  NetworkManager* network() const
+  { return m_network; }
 
-    Publish* publish() const
-    { return m_publish; }
-
-
-    GNUNET_CONFIGURATION_Handle* config() const
-    { return m_config; }
+  Publish* publish() const
+  { return m_publish; }
 
 
-
-    bool isConnected() const
-    { return m_connected; }
-
-    void setConnected(bool connected)
-    {
-        m_connected = connected;
-        emit connectedChanged(m_connected);
-    }
+  GNUNET_CONFIGURATION_Handle* config() const
+  { return m_config; }
 
 
-    //Connected peers
-    int getConnectedPeers() const
-    { return m_connectedPeers; }
-    void setConnectedPeers(int connected)
-    {
-        m_connectedPeers = connected;
-        emit connectedPeersChanged(connected);
-    }
 
-    //Connected peers
-    QString myPublicKeyStr() const
-    { return m_myPublicKeyStr; }
-    void setMyPublicKeyStr(QString key)
-    {
-        m_myPublicKeyStr = key;
-        emit myPublicKeyStrChanged(key);
-    }
+  bool isConnected() const
+  { return m_connected; }
 
-    GNUNET_CRYPTO_EddsaPublicKey myPublicKey() const;
-    void setMyPublicKey(const GNUNET_CRYPTO_EddsaPublicKey &myPublicKey);
+  void setConnected(bool connected)
+  {
+    m_connected = connected;
+    emit connectedChanged(m_connected);
+  }
+
+
+  //Connected peers
+  int getConnectedPeers() const
+  { return m_connectedPeers; }
+  void setConnectedPeers(int connected)
+  {
+    m_connectedPeers = connected;
+    emit connectedPeersChanged(connected);
+  }
+
+  //Public Key Str
+  QString myPublicKeyStr() const
+  { return m_myPublicKeyStr; }
+  void setMyPublicKeyStr(QString key)
+  {
+    m_myPublicKeyStr = key;
+    emit myPublicKeyStrChanged(key);
+  }
+
+
+
+  GNUNET_PeerIdentity* myPeer() const;
 
 
 
 private:
 
-    /**
+  /**
       Static Definitions
      */
-    static void mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
-                                 const struct GNUNET_CONFIGURATION_Handle *cfg);
+  static void mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
+                               const struct GNUNET_CONFIGURATION_Handle *cfg);
 
-    static void keepaliveTaskCallback (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
+  static void keepaliveTaskCallback (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc);
 
 public:
-    void armConnectionStateChange(int connected);
+  void armConnectionStateChange(int connected);
+
 
 signals:
-    void gnunetStarted();
-    void gnunetConnected();
-    void connectedChanged(bool connected);
-    void connectedPeersChanged(int connected);
-    void myPublicKeyStrChanged(QString key);
+  void gnunetStarted();
+  void gnunetConnected();
+  void connectedChanged(bool connected);
+  void connectedPeersChanged(int connected);
+  void myPublicKeyStrChanged(QString key);
+
 
 public slots:
-    void start();
+  void start();
 
 private slots:
-    void startServices();
+  void startServices();
 
 private:
 
-    /**
+  /**
      * Pointer to GNUnet filesharing.
      */
-    FileSharing* m_filesharing;
+  FileSharing* m_filesharing;
 
-    /**
+  /**
      * Pointer to network manager class.
      */
-    NetworkManager*  m_network;
+  NetworkManager*  m_network;
 
-    /**
+  /**
      * Pointer to the Publish class.
      */
-    Publish* m_publish;
+  Publish* m_publish;
 
-    /**
+  /**
      * Represent the number of connected peers
      */
-    int m_connectedPeers;
+  int m_connectedPeers;
 
-    /**
+  /**
      * @brief m_config
      */
-    struct GNUNET_CONFIGURATION_Handle *m_config;
+  struct GNUNET_CONFIGURATION_Handle *m_config;
 
-    /**
+  /**
      * @brief m_connected
      */
-    bool m_connected;
+  bool m_connected;
 
-    /**
+  /**
      * @brief m_numEstimateNodes
      */
-    int m_numEstimateNodes;
+  int m_numEstimateNodes;
 
-    /**
+  /**
      * Handle for ARM monitoring.
      */
-    struct GNUNET_ARM_MonitorHandle *m_armon;
+  struct GNUNET_ARM_MonitorHandle *m_armon;
 
-    /**
+  /**
      * Handle for ARM controlling.
      */
-    struct GNUNET_ARM_Handle *m_arm;
+  struct GNUNET_ARM_Handle *m_arm;
 
 
-    /**
+  /**
+     * My peer.
+     */
+
+  struct GNUNET_PeerIdentity* m_myPeer;
+
+  /**
      * My public key.
      */
-    struct GNUNET_CRYPTO_EddsaPublicKey m_myPublicKey;
-
-    /**
-     * My public key.
-     */
-    QString m_myPublicKeyStr;
+  QString m_myPublicKeyStr;
 
 
 
 
-    void processEvents();
-    void mainLoop(char *const*args, const char *cfgfile, const GNUNET_CONFIGURATION_Handle *cfg);
+
+  void processEvents();
+  void mainLoop(char *const*args, const char *cfgfile, const GNUNET_CONFIGURATION_Handle *cfg);
 
 };
 

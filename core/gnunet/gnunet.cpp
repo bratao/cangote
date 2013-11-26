@@ -54,6 +54,11 @@ void GNUNet::mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
 
 }
 
+static void
+teste (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc)
+{
+
+}
 
 /**
  * Static function
@@ -109,7 +114,14 @@ GNUNet::GNUNet(QObject *parent) :
 {
 
     m_connected = false;
+    m_myPeer = new GNUNET_PeerIdentity;
 
+
+}
+
+GNUNet::~GNUNet()
+{
+  delete m_myPeer;
 }
 
 /**
@@ -187,15 +199,12 @@ void GNUNet::mainLoop(char *const *args, const char *cfgfile,
     }
 
     GNUNET_free (privateKeyFileName);
-    GNUNET_CRYPTO_eddsa_key_get_public(priv, &m_myPublicKey);
+    GNUNET_CRYPTO_eddsa_key_get_public(priv, &m_myPeer->public_key);
 
-    char* str = GNUNET_CRYPTO_eddsa_public_key_to_string(&m_myPublicKey);
+    char* str = GNUNET_CRYPTO_eddsa_public_key_to_string(&m_myPeer->public_key);
     setMyPublicKeyStr(QString(str));
     GNUNET_free (str);
     GNUNET_free (priv);
-
-
-
 
 
     //A update function to process our messages
@@ -258,12 +267,8 @@ void GNUNet::processEvents()
 }
 
 
-GNUNET_CRYPTO_EddsaPublicKey GNUNet::myPublicKey() const
+GNUNET_PeerIdentity* GNUNet::myPeer() const
 {
-    return m_myPublicKey;
+    return m_myPeer;
 }
 
-void GNUNet::setMyPublicKey(const GNUNET_CRYPTO_EddsaPublicKey &myPublicKey)
-{
-    m_myPublicKey = myPublicKey;
-}

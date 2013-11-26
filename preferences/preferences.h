@@ -290,7 +290,7 @@ public:
 
   bool isFriendToFriendOnlyEnabled()
   {
-    return value("core/filesharing/friendToFriend/friendToFriendOnly",true).toBool();
+    return value("core/filesharing/friendToFriend/friendToFriendOnly",false).toBool();
   }
 
   int getMinimalNumberOfFriends()
@@ -404,7 +404,7 @@ public:
 
   int getTcpPort() const
   {
-    return value("core/network/tcp/port",8927).toInt();
+    return value("core/network/tcp/port",2086).toInt();
   }
 
   void setTcpPort(int port)
@@ -426,7 +426,7 @@ public:
 
   int getTcpAdvertisedPort() const
   {
-    return value("core/network/tcp/advertisedPort",8927).toInt();
+    return value("core/network/tcp/advertisedPort",2086).toInt();
   }
 
   void setTcpAdvertisedPort(int port)

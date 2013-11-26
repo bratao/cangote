@@ -195,50 +195,6 @@ void NetworkManager::peerAddressStringConvertCallback (void *cls, const char *ad
 }
 
 
-/**
- * Print URI of the peer.
- *
- * @param cls the 'struct GetUriContext'
- * @param peer identity of the peer (unused)
- * @param hello addresses of the peer
- * @param err_msg error message
- */
-/**
- * Static Callback called when a peer get a address.
- */
-static void
-print_my_uri (void *cls, const struct GNUNET_PeerIdentity *peer,
-	      const struct GNUNET_HELLO_Message *hello,
-	      const char *err_msg)
-{
-
-  GNUNET_log(GNUNET_ERROR_TYPE_WARNING,"HELLOO Func\n");
-
-  if (peer == NULL)
-  {
-    //pic = NULL;
-    if (err_msg != NULL)
-      FPRINTF (stderr,
-               _("Error in communication with PEERINFO service: %s\n"),
-               err_msg);
-    //tt = GNUNET_SCHEDULER_add_now (&state_machine, NULL);
-    return;
-  }
-
-  if (NULL == hello)
-    {
-      FPRINTF (stderr,
-               _("%s\n"),
-               "Hello is NULL");
-    return;
-    }
-  /*char *uri = GNUNET_HELLO_compose_uri(hello, &GPI_plugins_find);
-  if (NULL != uri) {
-    printf ("%s\n", (const char *) uri);
-    GNUNET_free (uri);
-  }*/
-}
-
 ///////////////////////STATIC CALLBACKS END//////////////////////////////////////////////////
 
 
@@ -257,6 +213,7 @@ NetworkManager::NetworkManager(QObject *parent) :
   connect(this, &NetworkManager::estimatedNodesChanged, theApp->status(), &Status::setEstimatedNodes, Qt::QueuedConnection);
   connect(this, &NetworkManager::outgoingBandChanged, theApp->status(), &Status::setOutgoingBand, Qt::QueuedConnection);
   connect(this, &NetworkManager::incomingBandChanged, theApp->status(), &Status::setIncomingBand, Qt::QueuedConnection);
+  connect(this, &NetworkManager::myHelloStrChanged, theApp->status(), &Status::setMyHelloStr, Qt::QueuedConnection);
 
 }
 
@@ -293,7 +250,7 @@ void NetworkManager::putHelloSlot (QString helloUrl)
 
 
 
-  GNUNET_CRYPTO_EddsaPublicKey mypublickey = theApp->gnunet()->myPublicKey();
+  GNUNET_CRYPTO_EddsaPublicKey mypublickey = theApp->gnunet()->myPeer()->public_key;
 
   int ret = GNUNET_HELLO_parse_uri(put_uri, &mypublickey, &hello, &m_gnunetTransportPlugins->GPI_plugins_find);
 
@@ -333,10 +290,10 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
       qWarning("Failed to connect to PeerInfo service");
     }
 
-
+  //Initialize transport plugins
+  m_gnunetTransportPlugins = new GnunetTransportPlugins(config,this);
 
   //Connect to peerinfo notifications
-
   m_peerInfoNotify =   GNUNET_PEERINFO_notify (config,NULL, peerinfoProcessorCallback, this);
 
 
@@ -361,8 +318,7 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
   nse = GNUNET_NSE_connect (config, checkNseMessageCallback, this);
 
 
-  //Initialize transport plugins
-  m_gnunetTransportPlugins = new GnunetTransportPlugins(config,this);
+
 
 
 
@@ -483,10 +439,9 @@ NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
   if(theApp->gnunet()->myPublicKeyStr() == peerIdStr)
     {
 
-      GNUNET_log(GNUNET_ERROR_TYPE_WARNING,"HELLO Call\n");
-      GNUNET_PEERINFO_iterate (m_peerInfo, false, NULL,
-                                       GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_SECONDS, 10)
-                               , &print_my_uri, NULL);
+      GNUNET_PEERINFO_iterate (m_peerInfo, false, peerIdent,
+                               GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_SECONDS, 10)
+                               , &peerinfoProcessorCallback, this);
       return;
       //char *uri = GNUNET_HELLO_compose_uri(hello, &GPI_plugins_find);
     }
@@ -561,6 +516,14 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
                                        const struct GNUNET_HELLO_Message *hello,
                                        const char *err_msg)
 {
+
+  if(peer == NULL)
+    {
+      qWarning() << QString("Got a NULL peer in peerinfoProcessor. %1").arg(err_msg ? err_msg : "");
+      return;
+    }
+
+
   const char* key = GNUNET_i2s_full (peer);
   QString peerIdStr(key);
 
@@ -568,6 +531,21 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
   if(!theApp->models()->networkModel())
     {
       qWarning() << tr("Got a info about a peer while the network model was not created");
+      return;
+    }
+
+
+  //If is myself, update my Hello string to display to the user.
+  if(theApp->gnunet()->myPublicKeyStr() == peerIdStr)
+    {
+      if(!hello)
+        {
+          qWarning() << tr("Got a info about myself without a hello");
+          return;
+        }
+
+      char *uri = GNUNET_HELLO_compose_uri(hello, &m_gnunetTransportPlugins->GPI_plugins_find);
+      setMyHelloStr(QString(uri));
       return;
     }
 

@@ -27,6 +27,7 @@ Preferences::Preferences(QObject *parent) :
   QSettings(QSettings::IniFormat, QSettings::UserScope,"Cangote","Cangote", parent)
 {
   convertToGnunet();
+  sync();
 
 
 }
@@ -62,7 +63,6 @@ void Preferences::convertToGnunet()
   QTextStream out(&data);
 
 
-/*
 
   out << "[arm]\n";
   out << QString("PORT = %1\n").arg(armPort());
@@ -152,6 +152,8 @@ void Preferences::convertToGnunet()
   if(internalIpv4Address().length() > 2)
     out << QString("INTERNAL_ADDRESS = %1\n").arg(internalIpv4Address());
   out << QString("USE_LOCALADDR = %1\n").arg(natUseLocalAddresses() ? "YES" : "NO");
+
+
   out << QString("USE_HOSTNAME = %1\n").arg(natUseHostname() ? "YES" : "NO");
   out << QString("DISABLEV6 = %1\n").arg(isIpv6Enabled() ? "YES" : "NO");
   out << QString("RETURN_LOCAL_ADDRESSES = %1\n").arg(natReturnLocalAddresses() ? "YES" : "NO");
@@ -188,6 +190,9 @@ void Preferences::convertToGnunet()
   out << QString("MINIMUM-FRIENDS = %1\n").arg(getMinimalNumberOfFriends());
   out << QString("FRIENDS-ONLY = %1\n").arg(isFriendToFriendOnlyEnabled() ? "YES" : "NO");
 
+
+
+
   out << "[transport]\n";
   out << QString("PORT = %1\n").arg(transportPort());
   out << QString("NEIGHBOUR_LIMIT = %1\n").arg(getNeighboursLimit());
@@ -213,10 +218,10 @@ void Preferences::convertToGnunet()
   out << QString("MAX_BPS = %1\n").arg(getUdpMaxSpeed());
 
 
-*/
+
   out << "[PATHS]\n";
-  //out << QString("HOME = %1 \n").arg(getFolder() + "/gnunet");
-  out << QString("GNUNET_HOME = %1 \n").arg(getFolder() + "/gnunet");
+  out << QString("HOME = %1 \n").arg(getFolder() + "/gnunet");
+  //out << QString("GNUNET_HOME = %1 \n").arg(getFolder() + "/gnunet");
 /*  out << QString("GNUNET_DATA_HOME = %1 \n").arg(getFolder() + "/gnunet/");
   out << QString("GNUNET_CONFIG_HOME = %1 \n").arg(getFolder() + "/gnunet/");
   out << QString("GNUNET_CACHE_HOME = %1 \n").arg(getFolder() + "/gnunet/");

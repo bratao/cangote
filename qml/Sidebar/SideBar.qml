@@ -52,7 +52,7 @@ Rectangle {
 
             }
             onChanged: {
-                browserBlock.selected = false
+                //browserBlock.selected = false
                 networkBlock.selected = false
                 searchBlock.selected = false
                 transferBlock.selected = false

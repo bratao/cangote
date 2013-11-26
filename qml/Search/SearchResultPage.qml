@@ -13,7 +13,7 @@ Item {
     property real tooltipX: 0
     property real tooltipY: 0
     property int tooltipIndex: -1
-    anchors.fill: parent
+    anchors.fill: parent ? parent : undefinied
 
     id: resultPage
 

@@ -9,16 +9,23 @@ Window {
     id: myInfoWnd
 
     width: 400
-    height: 300
+    height: 200
 
     color: "lightgrey"
     title: "My Info"
     ColumnLayout{
 
         anchors.fill: parent
+        anchors.margins: spacing
+
 
         Label{
-            text: "Share this link to your friends :"
+            text: "<b>I'm Peer: </b>" + Cangote.status.myPublicKeyStr
+            height: 20
+        }
+
+        Label{
+            text: "<b>Share this link to your friends: </b>"
             height: 20
         }
 
@@ -27,6 +34,8 @@ Window {
             id: textArea
             Layout.fillWidth: true
             Layout.fillHeight: true
+            text: Cangote.status.myHelloStr
+            wrapMode: TextEdit.WrapAnywhere
         }
 
         Button{

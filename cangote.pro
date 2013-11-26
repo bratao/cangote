@@ -137,6 +137,8 @@ HEADERS += \
     core/gnunet/filesharing/search/searchmanager.h \
     config.h
 
-qmlfiles.path    = $$OUT_PWD
-qmlfiles.files   = qml
-INSTALLS       += qmlfiles
+qmlfilesrelease.path    = $$OUT_PWD/debug
+qmlfilesrelease.files   = qml
+qmlfilesdebug.path    = $$OUT_PWD/release
+qmlfilesdebug.files   = qml
+INSTALLS       += qmlfilesrelease qmlfilesdebug
