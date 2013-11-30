@@ -44,6 +44,7 @@
 #include <QSystemTrayIcon>
 #include <iostream>
 #include "cangote.h"
+#include "core/cangotecore.h"
 
 
 void createTray();
@@ -81,8 +82,11 @@ int main(int argc, char *argv[])
     //Create the tray icon
     createTray();
 
+    if(SVN_BUILD)
+      theWindow->setTitle(QString("Cangote P2P v%1 - SVN %2").arg(CANGOTE_VERSION).arg(__DATE__));
+    else
+      theWindow->setTitle(QString("Cangote P2P v%1").arg(CANGOTE_VERSION));
 
-    theWindow->setTitle(QString("Cangote P2P"));
     theWindow->setIcon(QIcon(":/asserts/CangoteHead.ico"));
     theWindow->show();
     return app.exec();

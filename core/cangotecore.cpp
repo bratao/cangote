@@ -5,6 +5,7 @@
 #include "status.h"
 #include "core/gnunet/launcher/gnunetlauncher.h"
 #include "gnunet/network/NetworkManager.h"
+#include "utils/update_checker.h"
 
 #include <QTimer>
 
@@ -18,12 +19,11 @@ CangoteCore::CangoteCore(QObject *parent) :
 {
     theApp = this;
     m_connected = false;
-
     m_launcher = new GNUNetLauncher();
-
     m_models = new Models(this);
 
-
+    m_update = new UpdateChecker(this);
+    m_update->checkForUpdate();
 
     //Launcher services
     startLauncher();

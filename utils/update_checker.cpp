@@ -19,7 +19,7 @@
 
      Code originaly from Olivier Teulière <ipkiss @@ gmail.com>
 */
-/*
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -33,10 +33,19 @@
 #include "update_checker.h"
 
 
+#include "cangote.h"
+#include "core/cangotecore.h"
+#include "core/gnunet/gnunet.h"
+#include "preferences/preferences.h"
+
+
+
+
 using namespace std;
 
-#define SETTING_KEY "Interface/NextUpdateCheck"
-#define URL "http://www.nongnu.org/eliot/latest-version"
+
+#define URL "http://www.cangote.org/getversion"
+
 
 
 UpdateChecker::UpdateChecker(QObject *parent)
@@ -47,20 +56,19 @@ UpdateChecker::UpdateChecker(QObject *parent)
 
 void UpdateChecker::checkForUpdate()
 {
-    QSettings qs;
 
     // Do nothing if the updates are deactivated in the preferences
-    if (!qs.value(PrefsDialog::kINTF_CHECK_FOR_UPDATES, true).toBool())
+    if (!thePrefs->checkNewVersion())
         return;
 
-    QString dateStr = qs.value(SETTING_KEY, "").toString();
+    QString dateStr = thePrefs->nextCheckDate();
     QDate nextCheckDate = QDate::fromString(dateStr, Qt::ISODate);
 
     // If the next date for the check is in the future, nothing to do
     if (nextCheckDate.isValid() && nextCheckDate > QDate::currentDate())
         return;
 
-    emit notifyInfo(_q("Checking for updates..."));
+    emit notifyInfo("Checking for updates...");
 
     QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
     QObject::connect(networkManager, SIGNAL(finished(QNetworkReply*)),
@@ -76,27 +84,28 @@ void UpdateChecker::updateCheckFinished(QNetworkReply *iReply)
 
     // Save the new check date
     QDate nextCheckDate = QDate::currentDate().addDays(nbDaysToWait);
-    QSettings qs;
-    qs.setValue(SETTING_KEY, nextCheckDate.toString(Qt::ISODate));
+
+    thePrefs->setNextCheckDate(nextCheckDate.toString(Qt::ISODate));
+
 
     if (iReply->error() == QNetworkReply::NoError)
     {
-        LOG_INFO("Update file retrieved successfully");
+        qDebug() << ("Update file retrieved successfully");
         QByteArray data = iReply->readAll().trimmed();
         bool newer = isNewer(data);
 
         if (newer)
         {
-            LOG_INFO("New version available: " << lfq(data));
+            qWarning() << "New version available: " << data;
             showNewVersion(data);
         }
         else
-            emit notifyInfo(_q("Update check completed, no new version available"));
+            emit notifyInfo("Update check completed, no new version available");
     }
     else
     {
-        LOG_ERROR("Could not retrieve update file: " << lfq(iReply->errorString()));
-        emit notifyInfo(_q("Update check failed. Please check your internet connection"));
+        qCritical() << "Could not retrieve update file: " << iReply->errorString();
+        emit notifyInfo("Update check failed. Please check your internet connection");
     }
 
     // Delete the reply
@@ -115,7 +124,7 @@ UpdateChecker::VersionNumber UpdateChecker::parseVersionNumber(QString iVersion)
     re.setPatternSyntax(QRegExp::RegExp2);
     if (re.indexIn(iVersion) == -1)
     {
-        LOG_ERROR("Error parsing version number: " << lfq(iVersion));
+        qWarning() << "Error parsing version number: " << iVersion;
         vn.major = -1;
         vn.minor = -1;
         vn.letter = 0;
@@ -128,9 +137,9 @@ UpdateChecker::VersionNumber UpdateChecker::parseVersionNumber(QString iVersion)
         vn.letter = re.cap(3)[0].toLatin1();
     vn.suffix = re.cap(4);
 
-    LOG_DEBUG("Parsed version number: " << vn.major << "." << vn.minor <<
-              (vn.letter ? string(1, vn.letter) : "") << lfq(vn.suffix) <<
-              " (from '" << lfq(iVersion) << "')");
+    qDebug() << "Parsed version number: " << vn.major << "." << vn.minor <<
+              (vn.letter ? QString(vn.letter) : "") << vn.suffix <<
+              " (from '" << iVersion << "')";
     return vn;
 }
 
@@ -184,24 +193,24 @@ bool UpdateChecker::isNewer(QString iNewVersion) const
 
     // If we reach this point, the 2 version numbers have (different) suffixes.
     // This is not expected, so we are conservative...
-    LOG_WARN("Cannot compare version numbers: " <<
-             PACKAGE_VERSION << " and " << lfq(iNewVersion));
+    qWarning() <<"Cannot compare version numbers: " <<
+             PACKAGE_VERSION << " and " << iNewVersion;
     return false;
 }
 
 
 void UpdateChecker::showNewVersion(QString iVersion) const
 {
-    const QString url = _q("http://www.nongnu.org/eliot/en/");
+    const QString url = ("http://www.cangote.org/newversion");
     // TRANSLATORS: Here %1 represents a version number.
-    QString msg = _q("Eliot %1 is available.").arg(iVersion);
-    msg += "<br>" + _q("You can download it from %1.")
+    QString msg = QString("Cangote %1 is available.").arg(iVersion);
+    msg += "<br>" + QString("You can download it from %1.")
         .arg(QString("<a href=\"%1\">%2</a>").arg(url).arg(url));
-    msg += "<br><br>" + _q("This message will be displayed at most once a week.");
-    QMessageBox infoBox(QMessageBox::Information, _q("New version available"),
+    msg += "<br><br>" + QString("This message will be displayed at most once a week.");
+    QMessageBox infoBox(QMessageBox::Information, QString("New version available"),
                          msg, QMessageBox::Ok);
     infoBox.setTextFormat(Qt::RichText);
     infoBox.exec();
 }
-*/
+
 

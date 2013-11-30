@@ -11,6 +11,7 @@ class Models;
 class GNUNetLauncher;
 class QTimer;
 class Status;
+class UpdateChecker;
 class CangoteCore : public QObject
 {
     Q_OBJECT
@@ -18,6 +19,7 @@ class CangoteCore : public QObject
     Q_PROPERTY(Models * models READ models CONSTANT)
     Q_PROPERTY(Status * status READ status CONSTANT)
     Q_PROPERTY(bool connected READ isConnected WRITE setConnected NOTIFY connectedChanged)
+
 
 
 
@@ -54,6 +56,8 @@ private:
     QTimer *m_timer;
 
     bool m_connected;
+
+    UpdateChecker* m_update;
 
 
 

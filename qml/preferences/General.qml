@@ -13,5 +13,13 @@ Item {
             font.pixelSize: 30
         }
 
+        CheckBox{
+            text: "Check for new versions"
+            checked: Preferences.checkNewVersion
+            onCheckedChanged: {
+                Preferences.checkNewVersion = checked
+            }
+        }
+
     }
 }

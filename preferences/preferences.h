@@ -35,6 +35,18 @@ class Preferences : public QSettings
 
   /*
    *
+   * GENERAL
+   *
+   *
+   */
+  Q_PROPERTY(bool checkNewVersion READ checkNewVersion WRITE setCheckNewVersion NOTIFY checkNewVersionChangedSignal)
+  Q_PROPERTY(QString nextCheckDate READ nextCheckDate WRITE setNextCheckDate)
+
+
+
+
+  /*
+   *
    * DIRECTORIES
    *
    *
@@ -185,6 +197,39 @@ public:
   explicit Preferences(QObject *parent = 0);
 
 
+
+
+  /*
+   *
+   * GENERAL
+   *
+   *
+   */
+
+  bool checkNewVersion()
+  {
+
+    return value("core/checkNewVersion",true).toBool();
+  }
+
+  void setCheckNewVersion(bool flag)
+  {
+
+    setValue("core/checkNewVersion",flag);
+    emit checkNewVersionChangedSignal(flag);
+  }
+
+  QString nextCheckDate()
+  {
+
+    return value("core/nextCheckDate","").toString();
+  }
+
+  void setNextCheckDate(QString date)
+  {
+
+    setValue("core/setNextCheckDate",date);
+  }
   /*
    *
    * DIRECTORIES
@@ -1073,6 +1118,15 @@ public:
   QString getFolder();
   QString getGNUNetConfig();
 signals:
+  /*
+   *
+   * GENERAL
+   *
+   *
+   */
+  void checkNewVersionChangedSignal(bool flag);
+
+
   void preferencesChangedSignal();
   void armPortChangedSignal(int port);
   void atsPortChangedSignal(int port);

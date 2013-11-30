@@ -20,7 +20,7 @@
 
 #ifndef UPDATE_CHECKER_H_
 #define UPDATE_CHECKER_H_
-/*
+
 #include <QObject>
 #include <QString>
 
@@ -63,6 +63,6 @@ private:
     void showNewVersion(QString iVersion) const;
 
 };
-*/
+
 #endif
 

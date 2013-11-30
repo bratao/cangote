@@ -2,7 +2,9 @@
 #define CANGOTE_H
 
 #include <QObject>
-#include "config.h"
+
+#define CANGOTE_VERSION QString("0.0")
+#define SVN_BUILD true
 
 class CangoteCore;
 class Utils;

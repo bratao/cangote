@@ -62,7 +62,7 @@ namespace QLogger
 
         QLoggerWriter *logWriter = manager->getLogWriter(module);
 
-        if (logWriter and logWriter->getLevel() >= level)
+        if (logWriter and logWriter->getLevel() <= level)
                 logWriter->write(module,message);
     }
 
@@ -96,14 +96,28 @@ namespace QLogger
         }
     }
 
+    bool QLoggerManager::addDestination(const QString &fileDest, const QString &module, LogLevel level)
+    {
+        QLoggerWriter *log;
+
+        if (!moduleDest.contains(module))
+        {
+            log = new QLoggerWriter(fileDest,level);
+            moduleDest.insert(module, log);
+            return true;
+        }
+
+        return false;
+    }
+
     bool QLoggerManager::addDestination(const QString &fileDest, const QStringList &modules, LogLevel level)
     {
         QLoggerWriter *log;
         foreach (QString module, modules)
         {
-            log = new QLoggerWriter(fileDest,level);
             if (!moduleDest.contains(module))
             {
+                log = new QLoggerWriter(fileDest,level);
                 moduleDest.insert(module, log);
                 return true;
             }
