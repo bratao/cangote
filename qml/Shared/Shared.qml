@@ -30,11 +30,18 @@ Item{
         onTriggered: Utils.openFolder(selectedFile.path);
     }
 
+    Action {
+        id: unindex
+        text: "Unindex"
+        onTriggered: selectedFile.unIndex();
+    }
+
     Menu {
         id: contextMenu
         MenuItem { action: copyLink }
         MenuItem { action: openFile }
         MenuItem { action: openFolder }
+        MenuItem { action: unindex }
 
     }
 
@@ -42,13 +49,6 @@ Item{
     ColumnLayout{
         anchors.fill: parent
 
-        Rectangle{
-
-            color: "white"
-            Layout.fillWidth: true
-            height: 20
-
-        }
 
         TableView
         {

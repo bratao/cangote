@@ -19,6 +19,9 @@
 **************************************************************************/
 
 #include "sharedfile.h"
+#include "cangote.h"
+
+#include <QDebug>
 
 SharedFile::SharedFile(QObject *parent) :
   QObject(parent)
@@ -57,7 +60,7 @@ QString SharedFile::getFancyStatus()
       }
     case Unindexing:
       {
-        str = "Unindexing";
+        str = QString("Unindexing %1").arg(progress());
         break;
       }
     case Unindexed:
@@ -90,5 +93,11 @@ void SharedFile::setStatus(Status status)
 void SharedFile::setIndex(int index)
 {
   m_index = index;
+}
+
+void SharedFile::unIndex()
+{
+  emit unIndexSignal(this);
+
 }
 

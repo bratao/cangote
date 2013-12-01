@@ -35,10 +35,11 @@ public:
     void init(struct GNUNET_FS_Handle *fs);
     void addIndexedFile(const char *filename, const struct GNUNET_HashCode *file_id);
     void *eventHandler(void *cls, const struct GNUNET_FS_ProgressInfo *info);
+
 signals:
     
 public slots:
-
+    void unindexFile(SharedFile *file);
 private:
     struct GNUNET_FS_Handle * m_fs;
     SharedFilesModel* m_model;

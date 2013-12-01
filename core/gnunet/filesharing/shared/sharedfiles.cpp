@@ -168,6 +168,7 @@ void SharedFiles::addIndexedFile(const char *filename, const struct GNUNET_HashC
 
     file = m_model->addFile(qFilename,strHash);
     file->setStatus(SharedFile::Indexed);
+    connect(file, &SharedFile::unIndexSignal, this, &SharedFiles::unindexFile);
 }
 
 
@@ -195,8 +196,9 @@ SharedFiles::setup_publish (struct GNUNET_FS_PublishContext *pc, const char *fil
     QString qFilename =  QString(filename);
 
     SharedFile* file = m_model->addFile(qFilename,fsize);
-
     file->setStatus(SharedFile::Publishing);
+    connect(file, &SharedFile::unIndexSignal, this, &SharedFiles::unindexFile);
+
     return file;
 
 }
@@ -283,6 +285,24 @@ void SharedFiles::init(GNUNET_FS_Handle * fs)
  *
  */
 
+
+/**
+ * Slot to unindex a SharedFile
+ *
+ *
+ */
+void
+SharedFiles::unindexFile(SharedFile * file)
+{
+  Q_ASSERT(file);
+  Q_ASSERT(!file->path().isNull());
+
+
+  GNUNET_FS_unindex_start (m_fs,file->path().toUtf8().constData(), file);
+}
+
+
+
 /**
  * An unindex operation resumed.
  * @param uc unindex context with the FS library
@@ -320,6 +340,9 @@ SharedFiles::unindexResume (struct GNUNET_FS_UnindexContext *uc,
 
 
 
+
+
+
 /**
  * FS notified us that our unindex operation was stopped.
  *
@@ -328,6 +351,13 @@ SharedFiles::unindexResume (struct GNUNET_FS_UnindexContext *uc,
 void
 SharedFiles::unindexStop (SharedFile *file)
 {
+
+  if(!file){
+      qWarning() << tr("File to be unindexed not found in unindex Stop");
+      return;
+  }
+
+
   /*GtkTreePath *path;
   GtkTreeIter iter;
   GtkTreeModel *model;
@@ -397,6 +427,18 @@ void
 SharedFiles::unindexProgress(SharedFile *file,
                                         uint64_t completed)
 {
+
+
+  if(!file){
+      qWarning() << tr("File to be unindexed not found in unindex progress");
+      return;
+  }
+
+  file->setStatus(SharedFile::Unindexing);
+
+  file->setProgress(((file->size() > 0) ? (100 * completed / file->size()) : 100));
+
+
   /*GtkTreePath *path;
   GtkTreeIter iter;
   GtkTreeModel *model;
@@ -425,6 +467,15 @@ SharedFiles::unindexProgress(SharedFile *file,
 void
 SharedFiles::unindexCompleted (SharedFile *file)
 {
+
+  if(!file){
+      qWarning() << tr("File to be unindexed not found in unindex completed");
+      return;
+  }
+
+  file->setStatus(SharedFile::Unindexed);
+
+
  /* GtkTreePath *path;
   GtkTreeIter iter;
   GtkTreeModel *model;

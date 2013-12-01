@@ -95,6 +95,8 @@ signals:
     void progressChanged(int index);
     void statusChanged(int index);
 
+    void unIndexSignal(SharedFile* file);
+
 public slots:
 
 
@@ -102,6 +104,7 @@ public:
     void setStatus(Status status);
 
     void setIndex(int index);
+    Q_INVOKABLE void unIndex();
 private:
     QString m_filename;
     QString m_path;
