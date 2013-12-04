@@ -1,6 +1,7 @@
 
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import Cangote 1.0
 import "preferences"
 
 
@@ -10,17 +11,34 @@ ApplicationWindow {
     minimumWidth: 400
     minimumHeight: 300
 
+    onClosing: {
+
+        if(Preferences.minimizeToTray){
+            close.accepted = false
+            Cangote.onClose()
+        }
+    }
+
 
     menuBar: MenuBar {
         Menu {
             title: qsTr("Network")
             MenuItem {
+                text: qsTr("My Info");
+                onTriggered: {
+                    var myInfo = Qt.createComponent("Network/MyInfo.qml");
+                    var myInfoWnd = myInfo.createObject();
+
+                    myInfoWnd.show();
+                }
+            }
+            MenuItem {
                 text: qsTr("Add new peer");
                 onTriggered: {
                     var addPeer = Qt.createComponent("Network/AddPeer.qml");
-                    var addPeerObj = addPeer.createObject();
+                    var addPeerWnd = addPeer.createObject();
 
-                    addPeerObj.visible = true;
+                    addPeerWnd.show();
                 }
             }
         }
@@ -30,9 +48,9 @@ ApplicationWindow {
                 text: qsTr("Preferences");
                 onTriggered: {
                     var preferences = Qt.createComponent("preferences/PreferencesWindow.qml");
-                    var preferencesObj = preferences.createObject();
+                    var preferencesWnd = preferences.createObject();
 
-                    preferencesObj.visible = true;
+                    preferencesWnd.show();
                 }
             }
         }

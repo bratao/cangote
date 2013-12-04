@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
 
     //Create the tray icon
-    createTray();
+    theApp->setupTray();
 
     if(SVN_BUILD)
       theWindow->setTitle(QString("Cangote P2P v%1 - SVN %2").arg(CANGOTE_VERSION).arg(__DATE__));
@@ -93,12 +93,7 @@ int main(int argc, char *argv[])
 
 }
 
-void createTray()
-{
-    QSystemTrayIcon*  tray = new QSystemTrayIcon(QIcon(":/asserts/CangoteHead.ico")); //Same as above
-    tray->setVisible(true);
 
-}
 
 void logProcessor(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {

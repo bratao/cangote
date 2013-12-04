@@ -22,6 +22,8 @@ signals:
     
 public slots:
 
+
+
 private:
     CangoteCore *m_core;
 

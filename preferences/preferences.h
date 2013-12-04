@@ -40,6 +40,7 @@ class Preferences : public QSettings
    *
    */
   Q_PROPERTY(bool checkNewVersion READ checkNewVersion WRITE setCheckNewVersion NOTIFY checkNewVersionChangedSignal)
+  Q_PROPERTY(bool minimizeToTray READ minimizeToTray WRITE setMinimizeToTray NOTIFY minimizeToTrayChangedSignal)
   Q_PROPERTY(QString nextCheckDate READ nextCheckDate WRITE setNextCheckDate)
 
 
@@ -230,12 +231,27 @@ public:
 
     setValue("core/setNextCheckDate",date);
   }
+
+  bool minimizeToTray()
+  {
+
+    return value("core/minimizeToTray",true).toBool();
+  }
+
+  void setMinimizeToTray(bool flag)
+  {
+
+    setValue("core/minimizeToTray",flag);
+    emit minimizeToTrayChangedSignal(flag);
+  }
+
   /*
    *
    * DIRECTORIES
    *
    *
    */
+
   QString getDownloadDirectory()
   {
     QString dirStr = value("core/directories/downloadDirectory","").toString();
@@ -1125,6 +1141,7 @@ signals:
    *
    */
   void checkNewVersionChangedSignal(bool flag);
+  void minimizeToTrayChangedSignal(bool flag);
 
 
   void preferencesChangedSignal();

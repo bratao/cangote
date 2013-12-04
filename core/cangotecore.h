@@ -3,7 +3,8 @@
 
 #include <QObject>
 #include <QDebug>
-
+#include <QSystemTrayIcon>
+#include <QAction>
 
 
 class GNUNet;
@@ -42,6 +43,9 @@ public:
         { return m_status; }
 
 
+    Q_INVOKABLE void onClose();
+
+    void setupTray();
 private slots:
     void setConnected(bool connected);
     void process();
@@ -60,15 +64,24 @@ private:
     UpdateChecker* m_update;
 
 
+    QMenu* m_trayMenu;
+    QSystemTrayIcon* m_tray;
+    QAction* m_trayCloseAction;
+
+
 
     void startGNUNet();
     void startLauncher();
+    void close();
+    void showTrayInfo();
 signals:
     void connectedChanged(bool connected);
 
     
 public slots:    
     void armTimeOut();
+    void trayActivated(QSystemTrayIcon::ActivationReason reason);
+
 };
 extern CangoteCore* theApp;
 #endif // CANGOTECORE_H

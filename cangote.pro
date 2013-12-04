@@ -141,3 +141,5 @@ qmlfilesrelease.files   = qml
 qmlfilesdebug.path    = $$OUT_PWD/release
 qmlfilesdebug.files   = qml
 INSTALLS       += qmlfilesrelease qmlfilesdebug
+
+FORMS +=
