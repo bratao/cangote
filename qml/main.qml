@@ -14,10 +14,11 @@ ApplicationWindow {
     onClosing: {
 
         if(Preferences.minimizeToTray){
-            close.accepted = false
-            Cangote.onClose()
+            close.accepted = false;
+            Cangote.onClose();
         }
     }
+
 
 
     menuBar: MenuBar {
