@@ -19,7 +19,7 @@ signals:
 public slots:
 
   void downloadFromSearch(SearchResult *searchResult);
-  void searchSlot(QString terms, int anonLevel);
+  void searchSlot(QString terms, int searchType, int anonLevel);
 
 
 private:
@@ -63,6 +63,7 @@ private:
   struct GNUNET_FS_Handle *m_fs;
       SearchModel *m_searchModel;
 
+      QString getStringFromSearchType(int searchType);
 };
 
 #endif // SEARCHMANAGER_H

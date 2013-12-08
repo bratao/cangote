@@ -22,7 +22,6 @@ Item {
         text: "Download"
         onTriggered: {
             searchResultModel.getResult(searchResultList.currentRow).download()
-            console.log("TODO: Download transfer.")
         }
     }
 
@@ -185,6 +184,17 @@ Item {
                     renderType: Text.NativeRendering
                 }
             }
+        }
+        TableViewColumn
+        {
+            title: "Availiability"
+            role: "availiability"
+
+        }
+        TableViewColumn
+        {
+            title: "Availiability Rank"
+            role: "availiabilityRank"
         }
 
     }

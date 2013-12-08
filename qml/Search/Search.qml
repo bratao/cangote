@@ -35,9 +35,11 @@ Item{
 
         }
         onItemRemoved: {
-            var component = tabsView.getTab(index).component
+            var component = tabsView.getTab(index).item
+            component.searchResultModel = null
+            //component.destroy()
             tabsView.removeTab(index)
-            component.destroy()
+
 
 
         }

@@ -2,12 +2,13 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.0
 import QtQuick.Controls.Private 1.0
-
+import QtQuick.Layouts 1.0
 import Cangote 1.0
 
 
 ToolBar {
     property int searchType: 0
+    property int searchSecurityLevel: 0
     property var searchField: toolbarButtons.searchField
     id:toolbar
     height: 40
@@ -74,7 +75,7 @@ ToolBar {
                 Action {
                 text: "Documents"
                 onTriggered: {
-                     searchType = 5;
+                    searchType = 5;
                 }
             }
         }
@@ -145,9 +146,10 @@ ToolBar {
 
             function doSearch() {
                 if (text.length) {
-                    Cangote.gnunet.filesharing.search(text,0);
+                    Cangote.gnunet.filesharing.search(text ,searchType, searchSecurityLevel);
                 }
             }
+
 
             style: TextFieldStyle {
                 padding { top: 4 ; left: 35 ; right: 25 ; bottom:4 }
@@ -239,14 +241,78 @@ ToolBar {
             }
         }
 
-        CustomButton {
-            iconName: "images/toolbar/search-button"
+
+
+        Item{
             height: 34
             width: 40
-            hoverEnabled: true
-            onClicked: {
-                if(searchField.text.length)
-                    Cangote.gnunet.filesharing.search(searchField.text,0);
+            CustomButton {
+                id: searchButton
+                iconName: "images/toolbar/search-button"
+                height: 28
+                width: 40
+                hoverEnabled: true
+                onClicked: {
+                    if(searchField.text.length)
+                        Cangote.gnunet.filesharing.search(searchField.text,searchType, searchSecurityLevel);
+                }
+            }
+            Label{
+                id: searchLevelLabel
+                anchors.horizontalCenter: searchButton.horizontalCenter
+                //height: 60
+                font.pixelSize: 10
+                anchors.top:searchButton.bottom
+                text: qsTr("Secure")
+                color: "green"
+
+                states: [
+                    State {
+                        name: "NotAnon"
+                        when: searchSecurityLevel == 0
+                        PropertyChanges { target: searchLevelLabel; color: "yellow"}
+                        PropertyChanges { target: searchLevelLabel; text: qsTr("Not anonymous")}
+                    },
+                    State {
+                        name: "Anonymous"
+                         when: searchSecurityLevel == 1
+                        PropertyChanges { target: searchLevelLabel; color: "green"}
+                        PropertyChanges { target: searchLevelLabel; text: qsTr("Anonymous")}
+                    },
+                    State {
+                        name: "Paranoid"
+                         when: searchSecurityLevel == 2
+                        PropertyChanges { target: searchLevelLabel; color: "blue"}
+                        PropertyChanges { target: searchLevelLabel; text: qsTr("Paranoid")}
+                    }
+                ]
+
+
+                MouseArea{
+                    anchors.fill: parent
+                    id:searchLevel
+                    cursorShape: Qt.PointingHandCursor
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: searchLevelMenu.popup()
+
+                    Menu {
+                        id: searchLevelMenu
+                        title: "SearchLevel"
+
+                        MenuItem {
+                            text: qsTr("0 - Not anonymous")
+                            onTriggered: searchSecurityLevel = 0
+                        }
+                        MenuItem {
+                            text: qsTr("1 - Anonymous")
+                            onTriggered: searchSecurityLevel = 1
+                        }
+                        MenuItem {
+                            text: qsTr("10 - Paranoid")
+                            onTriggered: searchSecurityLevel = 2
+                        }
+                    }
+                }
             }
         }
 

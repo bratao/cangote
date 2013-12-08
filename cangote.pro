@@ -88,7 +88,9 @@ OTHER_FILES += \
     qml/preferences/Advanced.qml \
     qml/Network/AddPeer.qml \
     qml/Search/Tooltip.qml \
-    qml/Publish/PublishDetails.qml
+    qml/Publish/PublishDetails.qml \
+    qml/Wizard/FirstRun.qml \
+    qml/Wizard/Welcome.qml
 
 RESOURCES += \
     resources.qrc

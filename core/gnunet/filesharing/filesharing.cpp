@@ -211,9 +211,9 @@ FileSharing::GNUNET_fs_event_handler_callback (void *cls,
  * @param term
  * @param anonLevel
  */
-void FileSharing::search(QString term, int anonLevel)
+void FileSharing::search(QString term,int searchType, int anonLevel)
 {
-  emit searchSignal(term, anonLevel);
+  emit searchSignal(term,searchType, anonLevel);
 }
 
 

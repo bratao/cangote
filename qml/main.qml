@@ -6,10 +6,13 @@ import "preferences"
 
 
 ApplicationWindow {
+    id: root;
     width: 640
     height: 480
     minimumWidth: 400
     minimumHeight: 300
+    property variant firstRunWnd;
+    property variant preferencesWnd;
 
     onClosing: {
 
@@ -19,9 +22,28 @@ ApplicationWindow {
         }
     }
 
+    Component.onCompleted: {
+
+        firstTimeTimer.start()
+    }
+
+    Timer {
+        id: firstTimeTimer
+        interval: 500;
+        running: false;
+        repeat: false;
+        onTriggered: {
+            var wizard = Qt.createComponent("Wizard/FirstRun.qml");
+            firstRunWnd = wizard.createObject();
+            firstRunWnd.show();
+        }
+    }
 
 
     menuBar: MenuBar {
+
+
+
         Menu {
             title: qsTr("Network")
             MenuItem {
@@ -49,7 +71,7 @@ ApplicationWindow {
                 text: qsTr("Preferences");
                 onTriggered: {
                     var preferences = Qt.createComponent("preferences/PreferencesWindow.qml");
-                    var preferencesWnd = preferences.createObject();
+                    preferencesWnd = preferences.createObject(root);
 
                     preferencesWnd.show();
                 }

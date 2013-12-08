@@ -62,10 +62,10 @@ public:
 
 
     void start(GNUNET_CONFIGURATION_Handle *config);
-    Q_INVOKABLE void search(QString term, int anonLevel);
+    Q_INVOKABLE void search(QString term, int searchType, int anonLevel);
     void ProcessEvents();
 signals:
-    void searchSignal(QString term, int anonLevel);
+    void searchSignal(QString term,int searchType, int anonLevel);
 
 private:
 

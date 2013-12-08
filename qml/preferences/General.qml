@@ -26,7 +26,7 @@ Item {
             text: "Minimize to System Tray"
             checked: Preferences.minimizeToTray
             onCheckedChanged: {
-                Preferences.checkNewVersion = checked
+                Preferences.minimizeToTray = checked
             }
         }
 

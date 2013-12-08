@@ -21,12 +21,12 @@ SplitView {
         frameVisible: false
         tabsVisible: false
 
-
+/*
         Tab {
            active: true
            Browser{
            }
-        }
+        }*/
 
         Tab {
            active: true

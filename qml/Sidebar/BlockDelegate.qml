@@ -63,6 +63,7 @@ Item {
             anchors.left: playlistImage.right
             anchors.leftMargin: 5
 
+
             //anchors.rightMargin: closeButton.source.length ? 5 : 0
             verticalAlignment: Text.AlignVCenter
             text: term
@@ -73,6 +74,7 @@ Item {
         }
 
         Rectangle{
+            id: numberLabel
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: playlistText.right
             color: "lightgray"
@@ -102,7 +104,6 @@ Item {
             width: 15
             visible: true
             onClicked: {
-                console.log("clicked !")
                 Cangote.models.searchModel.closeSearch(index)
             }
         }

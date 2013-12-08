@@ -12,14 +12,14 @@
 
 
 SearchManager::SearchManager(QObject *parent) :
-  QObject(parent)
+    QObject(parent)
 {
-  m_fs = NULL;
-  m_searchModel= theApp->models()->searchModel();
+    m_fs = NULL;
+    m_searchModel= theApp->models()->searchModel();
 
 }
 void * SearchManager::eventHandler (void *cls,
-                                  const struct GNUNET_FS_ProgressInfo *info)
+                                    const struct GNUNET_FS_ProgressInfo *info)
 {
 
     void *ret;
@@ -152,12 +152,12 @@ void * SearchManager::eventHandler (void *cls,
  *                model at 'iter')
  */
 SearchResult *
-    SearchManager::setupInnerSearch (struct GNUNET_FS_SearchContext *sc,
-                                   struct SearchResult *parent)
+SearchManager::setupInnerSearch (struct GNUNET_FS_SearchContext *sc,
+                                 struct SearchResult *parent)
 {
 
-  //gError("Setup inner seach not implemented !");
-  return NULL;
+    //gError("Setup inner seach not implemented !");
+    return NULL;
 
 }
 
@@ -171,38 +171,38 @@ SearchResult *
  */
 Search*
 SearchManager::setupSearch (struct GNUNET_FS_SearchContext *sc,
-                          const struct GNUNET_FS_Uri *query)
+                            const struct GNUNET_FS_Uri *query)
 {
 
 
-  char * querytmp;
+    char * querytmp;
 
 
-  //TODO: Handle this case. What query == NULL means ?
-  if (query == NULL)
+    //TODO: Handle this case. What query == NULL means ?
+    if (query == NULL)
     {
-      //no real query, tab is for non-queries, use special label
-      querytmp = GNUNET_strdup ("*");
+        //no real query, tab is for non-queries, use special label
+        querytmp = GNUNET_strdup ("*");
     }
-  else
+    else
     {
-      //FS_uri functions should produce UTF-8, so let them be
-      if (GNUNET_FS_uri_test_ksk (query))
-        querytmp = GNUNET_FS_uri_ksk_to_string_fancy (query);
-      else
-        querytmp = GNUNET_FS_uri_to_string (query);
+        //FS_uri functions should produce UTF-8, so let them be
+        if (GNUNET_FS_uri_test_ksk (query))
+            querytmp = GNUNET_FS_uri_ksk_to_string_fancy (query);
+        else
+            querytmp = GNUNET_FS_uri_to_string (query);
     }
 
 
-  QString queryStr(querytmp);
+    QString queryStr(querytmp);
 
 
-  Search* search = m_searchModel->addNewSearch(sc,queryStr);
+    Search* search = m_searchModel->addNewSearch(sc,queryStr);
 
 
 
 
-  return search;
+    return search;
 
 }
 
@@ -215,10 +215,10 @@ SearchManager::setupSearch (struct GNUNET_FS_SearchContext *sc,
  */
 void
 SearchManager::searchError (struct SearchTab *tab,
-                          const char *emsg)
+                            const char *emsg)
 {
-  //TODO:: Implement search error handling.
-  qWarning() << "Search Failed !!";
+    //TODO:: Implement search error handling.
+    qWarning() << "Search Failed !!";
 }
 
 
@@ -239,27 +239,27 @@ SearchManager::searchError (struct SearchTab *tab,
  *                model at 'iter')
  */
 SearchResult *
-    SearchManager::processSearch (Search* search,
-                                struct SearchResult *parent,
-                                const struct GNUNET_FS_Uri *uri,
-                                const struct GNUNET_CONTAINER_MetaData *meta,
-                                struct GNUNET_FS_SearchResult *result,
-                                uint32_t applicability_rank)
+SearchManager::processSearch (Search* search,
+                              struct SearchResult *parent,
+                              const struct GNUNET_FS_Uri *uri,
+                              const struct GNUNET_CONTAINER_MetaData *meta,
+                              struct GNUNET_FS_SearchResult *result,
+                              uint32_t applicability_rank)
 {
 
-  struct SearchResult *sr;
+    struct SearchResult *sr;
 
-  if(search == NULL)
+    if(search == NULL)
     {
-      qWarning() << "Got a result to a file that don't exist !";
-      return NULL;
+        qWarning() << "Got a result to a file that don't exist !";
+        return NULL;
     }
 
-  sr = search->AddResult(parent, uri,meta, result, applicability_rank);
+    sr = search->AddResult(parent, uri,meta, result, applicability_rank);
 
-  connect(sr, &SearchResult::requestDownload, this, &SearchManager::downloadFromSearch);
+    connect(sr, &SearchResult::requestDownload, this, &SearchManager::downloadFromSearch);
 
-  return sr;
+    return sr;
 
 }
 
@@ -279,26 +279,26 @@ SearchResult *
  */
 void
 SearchManager::updateSearch (SearchResult *sr,
-                           const struct GNUNET_CONTAINER_MetaData *meta,
-                           int applicability_rank,
-                           int availability_rank,
-                           int availability_certainty)
+                             const struct GNUNET_CONTAINER_MetaData *meta,
+                             int applicability_rank,
+                             int availability_rank,
+                             int availability_certainty)
 {
 
-  if (sr == NULL)
+    if (sr == NULL)
     {
-      //gWarn("Try to update a search result that don't exist");
-      return;
+        //gWarn("Try to update a search result that don't exist");
+        return;
     }
 
 
 
 
-  sr->setMetadata((GNUNET_CONTAINER_MetaData *)meta,false);
-  sr->setApplicabilityRank(applicability_rank,false);
-  sr->setAvailabilityRank(availability_rank,false);
-  sr->setAvailabilityCertainty(availability_certainty,false);
-  sr->modified();
+    sr->setMetadata((GNUNET_CONTAINER_MetaData *)meta,false);
+    sr->setApplicabilityRank(applicability_rank,false);
+    sr->setAvailabilityRank(availability_rank,false);
+    sr->setAvailabilityCertainty(availability_certainty,false);
+    sr->modified();
 
 
 }
@@ -316,7 +316,7 @@ void
 SearchManager::closeSearch (struct Search *tab)
 {
 
-  tab->close();
+    tab->close();
 
 }
 
@@ -333,10 +333,10 @@ void
 SearchManager::freeSearch (struct SearchResult *sr)
 {
 
-  if (NULL == sr)
-    return;
+    if (NULL == sr)
+        return;
 
-  delete sr;
+    delete sr;
 
 }
 
@@ -347,25 +347,25 @@ SearchManager::freeSearch (struct SearchResult *sr)
  */
 void SearchManager::downloadFromSearch(SearchResult* searchResult)
 {
-  Q_ASSERT(searchResult);
-  Q_ASSERT(m_fs);
+    Q_ASSERT(searchResult);
+    Q_ASSERT(m_fs);
 
-  //TODO: Implement anonimity Level
-  int anonLevel = 0;
-  enum GNUNET_FS_DownloadOptions opt;
-  GNUNET_FS_DownloadContext * dc;
-  opt = GNUNET_FS_DOWNLOAD_OPTION_NONE;
+    //TODO: Implement anonimity Level
+    int anonLevel = 0;
+    enum GNUNET_FS_DownloadOptions opt;
+    GNUNET_FS_DownloadContext * dc;
+    opt = GNUNET_FS_DOWNLOAD_OPTION_NONE;
 
-  //TODO: Store this download context
-  dc = GNUNET_FS_download_start (m_fs,
-                                 searchResult->getUri(),
-                                 searchResult->getMeta() /* meta data */,
-                                 (thePrefs->getDownloadDirectory() +"/" + QString(searchResult->getFileName())).toUtf8(), NULL /* tempname */ ,
-                                 0 /* offset */ ,
-                                 searchResult->getFilesize(),
-                                 anonLevel, opt,
-                                 NULL,
-                                 NULL);
+    //TODO: Store this download context
+    dc = GNUNET_FS_download_start (m_fs,
+                                   searchResult->getUri(),
+                                   searchResult->getMeta() /* meta data */,
+                                   (thePrefs->getDownloadDirectory() +"/" + QString(searchResult->getFileName())).toUtf8(), NULL /* tempname */ ,
+                                   0 /* offset */ ,
+                                   searchResult->getFilesize(),
+                                   anonLevel, opt,
+                                   NULL,
+                                   NULL);
 
 }
 
@@ -380,29 +380,72 @@ void SearchManager::setFs(GNUNET_FS_Handle * fs)
  * @param terms
  * @param anonLevel
  */
-void SearchManager::searchSlot(QString terms, int anonLevel)
+void SearchManager::searchSlot(QString terms,int searchType, int anonLevel)
 {
-  char *emsg = NULL;
-  struct GNUNET_FS_Uri *uri;
-
-  QByteArray byteArray = terms.toUtf8();
-  const char* cString = byteArray.constData();
+    char *emsg = NULL;
+    struct GNUNET_FS_Uri *uri;
 
 
+    //Use AND if we specify search type
+    if((searchType!=0)&& (terms.size() > 0) && (terms.at(0)!='+'))
+    {
+        terms.insert(0,"+");
+    }
+    terms+= getStringFromSearchType(searchType);
 
-  uri = GNUNET_FS_uri_ksk_create (cString, &emsg);
-  if (NULL == uri) {
-      //GNUNET_log (GNUNET_ERROR_TYPE_ERROR, _("Invalid keyword string `%s': %s"),
-      //           cString, emsg);
-      GNUNET_free_non_null (emsg);
-      return;
+    //Convert string to C-String
+    QByteArray byteArray = terms.toUtf8();
+    const char* cString = byteArray.constData();
+
+
+
+
+
+    uri = GNUNET_FS_uri_ksk_create (cString, &emsg);
+    if (NULL == uri) {
+        //GNUNET_log (GNUNET_ERROR_TYPE_ERROR, _("Invalid keyword string `%s': %s"),
+        //           cString, emsg);
+        GNUNET_free_non_null (emsg);
+        return;
     }
 
-  /* start search */
-  GNUNET_FS_search_start(m_fs,
-                         uri, anonLevel,
-                         GNUNET_FS_SEARCH_OPTION_NONE, NULL);
-  GNUNET_FS_uri_destroy (uri);
+    /* start search */
+    GNUNET_FS_search_start(m_fs,
+                           uri, anonLevel,
+                           GNUNET_FS_SEARCH_OPTION_NONE, NULL);
+    GNUNET_FS_uri_destroy (uri);
 }
 
+
+QString SearchManager::getStringFromSearchType(int searchType)
+{
+    QString searchTypeStr;
+    searchTypeStr = " +mimetype:";
+    switch (searchType) {
+    case 0:
+        return"";
+        break;
+    case 1:
+        return searchTypeStr + "audio";
+        break;
+    case 2:
+        return searchTypeStr + "video";
+        break;
+    case 3:
+        return searchTypeStr + "image";
+        break;
+    case 4:
+        return searchTypeStr + "application";
+        break;
+    case 5:
+        return searchTypeStr + "text";
+        break;
+    case 6:
+        return searchTypeStr + "application";
+        break;
+    default:
+        break;
+    }
+
+}
 

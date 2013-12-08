@@ -36,7 +36,7 @@ Rectangle {
             title: "Network"
             onHeaderClicked: {
                 parent.resetSelected()
-                center.source = 1;
+                center.source = 0;
                 selected = true;
             }
         }
@@ -57,7 +57,7 @@ Rectangle {
                 searchBlock.selected = false
                 transferBlock.selected = false
                 sharedBlock.selected = false
-                center.source = 2;
+                center.source = 1;
                 center.search.visibleIndex = indexChanged
             }
         }
@@ -68,7 +68,7 @@ Rectangle {
             title: "Transfer"
             onHeaderClicked: {
                 parent.resetSelected()
-                center.source = 3;
+                center.source = 2;
                 selected = true;
             }
         }
@@ -79,7 +79,7 @@ Rectangle {
             title: "Shared Files"
             onHeaderClicked: {
                 parent.resetSelected()
-                center.source = 4;
+                center.source = 3;
                 selected = true;
             }
         }

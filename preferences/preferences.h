@@ -703,7 +703,7 @@ public:
 
   void setFsDelay(bool enable)
   {
-    setValue("core/advanced/fsPort",enable);
+    setValue("core/advanced/fsDelay",enable);
     emit fsDelayChangedSignal(enable);
   }
 
