@@ -26,6 +26,7 @@
 #include "core/gnunet/gnunet_includes.h"
 
 class Search;
+class MetaModel;
 class SearchResult : public QObject
 {
     Q_OBJECT
@@ -33,6 +34,7 @@ class SearchResult : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString fileName READ getFileName WRITE setFileName NOTIFY fileNameChanged)
     Q_PROPERTY(QImage* thumbnail READ thumbnail CONSTANT)
+    Q_PROPERTY(MetaModel* metadataModel READ metadataModel CONSTANT)
 
 
 public:
@@ -65,6 +67,10 @@ public:
     QImage* thumbnail() const
     { return m_thumbnail; }
 
+    MetaModel* metadataModel() const
+    { return m_metadataModel; }
+
+
 
 
 signals:
@@ -96,6 +102,8 @@ public:
     GNUNET_CONTAINER_MetaData *getMeta();
     Q_INVOKABLE void download();
     const GNUNET_FS_Uri *getUri();
+
+    int addMetadata(const char *plugin_name,EXTRACTOR_MetaType type, EXTRACTOR_MetaFormat format, const char *data_mime_type, const char *data, size_t data_len);
 private:
 
     QString m_filename;
@@ -110,6 +118,8 @@ private:
     QImage * m_thumbnail;
     Search* m_owner;
     SearchResult *m_parent;
+
+    MetaModel * m_metadataModel;
 
     unsigned int m_applicabilityRank;
     int m_availabilityRank;

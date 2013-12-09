@@ -1,4 +1,4 @@
-import QtQuick 2.1
+import QtQuick 2.2
 import QtQuick.Controls 1.1
 //import QtQuick.Controls.Private 1.0
 
@@ -132,6 +132,7 @@ Item {
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     clip: true
+                    cache: false
                     source: styleData.value
                     anchors.centerIn: parent
                 }
@@ -142,6 +143,7 @@ Item {
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     clip: true
+                    cache: false
                     source: styleData.value + "/thumbnail"
 
                     //anchors.centerIn: parent
@@ -216,7 +218,7 @@ Item {
                 tooltipX= ma.mapToItem(resultPage,mouseX,0).x
                 tooltipY= ma.mapToItem(resultPage,0,mouseY).y
                 tooltip.searchTerm = index
-                tooltip.metadata = searchResultModel.getResult(index)
+                tooltip.metadata = searchResultModel.getResult(index).metadataModel
                 needTooltip = ma.containsMouse
 
             }

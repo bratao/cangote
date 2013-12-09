@@ -22,6 +22,7 @@
 #include "SearchResultModel.h"
 #include <QQmlEngine>
 #include <sstream>
+#include <QDebug>
 //#include "utils/misc.h"
 #include "core/gnunet/filesharing/search/searchresult.h"
 

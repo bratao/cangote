@@ -22,6 +22,7 @@
 #include "cangote.h"
 #include "core/cangotecore.h"
 #include "models/models.h"
+#include "models/MetadataModel.h"
 #include "models/DownloadsModel.h"
 #include "utils/utils.h"
 
@@ -37,8 +38,26 @@ SearchResult::SearchResult(QObject *parent) :
     m_uri = NULL;
     m_thumbnail = NULL;
 
+    m_metadataModel = new MetaModel(this);
+    QQmlEngine::setObjectOwnership(m_metadataModel, QQmlEngine::CppOwnership);
+
 }
 
+
+
+static int
+addMetadataCallBack (void *cls, const char *plugin_name,
+                     enum EXTRACTOR_MetaType type,
+                     enum EXTRACTOR_MetaFormat format,
+                     const char *data_mime_type,
+                     const char *data, size_t data_len)
+{
+    SearchResult* result = (SearchResult*)cls;
+
+    result->addMetadata(plugin_name,type,format,data_mime_type,data,data_len);
+
+    return 0; // Zero to continue
+}
 
 void SearchResult::modified()
 {
@@ -70,11 +89,29 @@ void SearchResult::setMetadata(GNUNET_CONTAINER_MetaData *meta, bool notifyModif
     if (NULL != meta)
     {
         m_thumbnail = theUtils->getThumbnailFromMetaData( meta);
+        GNUNET_CONTAINER_meta_data_iterate (meta,
+                                            &addMetadataCallBack,
+                                            this);
     }
     
     if(notifyModified)
         modified();
 }
+
+int
+SearchResult::addMetadata (const char *plugin_name,
+                          EXTRACTOR_MetaType type,
+                          EXTRACTOR_MetaFormat format,
+                          const char *data_mime_type,
+                          const char *data, size_t data_len)
+{
+
+    QString name = QString(EXTRACTOR_metatype_to_string (type));
+    QString value = QString(data);
+    m_metadataModel->add(name,value);
+}
+
+
 
 GNUNET_CONTAINER_MetaData* SearchResult::getMeta()
 {

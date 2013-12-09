@@ -190,10 +190,11 @@ void  SearchModel::addNewSearchSlot(Search* search)
   m_data.append(search);
   connect(search, &Search::resultsChanged, this, &SearchModel::modifiedSlot);
 
+  resultModel->setIndex(new QPersistentModelIndex (index(count, 0)));
 
   endInsertRows();
 
-  resultModel->setIndex(new QPersistentModelIndex (index(count, 0)));
+
 
 
 
@@ -217,11 +218,13 @@ void  SearchModel::closeSearchSlot(int index)
 
   m_data.removeAt(index);
 
-  endRemoveRows();
-
   //Model was allocated here because QML can't work with cross-tread models.
   if(search->model())
     search->model()->deleteLater();
+
+  endRemoveRows();
+
+
 
 
 }

@@ -1,4 +1,5 @@
-import QtQuick 2.0
+import QtQuick 2.2
+import QtQuick.Controls 1.1
 
 
 //The tooltip
@@ -11,11 +12,22 @@ Rectangle {
     color: "beige"
     opacity: 0.7
     z:100
-    Text {
+    /*Text {
         anchors.centerIn: parent
         text: searchTerm
-    }
+    }*/
 
+
+
+    ListView {
+        id: tableMeta
+        model:metadata
+        anchors.fill: parent
+
+        delegate: Text {
+            text: name + ": " + value
+        }
+    }
 
 
 }
