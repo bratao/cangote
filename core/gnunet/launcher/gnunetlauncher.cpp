@@ -93,7 +93,6 @@ void GNUNetLauncher::cleanOldProcesses()
     killArmProcess->setProcessEnvironment(env);
     killArmProcess->start("taskkill -f /IM gnunet-*");
 #else
-    QProcess* killArmProcess     = new QProcess(this);
     killArmProcess->setProcessEnvironment(env);
     killArmProcess->start("pkill -9 -f gnunet-*");
 #endif

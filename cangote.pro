@@ -9,13 +9,22 @@ QMAKE_CFLAGS_RELEASE += -g
 QMAKE_LFLAGS_RELEASE =
 
 
+LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunethello -lgnunetcore -lgnunetidentity -lgnunettransport -lgnunetats -lgnunetnse -lgnunetarm -lextractor
+
+macx{
+CONFIG   += c++11
+QMAKE_CXXFLAGS += -stdlib=libc++
+QMAKE_CXXFLAGS += -mmacosx-version-min=10.7
+INCLUDEPATH+= "/usr/local/include"
+LIBPATH+= "/usr/local/lib"
+}
+
 !win32 {
-   LIBS += -L/home/bratao/gnunet/gnunet-bin/lib -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunetcore -lgnunetidentity -lgnunettransport -lgnunetats -lgnunetnse -lextractor
+   LIBS +=
 
 }
 win32 {
-   LIBS += -lgnunetutil -lgnunetfs -lgnunetpeerinfo -lgnunethello -lgnunetcore -lgnunetidentity -lgnunettransport -lgnunetats -lgnunetnse -lgnunetarm -lws2_32 -lintl -lextractor
-    INCLUDEPATH += C:/sbuild_old/mingw/include
+   LIBS += -lws2_32 -lintl
 }
 
 RC_ICONS = asserts\CangoteHead.ico
