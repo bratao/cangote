@@ -88,6 +88,7 @@ void SearchResult::setMetadata(GNUNET_CONTAINER_MetaData *meta, bool notifyModif
     /* import meta data */
     if (NULL != meta)
     {
+        m_metadataModel->clear();
         m_thumbnail = theUtils->getThumbnailFromMetaData( meta);
         GNUNET_CONTAINER_meta_data_iterate (meta,
                                             &addMetadataCallBack,

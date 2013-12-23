@@ -113,3 +113,13 @@ int MetaModel::getCount()
     return m_data.count();
 }
 
+
+void MetaModel::clear()
+{
+    beginResetModel();
+
+    m_data.clear();
+
+    endResetModel();
+}
+

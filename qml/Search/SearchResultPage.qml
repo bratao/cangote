@@ -44,7 +44,7 @@ Item {
                 PropertyChanges {
                     target: tooltip
                     visible: true
-                    opacity:0.8
+                    opacity:1.0
 
                 }
             },

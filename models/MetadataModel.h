@@ -40,6 +40,7 @@ public:
 
     Metadata* add(QString name, QString value);
     Metadata* getMetadata(int index);
+    void clear();
 public slots:
 
 signals:

@@ -107,7 +107,7 @@ void DownloadItem::setSize(qint64 size, bool notifyModified)
 
 qint64 DownloadItem::getCompleted()
 {
-    return m_size;
+    return m_completed;
 }
 
 
