@@ -147,10 +147,18 @@ HEADERS += \
     utils/update_checker.h \
     core/gnunet/filesharing/search/searchmanager.h
 
-qmlfilesrelease.path    = $$OUT_PWD/debug
-qmlfilesrelease.files   = qml
-qmlfilesdebug.path    = $$OUT_PWD/release
-qmlfilesdebug.files   = qml
-INSTALLS       += qmlfilesrelease qmlfilesdebug
 
-FORMS +=
+!macx{
+qmlfilesdebug.files   = qml
+qmlfilesrelease.files   = qml
+qmlfilesrelease.path    = $$OUT_PWD/debug
+qmlfilesdebug.path    = $$OUT_PWD/release
+INSTALLS       += qmlfilesrelease qmlfilesdebug
+}
+macx{
+qmlfiles.files   = qml
+qmlfiles.path  = "Contents/MacOS"
+QMAKE_BUNDLE_DATA+= qmlfiles
+}
+
+
