@@ -1,5 +1,10 @@
 QT += widgets qml quick
+!macx {
 TARGET = cangote
+}
+macx{
+TARGET = Cangote
+}
 CONFIG+=qml_debug
 
 QMAKE_CXXFLAGS+=-Wall -Wextra #-Werror
@@ -160,5 +165,6 @@ qmlfiles.files   = qml
 qmlfiles.path  = "Contents/MacOS"
 QMAKE_BUNDLE_DATA+= qmlfiles
 }
+
 
 
