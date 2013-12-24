@@ -1,0 +1,8 @@
+[branchname]
+develop = default
+support = support/
+feature = feature/
+master = stable
+release = release/
+hotfix = hotfix/
+

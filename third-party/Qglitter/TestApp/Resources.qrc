@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+	<qresource>
+		<file>Resources/dsa_pub.pem</file>
+		<file>Resources/TestAppIcon.png</file>
+	</qresource>
+</RCC>

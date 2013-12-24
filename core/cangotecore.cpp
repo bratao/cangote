@@ -206,7 +206,7 @@ void CangoteCore::close(){
 
 void CangoteCore::showTrayInfo(){
 
-  if(!thePrefs->value("dialogs/ShowGoToTrayDialog",true).toBool())
+  if(!thePrefs->minimizeToTray())
       return;
 
 
@@ -270,7 +270,7 @@ void CangoteCore::showTrayInfo(){
   columnLayout->addLayout(lineLayout);
 
 
-  thePrefs->setValue("dialogs/ShowGoToTrayDialog",!doNotShowAgainCheckBox->isChecked());
+  thePrefs->setMinimizeToTray(!doNotShowAgainCheckBox->isChecked());
 
   dockDialog->setLayout(columnLayout);
   dockDialog->exec();

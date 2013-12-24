@@ -1,0 +1,43 @@
+cmake_minimum_required(VERSION 2.8)
+project(QGLITTERTOOL)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(Qt5Widgets)
+find_package(Qt5Core)
+find_package(Qt5Network)
+find_package(Qt5Xml)
+
+
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Core_INCLUDE_DIRS})
+add_definitions(${QT_DEFINITIONS})
+
+set(SOURCES
+	main.cpp)
+
+set(SKIP_BUILD_RPATH FALSE)
+set(BUILD_WITH_INSTALL_RPATH FALSE)
+set(INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+set(INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+   set(INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif()
+
+add_executable(qglitter-tool ${SOURCES})
+target_link_libraries(qglitter-tool qglitter ${QT_LIBRARIES} ${PLATFORM_LIBS})
+set_target_properties(qglitter-tool PROPERTIES
+	SKIP_BUILD_RPATH ${SKIP_BUILD_RPATH}
+	BUILD_WITH_INSTALL_RPATH ${BUILD_WITH_INSTALL_RPATH}
+	INSTALL_NAME_DIR ${INSTALL_NAME_DIR}
+	INSTALL_RPATH ${INSTALL_RPATH}
+	INSTALL_RPATH_USE_LINK_PATH ${INSTALL_RPATH_USE_LINK_PATH})
+
+install(TARGETS qglitter-tool RUNTIME DESTINATION bin)
