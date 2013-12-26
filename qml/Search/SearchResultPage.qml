@@ -216,7 +216,7 @@ Item {
                 }
 
                 tooltipX= ma.mapToItem(resultPage,mouseX,0).x
-                tooltipY= ma.mapToItem(resultPage,0,mouseY).y
+                tooltipY= ma.mapToItem(resultPage,0,mouseY).y +20
                 tooltip.searchTerm = index
                 tooltip.metadata = searchResultModel.getResult(index).metadataModel
                 needTooltip = ma.containsMouse

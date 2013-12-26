@@ -40,8 +40,9 @@ class Preferences : public QSettings
    *
    */
   Q_PROPERTY(bool checkNewVersion READ checkNewVersion WRITE setCheckNewVersion NOTIFY checkNewVersionChangedSignal)
+  Q_PROPERTY(bool showMinimizeToTrayDialog READ showMinimizeToTrayDialog WRITE setShowMinimizeToTrayDialog NOTIFY showMinimizeToTrayDialogChangedSignal)
   Q_PROPERTY(bool minimizeToTray READ minimizeToTray WRITE setMinimizeToTray NOTIFY minimizeToTrayChangedSignal)
-  Q_PROPERTY(QString nextCheckDate READ nextCheckDate WRITE setNextCheckDate)
+  Q_PROPERTY(QString nextCheckDate READ nextCheckDate WRITE setNextCheckDate NOTIFY setNextCheckDateChangedSignal)
 
 
 
@@ -99,7 +100,7 @@ class Preferences : public QSettings
   /*
      * UDP
      */
-  Q_PROPERTY(int udpPort READ getUdpPort WRITE setTcpPort NOTIFY preferencesChangedSignal)
+  Q_PROPERTY(int udpPort READ getUdpPort WRITE setUdpPort NOTIFY udpPortChangedSignal)
   Q_PROPERTY(bool udpEnabled READ isUdpEnabled WRITE setUdpEnabled NOTIFY preferencesChangedSignal)
   Q_PROPERTY(int udpAdvertisedPort READ getUdpAdvertisedPort WRITE setUdpAdvertisedPort NOTIFY preferencesChangedSignal)
   Q_PROPERTY(int udpMaxSpeed READ getUdpMaxSpeed WRITE setUdpMaxSpeed NOTIFY preferencesChangedSignal)
@@ -230,7 +231,22 @@ public:
   {
 
     setValue("core/setNextCheckDate",date);
+    emit setNextCheckDateChangedSignal(date);
   }
+
+  bool showMinimizeToTrayDialog()
+  {
+
+    return value("core/showMinimizeToTrayDialog",true).toBool();
+  }
+
+  void setShowMinimizeToTrayDialog(bool flag)
+  {
+
+    setValue("core/showMinimizeToTrayDialog",flag);
+    emit showMinimizeToTrayDialogChangedSignal(flag);
+  }
+
 
   bool minimizeToTray()
   {
@@ -519,7 +535,7 @@ public:
   void setUdpPort(int port)
   {
     setValue("core/network/udp/port",port);
-    emit preferencesChangedSignal();
+    emit udpPortChangedSignal(port);
   }
 
   bool isUdpEnabled() const
@@ -1141,6 +1157,8 @@ signals:
    *
    */
   void checkNewVersionChangedSignal(bool flag);
+  void setNextCheckDateChangedSignal(QString date);
+  void showMinimizeToTrayDialogChangedSignal(bool flag);
   void minimizeToTrayChangedSignal(bool flag);
 
 
@@ -1204,6 +1222,7 @@ signals:
   void transportPortChangedSignal(int port);
 
   void tcpTimeoutChangedSignal(int timeout);
+  void udpPortChangedSignal(int port);
 
 
 public slots:

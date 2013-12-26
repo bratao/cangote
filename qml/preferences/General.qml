@@ -23,6 +23,15 @@ Item {
         }
 
         CheckBox{
+            text: "Show Minimize to System Tray dialog"
+            checked: Preferences.showMinimizeToTrayDialog
+            onCheckedChanged: {
+                Preferences.showMinimizeToTrayDialog = checked
+            }
+        }
+
+
+        CheckBox{
             text: "Minimize to System Tray"
             checked: Preferences.minimizeToTray
             onCheckedChanged: {

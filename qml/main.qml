@@ -50,7 +50,7 @@ ApplicationWindow {
                 text: qsTr("My Info");
                 onTriggered: {
                     var myInfo = Qt.createComponent("Network/MyInfo.qml");
-                    var myInfoWnd = myInfo.createObject();
+                    var myInfoWnd = myInfo.createObject(root);
 
                     myInfoWnd.show();
                 }
@@ -59,7 +59,7 @@ ApplicationWindow {
                 text: qsTr("Add new peer");
                 onTriggered: {
                     var addPeer = Qt.createComponent("Network/AddPeer.qml");
-                    var addPeerWnd = addPeer.createObject();
+                    var addPeerWnd = addPeer.createObject(root);
 
                     addPeerWnd.show();
                 }
