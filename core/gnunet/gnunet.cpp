@@ -54,11 +54,6 @@ void GNUNet::mainLoopCallback(void *cls, char *const *args, const char *cfgfile,
 
 }
 
-static void
-teste (void *cls, const struct GNUNET_SCHEDULER_TaskContext *tc)
-{
-
-}
 
 /**
  * Static function
