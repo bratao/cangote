@@ -1,0 +1,296 @@
+The system is: Windows - 6.2 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: C:/sbuild/mingw/bin/gcc.exe 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
+
+The C compiler identification is GNU, found in "E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/2.8.11/CompilerIdC/a.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: C:/sbuild/mingw/bin/g++.exe 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
+
+The CXX compiler identification is GNU, found in "E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/2.8.11/CompilerIdCXX/a.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:/sbuild/mingw/bin/mingw32-make.exe "cmTryCompileExec2472349582/fast"
+C:/sbuild/mingw/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec2472349582.dir\build.make CMakeFiles/cmTryCompileExec2472349582.dir/build
+mingw32-make.exe[1]: Entering directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+C:\sbuild\mingw\bin\cmake.exe -E cmake_progress_report "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\CMakeFiles" 1
+Building C object CMakeFiles/cmTryCompileExec2472349582.dir/testCCompiler.c.obj
+C:\sbuild\mingw\bin\gcc.exe    -o CMakeFiles\cmTryCompileExec2472349582.dir\testCCompiler.c.obj   -c "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\testCCompiler.c"
+Linking C executable cmTryCompileExec2472349582.exe
+C:\sbuild\mingw\bin\cmake.exe -E cmake_link_script CMakeFiles\cmTryCompileExec2472349582.dir\link.txt --verbose=1
+C:\sbuild\mingw\bin\cmake.exe -E remove -f CMakeFiles\cmTryCompileExec2472349582.dir/objects.a
+C:\sbuild\mingw\bin\ar.exe cr CMakeFiles\cmTryCompileExec2472349582.dir/objects.a @CMakeFiles\cmTryCompileExec2472349582.dir\objects1.rsp
+C:\sbuild\mingw\bin\gcc.exe         -Wl,--whole-archive CMakeFiles\cmTryCompileExec2472349582.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec2472349582.exe -Wl,--out-implib,libcmTryCompileExec2472349582.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
+mingw32-make.exe[1]: Leaving directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:/sbuild/mingw/bin/mingw32-make.exe "cmTryCompileExec1083216928/fast"
+C:/sbuild/mingw/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec1083216928.dir\build.make CMakeFiles/cmTryCompileExec1083216928.dir/build
+mingw32-make.exe[1]: Entering directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+C:\sbuild\mingw\bin\cmake.exe -E cmake_progress_report "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\CMakeFiles" 1
+Building C object CMakeFiles/cmTryCompileExec1083216928.dir/CMakeCCompilerABI.c.obj
+C:\sbuild\mingw\bin\gcc.exe    -o CMakeFiles\cmTryCompileExec1083216928.dir\CMakeCCompilerABI.c.obj   -c C:\sbuild\mingw\share\cmake-2.8\Modules\CMakeCCompilerABI.c
+Linking C executable cmTryCompileExec1083216928.exe
+C:\sbuild\mingw\bin\cmake.exe -E cmake_link_script CMakeFiles\cmTryCompileExec1083216928.dir\link.txt --verbose=1
+C:\sbuild\mingw\bin\cmake.exe -E remove -f CMakeFiles\cmTryCompileExec1083216928.dir/objects.a
+C:\sbuild\mingw\bin\ar.exe cr CMakeFiles\cmTryCompileExec1083216928.dir/objects.a @CMakeFiles\cmTryCompileExec1083216928.dir\objects1.rsp
+C:\sbuild\mingw\bin\gcc.exe       -v -Wl,--whole-archive CMakeFiles\cmTryCompileExec1083216928.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec1083216928.exe -Wl,--out-implib,libcmTryCompileExec1083216928.dll.a -Wl,--major-image-version,0,--minor-image-version,0   
+Using built-in specs.
+COLLECT_GCC=C:\sbuild\mingw\bin\gcc.exe
+COLLECT_LTO_WRAPPER=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/lto-wrapper.exe
+Target: i686-w64-mingw32
+Configured with: ../gcc-4.8.2/configure --host=i686-w64-mingw32 --target=i686-w64-mingw32 --enable-threads=posix --enable-cloog-backend=isl --disable-win32-registry --enable-languages=c,c++,fortran,objc,obj-c++ --enable-fully-dynamic-string --enable-libgomp --with-dwarf2 --disable-multilib --enable-sjlj-exceptions --disable-bootstrap --enable-nls -with-native-system-header-dir=/home/lrn/src/mingw-w64-mingw32-native/cross-toolchain/i686-w64-mingw32/include --prefix=/mingw --datarootdir='/mingw/share' --docdir='/mingw/share/doc/gcc/4.8.2' --sbindir='/mingw/sbin' --libexecdir='/mingw/libexec' --sysconfdir=/etc --localstatedir=/var STRIP=true CFLAGS='-g -O2'
+Thread model: posix
+gcc version 4.8.2 (GCC) 
+COMPILER_PATH=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/;c:/sbuild/mingw/bin/../libexec/gcc/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/bin/
+LIBRARY_PATH=c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/;c:/sbuild/mingw/bin/../lib/gcc/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec1083216928.exe' '-mtune=generic' '-march=pentiumpro'
+ c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/collect2.exe -m i386pe -Bdynamic -o cmTryCompileExec1083216928.exe c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/crt2.o c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtbegin.o -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2 -Lc:/sbuild/mingw/bin/../lib/gcc -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../.. --whole-archive CMakeFiles\cmTryCompileExec1083216928.dir/objects.a --no-whole-archive --out-implib libcmTryCompileExec1083216928.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmoldname -lmingwex -lmsvcrt -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc -lgcc_eh -lmoldname -lmingwex -lmsvcrt c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtend.o
+mingw32-make.exe[1]: Leaving directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld.exe|ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:C:/sbuild/mingw/bin/mingw32-make.exe "cmTryCompileExec1083216928/fast"]
+  ignore line: [C:/sbuild/mingw/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec1083216928.dir\build.make CMakeFiles/cmTryCompileExec1083216928.dir/build]
+  ignore line: [mingw32-make.exe[1]: Entering directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp']
+  ignore line: [C:\sbuild\mingw\bin\cmake.exe -E cmake_progress_report "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\CMakeFiles" 1]
+  ignore line: [Building C object CMakeFiles/cmTryCompileExec1083216928.dir/CMakeCCompilerABI.c.obj]
+  ignore line: [C:\sbuild\mingw\bin\gcc.exe    -o CMakeFiles\cmTryCompileExec1083216928.dir\CMakeCCompilerABI.c.obj   -c C:\sbuild\mingw\share\cmake-2.8\Modules\CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTryCompileExec1083216928.exe]
+  ignore line: [C:\sbuild\mingw\bin\cmake.exe -E cmake_link_script CMakeFiles\cmTryCompileExec1083216928.dir\link.txt --verbose=1]
+  ignore line: [C:\sbuild\mingw\bin\cmake.exe -E remove -f CMakeFiles\cmTryCompileExec1083216928.dir/objects.a]
+  ignore line: [C:\sbuild\mingw\bin\ar.exe cr CMakeFiles\cmTryCompileExec1083216928.dir/objects.a @CMakeFiles\cmTryCompileExec1083216928.dir\objects1.rsp]
+  ignore line: [C:\sbuild\mingw\bin\gcc.exe       -v -Wl,--whole-archive CMakeFiles\cmTryCompileExec1083216928.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec1083216928.exe -Wl,--out-implib,libcmTryCompileExec1083216928.dll.a -Wl,--major-image-version,0,--minor-image-version,0   ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=C:\sbuild\mingw\bin\gcc.exe]
+  ignore line: [COLLECT_LTO_WRAPPER=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/lto-wrapper.exe]
+  ignore line: [Target: i686-w64-mingw32]
+  ignore line: [Configured with: ../gcc-4.8.2/configure --host=i686-w64-mingw32 --target=i686-w64-mingw32 --enable-threads=posix --enable-cloog-backend=isl --disable-win32-registry --enable-languages=c,c++,fortran,objc,obj-c++ --enable-fully-dynamic-string --enable-libgomp --with-dwarf2 --disable-multilib --enable-sjlj-exceptions --disable-bootstrap --enable-nls -with-native-system-header-dir=/home/lrn/src/mingw-w64-mingw32-native/cross-toolchain/i686-w64-mingw32/include --prefix=/mingw --datarootdir='/mingw/share' --docdir='/mingw/share/doc/gcc/4.8.2' --sbindir='/mingw/sbin' --libexecdir='/mingw/libexec' --sysconfdir=/etc --localstatedir=/var STRIP=true CFLAGS='-g -O2']
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 4.8.2 (GCC) ]
+  ignore line: [COMPILER_PATH=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/]
+  ignore line: [c:/sbuild/mingw/bin/../libexec/gcc/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/bin/]
+  ignore line: [LIBRARY_PATH=c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec1083216928.exe' '-mtune=generic' '-march=pentiumpro']
+  link line: [ c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/collect2.exe -m i386pe -Bdynamic -o cmTryCompileExec1083216928.exe c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/crt2.o c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtbegin.o -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2 -Lc:/sbuild/mingw/bin/../lib/gcc -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../.. --whole-archive CMakeFiles\cmTryCompileExec1083216928.dir/objects.a --no-whole-archive --out-implib libcmTryCompileExec1083216928.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmoldname -lmingwex -lmsvcrt -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc -lgcc_eh -lmoldname -lmingwex -lmsvcrt c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtend.o]
+    arg [c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/collect2.exe] ==> ignore
+    arg [-m] ==> ignore
+    arg [i386pe] ==> ignore
+    arg [-Bdynamic] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec1083216928.exe] ==> ignore
+    arg [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/crt2.o] ==> ignore
+    arg [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtbegin.o] ==> ignore
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc] ==> dir [c:/sbuild/mingw/bin/../lib/gcc]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../..] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../..]
+    arg [--whole-archive] ==> ignore
+    arg [CMakeFiles\cmTryCompileExec1083216928.dir/objects.a] ==> ignore
+    arg [--no-whole-archive] ==> ignore
+    arg [--out-implib] ==> ignore
+    arg [libcmTryCompileExec1083216928.dll.a] ==> ignore
+    arg [--major-image-version] ==> ignore
+    arg [0] ==> ignore
+    arg [--minor-image-version] ==> ignore
+    arg [0] ==> ignore
+    arg [-lmingw32] ==> lib [mingw32]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc_eh] ==> lib [gcc_eh]
+    arg [-lmoldname] ==> lib [moldname]
+    arg [-lmingwex] ==> lib [mingwex]
+    arg [-lmsvcrt] ==> lib [msvcrt]
+    arg [-lpthread] ==> lib [pthread]
+    arg [-ladvapi32] ==> lib [advapi32]
+    arg [-lshell32] ==> lib [shell32]
+    arg [-luser32] ==> lib [user32]
+    arg [-lkernel32] ==> lib [kernel32]
+    arg [-lmingw32] ==> lib [mingw32]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc_eh] ==> lib [gcc_eh]
+    arg [-lmoldname] ==> lib [moldname]
+    arg [-lmingwex] ==> lib [mingwex]
+    arg [-lmsvcrt] ==> lib [msvcrt]
+    arg [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtend.o] ==> ignore
+  remove lib [gcc]
+  remove lib [gcc_eh]
+  remove lib [gcc]
+  remove lib [gcc_eh]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2] ==> [c:/sbuild/mingw/lib/gcc/i686-w64-mingw32/4.8.2]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc] ==> [c:/sbuild/mingw/lib/gcc]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib] ==> [c:/sbuild/mingw/i686-w64-mingw32/lib]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib] ==> [c:/sbuild/mingw/lib]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib] ==> [c:/sbuild/mingw/i686-w64-mingw32/lib]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../..] ==> [c:/sbuild/mingw/lib]
+  implicit libs: [mingw32;moldname;mingwex;msvcrt;pthread;advapi32;shell32;user32;kernel32;mingw32;moldname;mingwex;msvcrt]
+  implicit dirs: [c:/sbuild/mingw/lib/gcc/i686-w64-mingw32/4.8.2;c:/sbuild/mingw/lib/gcc;c:/sbuild/mingw/i686-w64-mingw32/lib;c:/sbuild/mingw/lib]
+  implicit fwks: []
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:/sbuild/mingw/bin/mingw32-make.exe "cmTryCompileExec447629093/fast"
+C:/sbuild/mingw/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec447629093.dir\build.make CMakeFiles/cmTryCompileExec447629093.dir/build
+mingw32-make.exe[1]: Entering directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+C:\sbuild\mingw\bin\cmake.exe -E cmake_progress_report "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\CMakeFiles" 1
+Building CXX object CMakeFiles/cmTryCompileExec447629093.dir/testCXXCompiler.cxx.obj
+C:\sbuild\mingw\bin\g++.exe     -o CMakeFiles\cmTryCompileExec447629093.dir\testCXXCompiler.cxx.obj -c "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+Linking CXX executable cmTryCompileExec447629093.exe
+C:\sbuild\mingw\bin\cmake.exe -E cmake_link_script CMakeFiles\cmTryCompileExec447629093.dir\link.txt --verbose=1
+C:\sbuild\mingw\bin\cmake.exe -E remove -f CMakeFiles\cmTryCompileExec447629093.dir/objects.a
+C:\sbuild\mingw\bin\ar.exe cr CMakeFiles\cmTryCompileExec447629093.dir/objects.a @CMakeFiles\cmTryCompileExec447629093.dir\objects1.rsp
+C:\sbuild\mingw\bin\g++.exe         -Wl,--whole-archive CMakeFiles\cmTryCompileExec447629093.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec447629093.exe -Wl,--out-implib,libcmTryCompileExec447629093.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
+mingw32-make.exe[1]: Leaving directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:/sbuild/mingw/bin/mingw32-make.exe "cmTryCompileExec662157086/fast"
+C:/sbuild/mingw/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec662157086.dir\build.make CMakeFiles/cmTryCompileExec662157086.dir/build
+mingw32-make.exe[1]: Entering directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+C:\sbuild\mingw\bin\cmake.exe -E cmake_progress_report "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\CMakeFiles" 1
+Building CXX object CMakeFiles/cmTryCompileExec662157086.dir/CMakeCXXCompilerABI.cpp.obj
+C:\sbuild\mingw\bin\g++.exe     -o CMakeFiles\cmTryCompileExec662157086.dir\CMakeCXXCompilerABI.cpp.obj -c C:\sbuild\mingw\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTryCompileExec662157086.exe
+C:\sbuild\mingw\bin\cmake.exe -E cmake_link_script CMakeFiles\cmTryCompileExec662157086.dir\link.txt --verbose=1
+C:\sbuild\mingw\bin\cmake.exe -E remove -f CMakeFiles\cmTryCompileExec662157086.dir/objects.a
+C:\sbuild\mingw\bin\ar.exe cr CMakeFiles\cmTryCompileExec662157086.dir/objects.a @CMakeFiles\cmTryCompileExec662157086.dir\objects1.rsp
+C:\sbuild\mingw\bin\g++.exe       -v -Wl,--whole-archive CMakeFiles\cmTryCompileExec662157086.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec662157086.exe -Wl,--out-implib,libcmTryCompileExec662157086.dll.a -Wl,--major-image-version,0,--minor-image-version,0   
+Using built-in specs.
+COLLECT_GCC=C:\sbuild\mingw\bin\g++.exe
+COLLECT_LTO_WRAPPER=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/lto-wrapper.exe
+Target: i686-w64-mingw32
+Configured with: ../gcc-4.8.2/configure --host=i686-w64-mingw32 --target=i686-w64-mingw32 --enable-threads=posix --enable-cloog-backend=isl --disable-win32-registry --enable-languages=c,c++,fortran,objc,obj-c++ --enable-fully-dynamic-string --enable-libgomp --with-dwarf2 --disable-multilib --enable-sjlj-exceptions --disable-bootstrap --enable-nls -with-native-system-header-dir=/home/lrn/src/mingw-w64-mingw32-native/cross-toolchain/i686-w64-mingw32/include --prefix=/mingw --datarootdir='/mingw/share' --docdir='/mingw/share/doc/gcc/4.8.2' --sbindir='/mingw/sbin' --libexecdir='/mingw/libexec' --sysconfdir=/etc --localstatedir=/var STRIP=true CFLAGS='-g -O2'
+Thread model: posix
+gcc version 4.8.2 (GCC) 
+COMPILER_PATH=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/;c:/sbuild/mingw/bin/../libexec/gcc/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/bin/
+LIBRARY_PATH=c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/;c:/sbuild/mingw/bin/../lib/gcc/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/;c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec662157086.exe' '-shared-libgcc' '-mtune=generic' '-march=pentiumpro'
+ c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/collect2.exe -m i386pe -Bdynamic -o cmTryCompileExec662157086.exe c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/crt2.o c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtbegin.o -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2 -Lc:/sbuild/mingw/bin/../lib/gcc -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../.. --whole-archive CMakeFiles\cmTryCompileExec662157086.dir/objects.a --no-whole-archive --out-implib libcmTryCompileExec662157086.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtend.o
+mingw32-make.exe[1]: Leaving directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp'
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld.exe|ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:C:/sbuild/mingw/bin/mingw32-make.exe "cmTryCompileExec662157086/fast"]
+  ignore line: [C:/sbuild/mingw/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec662157086.dir\build.make CMakeFiles/cmTryCompileExec662157086.dir/build]
+  ignore line: [mingw32-make.exe[1]: Entering directory 'E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/CMakeTmp']
+  ignore line: [C:\sbuild\mingw\bin\cmake.exe -E cmake_progress_report "E:\Projetos\Meus Projetos\Cangote\Software\Qt Cangote\cangote\third-party\Qglitter\QGlitter-build\CMakeFiles\CMakeTmp\CMakeFiles" 1]
+  ignore line: [Building CXX object CMakeFiles/cmTryCompileExec662157086.dir/CMakeCXXCompilerABI.cpp.obj]
+  ignore line: [C:\sbuild\mingw\bin\g++.exe     -o CMakeFiles\cmTryCompileExec662157086.dir\CMakeCXXCompilerABI.cpp.obj -c C:\sbuild\mingw\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTryCompileExec662157086.exe]
+  ignore line: [C:\sbuild\mingw\bin\cmake.exe -E cmake_link_script CMakeFiles\cmTryCompileExec662157086.dir\link.txt --verbose=1]
+  ignore line: [C:\sbuild\mingw\bin\cmake.exe -E remove -f CMakeFiles\cmTryCompileExec662157086.dir/objects.a]
+  ignore line: [C:\sbuild\mingw\bin\ar.exe cr CMakeFiles\cmTryCompileExec662157086.dir/objects.a @CMakeFiles\cmTryCompileExec662157086.dir\objects1.rsp]
+  ignore line: [C:\sbuild\mingw\bin\g++.exe       -v -Wl,--whole-archive CMakeFiles\cmTryCompileExec662157086.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec662157086.exe -Wl,--out-implib,libcmTryCompileExec662157086.dll.a -Wl,--major-image-version,0,--minor-image-version,0   ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=C:\sbuild\mingw\bin\g++.exe]
+  ignore line: [COLLECT_LTO_WRAPPER=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/lto-wrapper.exe]
+  ignore line: [Target: i686-w64-mingw32]
+  ignore line: [Configured with: ../gcc-4.8.2/configure --host=i686-w64-mingw32 --target=i686-w64-mingw32 --enable-threads=posix --enable-cloog-backend=isl --disable-win32-registry --enable-languages=c,c++,fortran,objc,obj-c++ --enable-fully-dynamic-string --enable-libgomp --with-dwarf2 --disable-multilib --enable-sjlj-exceptions --disable-bootstrap --enable-nls -with-native-system-header-dir=/home/lrn/src/mingw-w64-mingw32-native/cross-toolchain/i686-w64-mingw32/include --prefix=/mingw --datarootdir='/mingw/share' --docdir='/mingw/share/doc/gcc/4.8.2' --sbindir='/mingw/sbin' --libexecdir='/mingw/libexec' --sysconfdir=/etc --localstatedir=/var STRIP=true CFLAGS='-g -O2']
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 4.8.2 (GCC) ]
+  ignore line: [COMPILER_PATH=c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/]
+  ignore line: [c:/sbuild/mingw/bin/../libexec/gcc/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/bin/]
+  ignore line: [LIBRARY_PATH=c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/]
+  ignore line: [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec662157086.exe' '-shared-libgcc' '-mtune=generic' '-march=pentiumpro']
+  link line: [ c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/collect2.exe -m i386pe -Bdynamic -o cmTryCompileExec662157086.exe c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/crt2.o c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtbegin.o -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2 -Lc:/sbuild/mingw/bin/../lib/gcc -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib -Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../.. --whole-archive CMakeFiles\cmTryCompileExec662157086.dir/objects.a --no-whole-archive --out-implib libcmTryCompileExec662157086.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc_s -lgcc -lmoldname -lmingwex -lmsvcrt c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtend.o]
+    arg [c:/sbuild/mingw/bin/../libexec/gcc/i686-w64-mingw32/4.8.2/collect2.exe] ==> ignore
+    arg [-m] ==> ignore
+    arg [i386pe] ==> ignore
+    arg [-Bdynamic] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec662157086.exe] ==> ignore
+    arg [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib/crt2.o] ==> ignore
+    arg [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtbegin.o] ==> ignore
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc] ==> dir [c:/sbuild/mingw/bin/../lib/gcc]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib]
+    arg [-Lc:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../..] ==> dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../..]
+    arg [--whole-archive] ==> ignore
+    arg [CMakeFiles\cmTryCompileExec662157086.dir/objects.a] ==> ignore
+    arg [--no-whole-archive] ==> ignore
+    arg [--out-implib] ==> ignore
+    arg [libcmTryCompileExec662157086.dll.a] ==> ignore
+    arg [--major-image-version] ==> ignore
+    arg [0] ==> ignore
+    arg [--minor-image-version] ==> ignore
+    arg [0] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lmingw32] ==> lib [mingw32]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lmoldname] ==> lib [moldname]
+    arg [-lmingwex] ==> lib [mingwex]
+    arg [-lmsvcrt] ==> lib [msvcrt]
+    arg [-lpthread] ==> lib [pthread]
+    arg [-ladvapi32] ==> lib [advapi32]
+    arg [-lshell32] ==> lib [shell32]
+    arg [-luser32] ==> lib [user32]
+    arg [-lkernel32] ==> lib [kernel32]
+    arg [-lmingw32] ==> lib [mingw32]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lmoldname] ==> lib [moldname]
+    arg [-lmingwex] ==> lib [mingwex]
+    arg [-lmsvcrt] ==> lib [msvcrt]
+    arg [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/crtend.o] ==> ignore
+  remove lib [gcc_s]
+  remove lib [gcc]
+  remove lib [gcc_s]
+  remove lib [gcc]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2] ==> [c:/sbuild/mingw/lib/gcc/i686-w64-mingw32/4.8.2]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc] ==> [c:/sbuild/mingw/lib/gcc]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib/../lib] ==> [c:/sbuild/mingw/i686-w64-mingw32/lib]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../lib] ==> [c:/sbuild/mingw/lib]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../../../i686-w64-mingw32/lib] ==> [c:/sbuild/mingw/i686-w64-mingw32/lib]
+  collapse library dir [c:/sbuild/mingw/bin/../lib/gcc/i686-w64-mingw32/4.8.2/../../..] ==> [c:/sbuild/mingw/lib]
+  implicit libs: [stdc++;mingw32;moldname;mingwex;msvcrt;pthread;advapi32;shell32;user32;kernel32;mingw32;moldname;mingwex;msvcrt]
+  implicit dirs: [c:/sbuild/mingw/lib/gcc/i686-w64-mingw32/4.8.2;c:/sbuild/mingw/lib/gcc;c:/sbuild/mingw/i686-w64-mingw32/lib;c:/sbuild/mingw/lib]
+  implicit fwks: []
+
+

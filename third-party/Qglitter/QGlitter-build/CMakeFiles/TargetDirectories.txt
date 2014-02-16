@@ -1,0 +1,2 @@
+E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/qglitter.dir
+E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter-build/CMakeFiles/qglitter_automoc.dir

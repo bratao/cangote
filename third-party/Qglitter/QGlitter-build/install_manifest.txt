@@ -1,0 +1,7 @@
+C:/Program Files (x86)/QGLITTER/include/QGlitter/QGlitter
+C:/Program Files (x86)/QGLITTER/include/QGlitter/QGlitterAppcast.h
+C:/Program Files (x86)/QGLITTER/include/QGlitter/QGlitterAppcastItem.h
+C:/Program Files (x86)/QGLITTER/include/QGlitter/QGlitterConfig.h
+C:/Program Files (x86)/QGLITTER/include/QGlitter/QGlitterObject.h
+C:/Program Files (x86)/QGLITTER/include/QGlitter/QGlitterUpdater.h
+C:/Program Files (x86)/QGLITTER/bin/libqglitter.dll.a

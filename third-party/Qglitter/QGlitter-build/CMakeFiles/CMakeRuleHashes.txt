@@ -1,0 +1,5 @@
+# Hashes of file build rules.
+79436c76b79eb8374fdf63f06fd8cade CMakeFiles/qglitter_automoc
+b4e420a49a528e569c5b2f4cff67ba5f ui_QGlitterAutomaticUpdateAlert.h
+8319b399c315275ff69036681500de92 ui_QGlitterUpdateAlert.h
+7630fe7d34c625de106274947f9e61b7 ui_QGlitterUpdateStatus.h

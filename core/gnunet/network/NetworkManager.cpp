@@ -30,8 +30,8 @@
 
 //Struct that join
 struct PeerAddressStringConversionConteiner{
-  NetworkManager* networkInstance;
-  QString id;
+    NetworkManager* networkInstance;
+    QString id;
 };
 
 
@@ -45,10 +45,10 @@ struct PeerAddressStringConversionConteiner{
 void NetworkManager::checkNseMessageCallback (void *cls, struct GNUNET_TIME_Absolute timestamp,
                                               double estimate, double std_dev)
 {
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
-  networkInstance->checkNseMessage(timestamp,estimate,std_dev);
+    networkInstance->checkNseMessage(timestamp,estimate,std_dev);
 }
 
 
@@ -63,13 +63,13 @@ int NetworkManager::incomeMsgCallback (void *cls,
                                        message)
 {
 
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
 
-  networkInstance->incomeMsg(other,message);
+    networkInstance->incomeMsg(other,message);
 
-  return GNUNET_OK;
+    return GNUNET_OK;
 
 }
 
@@ -84,13 +84,13 @@ int NetworkManager::outcomeMsgCallback (void *cls,
                                         message)
 {
 
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
 
-  networkInstance->outcomeMsg(other,message);
+    networkInstance->outcomeMsg(other,message);
 
-  return GNUNET_OK;
+    return GNUNET_OK;
 
 }
 /**
@@ -100,10 +100,10 @@ int NetworkManager::outcomeMsgCallback (void *cls,
 void
 NetworkManager::notifyConnectCallback (void *cls, const struct GNUNET_PeerIdentity *peer)
 {
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
-  networkInstance->notifyConnect(peer);
+    networkInstance->notifyConnect(peer);
 }
 
 /**
@@ -112,11 +112,11 @@ NetworkManager::notifyConnectCallback (void *cls, const struct GNUNET_PeerIdenti
 void
 NetworkManager::notifyDisconnectCallback(void *cls, const struct GNUNET_PeerIdentity *peer)
 {
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
 
-  networkInstance->notifyDisconnect(peer);
+    networkInstance->notifyDisconnect(peer);
 }
 
 /**
@@ -126,10 +126,10 @@ void
 NetworkManager::gotActiveAddressCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
                                           const struct GNUNET_HELLO_Address *address)
 {
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
-  networkInstance->gotActiveAddress(peer,address);
+    networkInstance->gotActiveAddress(peer,address);
 }
 
 
@@ -140,10 +140,10 @@ void NetworkManager::peerinfoProcessorCallback (void *cls, const struct GNUNET_P
                                                 const struct GNUNET_HELLO_Message *hello,
                                                 const char *err_msg)
 {
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
-  networkInstance->peerinfoProcessor(peer, hello, err_msg);
+    networkInstance->peerinfoProcessor(peer, hello, err_msg);
 }
 
 /**
@@ -159,10 +159,10 @@ void NetworkManager::ATSstatusChangeCallback (void *cls,
                                               uint32_t ats_count)
 {
 
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
-  networkInstance->peerATSstatusChange(address,address_active, bandwidth_in, bandwidth_out, ats,ats_count);
+    networkInstance->peerATSstatusChange(address,address_active, bandwidth_in, bandwidth_out, ats,ats_count);
 
 }
 
@@ -172,11 +172,11 @@ void NetworkManager::ATSstatusChangeCallback (void *cls,
 void NetworkManager::peerAddressCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
                                           const struct GNUNET_HELLO_Address *address)
 {
-  NetworkManager* networkInstance = (NetworkManager*)cls;
-  Q_ASSERT(networkInstance);
+    NetworkManager* networkInstance = (NetworkManager*)cls;
+    Q_ASSERT(networkInstance);
 
 
-  networkInstance->newPeerAddress(peer,address);
+    networkInstance->newPeerAddress(peer,address);
 }
 
 /**
@@ -184,14 +184,14 @@ void NetworkManager::peerAddressCallback (void *cls, const struct GNUNET_PeerIde
  */
 void NetworkManager::peerAddressStringConvertCallback (void *cls, const char *address)
 {
-  PeerAddressStringConversionConteiner* peersinfoConteiner = (PeerAddressStringConversionConteiner*)cls;
-  Q_ASSERT(peersinfoConteiner);
+    PeerAddressStringConversionConteiner* peersinfoConteiner = (PeerAddressStringConversionConteiner*)cls;
+    Q_ASSERT(peersinfoConteiner);
 
 
-  peersinfoConteiner->networkInstance->peerNewAddressString(peersinfoConteiner->id,address);
+    peersinfoConteiner->networkInstance->peerNewAddressString(peersinfoConteiner->id,address);
 
-  //FIXME:: I need to delete this conteiner ! Doing here will crash !
-  //delete peersinfoConteiner;
+    //FIXME:: I need to delete this conteiner ! Doing here will crash !
+    //delete peersinfoConteiner;
 }
 
 
@@ -201,19 +201,19 @@ void NetworkManager::peerAddressStringConvertCallback (void *cls, const char *ad
 
 
 NetworkManager::NetworkManager(QObject *parent) :
-  ServiceObject(parent)
+    ServiceObject(parent)
 {
 
-  m_connectedPeers = 0;
-  m_numEstimateNodes = 0;
-  m_nextBandwidthRetrive = QTime::currentTime();
+    m_connectedPeers = 0;
+    m_numEstimateNodes = 0;
+    m_nextBandwidthRetrive = QTime::currentTime();
 
-  connect(this,&NetworkManager::putHelloSignal,this,&NetworkManager::putHelloSlot);
+    connect(this,&NetworkManager::putHelloSignal,this,&NetworkManager::putHelloSlot);
 
-  connect(this, &NetworkManager::estimatedNodesChanged, theApp->status(), &Status::setEstimatedNodes, Qt::QueuedConnection);
-  connect(this, &NetworkManager::outgoingBandChanged, theApp->status(), &Status::setOutgoingBand, Qt::QueuedConnection);
-  connect(this, &NetworkManager::incomingBandChanged, theApp->status(), &Status::setIncomingBand, Qt::QueuedConnection);
-  connect(this, &NetworkManager::myHelloStrChanged, theApp->status(), &Status::setMyHelloStr, Qt::QueuedConnection);
+    connect(this, &NetworkManager::estimatedNodesChanged, theApp->status(), &Status::setEstimatedNodes, Qt::QueuedConnection);
+    connect(this, &NetworkManager::outgoingBandChanged, theApp->status(), &Status::setOutgoingBand, Qt::QueuedConnection);
+    connect(this, &NetworkManager::incomingBandChanged, theApp->status(), &Status::setIncomingBand, Qt::QueuedConnection);
+    connect(this, &NetworkManager::myHelloStrChanged, theApp->status(), &Status::setMyHelloStr, Qt::QueuedConnection);
 
 }
 
@@ -229,10 +229,10 @@ static void
 add_continuation (void *cls,
                   const char *emsg)
 {
-  if (NULL != emsg)
-    fprintf (stderr,
-             _("Failure adding HELLO: %s\n"),
-             emsg);
+    if (NULL != emsg)
+        fprintf (stderr,
+                 _("Failure adding HELLO: %s\n"),
+                 emsg);
 
 }
 
@@ -244,26 +244,26 @@ add_continuation (void *cls,
 void NetworkManager::putHelloSlot (QString helloUrl)
 {
 
-  struct GNUNET_HELLO_Message *hello = NULL;
+    struct GNUNET_HELLO_Message *hello = NULL;
 
-  const char *put_uri = helloUrl.toUtf8().constData();
+    const char *put_uri = helloUrl.toUtf8().constData();
 
 
 
-  GNUNET_CRYPTO_EddsaPublicKey mypublickey = theApp->gnunet()->myPeer()->public_key;
+    GNUNET_CRYPTO_EddsaPublicKey mypublickey = theApp->gnunet()->myPeer()->public_key;
 
-  int ret = GNUNET_HELLO_parse_uri(put_uri, &mypublickey, &hello, &m_gnunetTransportPlugins->GPI_plugins_find);
+    int ret = GNUNET_HELLO_parse_uri(put_uri, &mypublickey, &hello, &m_gnunetTransportPlugins->GPI_plugins_find);
 
-  if (NULL != hello) {
-      // WARNING: this adds the address from URI WITHOUT verification!
-      if (GNUNET_OK == ret)
-        GNUNET_PEERINFO_add_peer (m_peerInfo, hello, &add_continuation, NULL);
+    if (NULL != hello) {
+        // WARNING: this adds the address from URI WITHOUT verification!
+        if (GNUNET_OK == ret)
+            GNUNET_PEERINFO_add_peer (m_peerInfo, hello, &add_continuation, NULL);
 
-      GNUNET_free (hello);
+        GNUNET_free (hello);
     }
-  else
+    else
     {
-      qWarning() << tr("Failed to process the url");
+        qWarning() << tr("Failed to process the url");
     }
 
 
@@ -272,7 +272,7 @@ void NetworkManager::putHelloSlot (QString helloUrl)
 void NetworkManager::putHello (QString helloUrl)
 {
 
-  emit putHelloSignal(helloUrl);
+    emit putHelloSignal(helloUrl);
 }
 
 
@@ -281,50 +281,63 @@ void NetworkManager::putHello (QString helloUrl)
  */
 void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
 {
-  m_config = config;
+    m_config = config;
 
 
-  //Connect to peerinfo
-  if (NULL == (m_peerInfo = GNUNET_PEERINFO_connect (config)))
+    //Connect to peerinfo
+    if (NULL == (m_peerInfo = GNUNET_PEERINFO_connect (config)))
     {
-      qWarning("Failed to connect to PeerInfo service");
+        qWarning("Failed to connect to PeerInfo service");
     }
 
-  //Initialize transport plugins
-  m_gnunetTransportPlugins = new GnunetTransportPlugins(config,this);
+    //Initialize transport plugins
+    m_gnunetTransportPlugins = new GnunetTransportPlugins(config,this);
 
-  //Connect to peerinfo notifications
-  m_peerInfoNotify =   GNUNET_PEERINFO_notify (config,NULL, peerinfoProcessorCallback, this);
-
-
-  if (m_peerInfoNotify == NULL) {
-      qWarning("Failed to connect to PeerInfo Notify service");
+    //Connect to peerinfo notifications
+    m_peerInfoNotify =   GNUNET_PEERINFO_notify (config, NULL, peerinfoProcessorCallback, this);
+    if (m_peerInfoNotify == NULL) {
+        qWarning("Failed to connect to PeerInfo Notify service");
     }
 
-  //Connect to the ats service
-  m_ats = GNUNET_ATS_performance_init (config, ATSstatusChangeCallback, this);
-  if (m_ats == NULL) {
-      qWarning("Failed to connect to ATS service");
-      //status->setErrorState("Failed to connect to ATS service");
+    //Connect to the ats service
+    m_ats = GNUNET_ATS_performance_init (config, ATSstatusChangeCallback, this);
+    if (m_ats == NULL) {
+        qWarning("Failed to connect to ATS service");
     }
 
-  //Connect to core to receive all income and outcome messages ( for bandwidth calculation)
-  GNUNET_CORE_connect (m_config, this, NULL,
-                       notifyConnectCallback, notifyDisconnectCallback,
-                       incomeMsgCallback, GNUNET_YES, outcomeMsgCallback, GNUNET_YES, NULL);
+    //Monitor peer for connected transports
+    m_peerMonitoring = GNUNET_TRANSPORT_monitor_peers (config,
+                      NULL,
+                      GNUNET_NO,
+                      GNUNET_TIME_UNIT_FOREVER_REL,
+                      &transport_peer_cb,
+                      NULL);
 
-  //Inicialize NSE
-  struct GNUNET_NSE_Handle *nse;
-  nse = GNUNET_NSE_connect (config, checkNseMessageCallback, this);
+    //Monitor peer for validated transports
+    m_peerTransportValidation = GNUNET_TRANSPORT_monitor_validation_entries (config,
+                               NULL,
+                               GNUNET_NO,
+                               GNUNET_TIME_UNIT_FOREVER_REL,
+                               &validation_monitor_cb,
+                               NULL);
+
+    //Connect to core to receive all income and outcome messages ( for bandwidth calculation)
+    m_core = GNUNET_CORE_connect (m_config, this, NULL,
+                         notifyConnectCallback, notifyDisconnectCallback,
+                         incomeMsgCallback, GNUNET_YES, outcomeMsgCallback, GNUNET_YES, NULL);
+
+    //Inicialize NSE
+    struct GNUNET_NSE_Handle *nse;
+    nse = GNUNET_NSE_connect (config, checkNseMessageCallback, this);
 
 
 
 
 
 
-  if(m_peerInfoNotify && m_ats && nse)
+    if(m_peerInfoNotify && m_ats && nse)
     {
-      //status->setOkState();
+        //status->setOkState();
     }
 
 
@@ -338,32 +351,32 @@ int NetworkManager::incomeMsg (const struct GNUNET_PeerIdentity *
                                message)
 
 {
-  const char* key = GNUNET_i2s_full (other);
-  QString peerIdStr(key);
+    const char* key = GNUNET_i2s_full (other);
+    QString peerIdStr(key);
 
 
 
-  if(!theApp->models()->networkModel())
+    if(!theApp->models()->networkModel())
+        return GNUNET_OK;
+
+    Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
+
+    if(peer == NULL)
+        return GNUNET_OK;
+
+    unsigned int size;
+    unsigned int type;
+
+
+    size = ntohs(message->size);
+    type = ntohs(message->type);
+
+
+    QTime time = QTime::currentTime();
+
+    peer->addIncomingTraffic(size);
+
     return GNUNET_OK;
-
-  Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
-
-  if(peer == NULL)
-    return GNUNET_OK;
-
-  unsigned int size;
-  unsigned int type;
-
-
-  size = ntohs(message->size);
-  type = ntohs(message->type);
-
-
-  QTime time = QTime::currentTime();
-
-  peer->addIncomingTraffic(size);
-
-  return GNUNET_OK;
 }
 
 /**
@@ -378,34 +391,34 @@ int NetworkManager::outcomeMsg (const struct GNUNET_PeerIdentity *
 {
 
 
-  const char* key = GNUNET_i2s_full (other);
-  QString peerIdStr(key);
+    const char* key = GNUNET_i2s_full (other);
+    QString peerIdStr(key);
 
 
 
 
-  if(!theApp->models()->networkModel())
+    if(!theApp->models()->networkModel())
+        return GNUNET_OK;
+
+
+    Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
+
+    if(peer == NULL)
+        return GNUNET_OK;
+
+    unsigned int size;
+    unsigned int type;
+
+
+    size = ntohs(message->size);
+    type = ntohs(message->type);
+
+
+    QTime time = QTime::currentTime();
+
+    peer->addOutgoingTraffic(size);
+
     return GNUNET_OK;
-
-
-  Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
-
-  if(peer == NULL)
-    return GNUNET_OK;
-
-  unsigned int size;
-  unsigned int type;
-
-
-  size = ntohs(message->size);
-  type = ntohs(message->type);
-
-
-  QTime time = QTime::currentTime();
-
-  peer->addOutgoingTraffic(size);
-
-  return GNUNET_OK;
 }
 
 
@@ -424,48 +437,48 @@ void
 NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
 {
 
-  const char* key = GNUNET_i2s_full (peerIdent);
-  QString peerIdStr(key);
+    const char* key = GNUNET_i2s_full (peerIdent);
+    QString peerIdStr(key);
 
 
-  if(!theApp->models()->networkModel())
+    if(!theApp->models()->networkModel())
     {
 
-      qWarning() << tr("Tried to add a peer while the network model was not created");
-      return;
+        qWarning() << tr("Tried to add a peer while the network model was not created");
+        return;
     }
 
-  //Do not show my own.
-  if(theApp->gnunet()->myPublicKeyStr() == peerIdStr)
+    //Do not show my own.
+    if(theApp->gnunet()->myPublicKeyStr() == peerIdStr)
     {
 
-      GNUNET_PEERINFO_iterate (m_peerInfo, false, peerIdent,
-                               GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_SECONDS, 10)
-                               , &peerinfoProcessorCallback, this);
-      return;
-      //char *uri = GNUNET_HELLO_compose_uri(hello, &GPI_plugins_find);
+        //Call peerinfo iterate to get my own hello, to create my share-link.
+        GNUNET_PEERINFO_iterate (m_peerInfo, false, peerIdent,
+                                 GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_SECONDS, 10),
+                                &peerinfoProcessorCallback, this);
+        return;
     }
 
 
-  Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
+    Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
 
-  if(peer == NULL)
-    peer = theApp->models()->networkModel()->addNewPeer(peerIdent,peerIdStr);
-
-
-  //TODO :: Cancel the request
-  if(!peer->m_peerActiveAddressCallback)
-    peer->m_peerActiveAddressCallback = GNUNET_TRANSPORT_peer_get_active_addresses (m_config, peerIdent, GNUNET_NO,
-                                                                                    GNUNET_TIME_UNIT_FOREVER_REL,
-                                                                                    &gotActiveAddressCallback, this);
+    //If peer do not exist, create it.
+    if(peer == NULL)
+        peer = theApp->models()->networkModel()->addNewPeer(peerIdent,peerIdStr);
 
 
+    //TODO :: Cancel the request
+    if(!peer->m_peerActiveAddressCallback)
+        peer->m_peerActiveAddressCallback = GNUNET_TRANSPORT_peer_get_active_addresses (m_config, peerIdent, GNUNET_NO,
+                                                                                        GNUNET_TIME_UNIT_FOREVER_REL,
+                                                                                        &gotActiveAddressCallback, this);
 
-  //Just set as connected if the previous status was disconnected
-  if(!peer->isConnected())
-    setConnectedPeers(++m_connectedPeers);
 
-  peer->setConnected(true);
+    //Just set as connected if the previous status was disconnected
+    if(!peer->isConnected())
+        setConnectedPeers(++m_connectedPeers);
+
+    peer->setConnected(true);
 
 }
 
@@ -480,23 +493,23 @@ NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
 void
 NetworkManager::notifyDisconnect(const struct GNUNET_PeerIdentity *peerIdent)
 {
-  //struct GNUNET_CRYPTO_HashAsciiEncoded enc;
+    //struct GNUNET_CRYPTO_HashAsciiEncoded enc;
 
 
-  const char* key = GNUNET_i2s_full (peerIdent);
-  QString peerIdStr(key);
+    const char* key = GNUNET_i2s_full (peerIdent);
+    QString peerIdStr(key);
 
-  if(!theApp->models() || !theApp->models()->networkModel())
+    if(!theApp->models() || !theApp->models()->networkModel())
     {
-      qWarning() << tr("Tried to remove a peer while the network model was not created");
-      return;
+        qWarning() << tr("Tried to remove a peer while the network model was not created");
+        return;
     }
-  Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
-  if(peer == NULL)
-    return;
+    Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
+    if(peer == NULL)
+        return;
 
-  peer->setConnected(false);
-  setConnectedPeers(--m_connectedPeers);
+    peer->setConnected(false);
+    setConnectedPeers(--m_connectedPeers);
 
 
 }
@@ -517,56 +530,56 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
                                        const char *err_msg)
 {
 
-  if(peer == NULL)
+    if(peer == NULL)
     {
-      qWarning() << QString("Got a NULL peer in peerinfoProcessor. %1").arg(err_msg ? err_msg : "");
-      return;
+        qWarning() << QString("Got a NULL peer in peerinfoProcessor. %1").arg(err_msg ? err_msg : "");
+        return;
     }
 
 
-  const char* key = GNUNET_i2s_full (peer);
-  QString peerIdStr(key);
+    const char* key = GNUNET_i2s_full (peer);
+    QString peerIdStr(key);
 
 
-  if(!theApp->models()->networkModel())
+    if(!theApp->models()->networkModel())
     {
-      qWarning() << tr("Got a info about a peer while the network model was not created");
-      return;
+        qWarning() << tr("Got a info about a peer while the network model was not created");
+        return;
     }
 
 
-  //If is myself, update my Hello string to display to the user.
-  if(theApp->gnunet()->myPublicKeyStr() == peerIdStr)
+    //If is myself, update my Hello string to display to the user.
+    if(theApp->gnunet()->myPublicKeyStr() == peerIdStr)
     {
-      if(!hello)
+        if(!hello)
         {
-          qWarning() << tr("Got a info about myself without a hello");
-          return;
+            qWarning() << tr("Got a info about myself without a hello");
+            return;
         }
 
-      char *uri = GNUNET_HELLO_compose_uri(hello, &m_gnunetTransportPlugins->GPI_plugins_find);
-      setMyHelloStr(QString(uri));
-      return;
+        char *uri = GNUNET_HELLO_compose_uri(hello, &m_gnunetTransportPlugins->GPI_plugins_find);
+        setMyHelloStr(QString(uri));
+        return;
     }
 
 
-  Peer* newPeer = NULL;
+    Peer* newPeer = NULL;
 
-  if(!theApp->models()->networkModel()->contains(peerIdStr)) {
-      newPeer = theApp->models()->networkModel()->addNewPeer(peer, peerIdStr);
+    if(!theApp->models()->networkModel()->contains(peerIdStr)) {
+        newPeer = theApp->models()->networkModel()->addNewPeer(peer, peerIdStr);
     } else {
-      newPeer =theApp->models()->networkModel()->getPeer(peerIdStr);
+        newPeer =theApp->models()->networkModel()->getPeer(peerIdStr);
     }
 
-  Q_ASSERT(newPeer);
+    Q_ASSERT(newPeer);
 
 
-  //Get The address
-  if(newPeer->m_palc == NULL) {
-      newPeer->m_palc = GNUNET_TRANSPORT_peer_get_active_addresses ((const GNUNET_CONFIGURATION_Handle*)theApp->gnunet()->config(), peer,
-                                                                    GNUNET_NO,
-                                                                    GNUNET_TIME_UNIT_FOREVER_REL,
-                                                                    peerAddressCallback, this);
+    //Get The address
+    if(newPeer->m_palc == NULL) {
+        newPeer->m_palc = GNUNET_TRANSPORT_peer_get_active_addresses ((const GNUNET_CONFIGURATION_Handle*)theApp->gnunet()->config(), peer,
+                                                                      GNUNET_NO,
+                                                                      GNUNET_TIME_UNIT_FOREVER_REL,
+                                                                      peerAddressCallback, this);
     }
 
 
@@ -585,36 +598,36 @@ NetworkManager::gotActiveAddress(const struct GNUNET_PeerIdentity *peerIdent,
 
 
 
-  if (address == NULL)
+    if (address == NULL)
     {
-      qDebug() << tr("Peer removed because dont have an active address");
-      notifyDisconnect(peerIdent);
-      return;
+        qDebug() << tr("Peer removed because dont have an active address");
+        notifyDisconnect(peerIdent);
+        return;
     }
 
-  //We have an address so is connected
+    //We have an address so is connected
 
-  notifyConnect(peerIdent);
+    notifyConnect(peerIdent);
 
-  if(!theApp->models()->networkModel())
+    if(!theApp->models()->networkModel())
     {
-      qWarning() << tr("Got an active address for a peer while the network model was not created");
-      return;
+        qWarning() << tr("Got an active address for a peer while the network model was not created");
+        return;
     }
 
-  const char* key = GNUNET_i2s_full (peerIdent);
-  QString peerIdStr(key);
+    const char* key = GNUNET_i2s_full (peerIdent);
+    QString peerIdStr(key);
 
-  Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
-  if(peer == NULL)
+    Peer* peer = theApp->models()->networkModel()->getPeer(peerIdStr);
+    if(peer == NULL)
     {
-      qDebug() << "Received a address to a peer that do not exist";
+        qDebug() << "Received a address to a peer that do not exist";
     }
-  QString peerTransportName((char *)address->transport_name);
+    QString peerTransportName((char *)address->transport_name);
 
 
 
-  peer->setTransportName(peerTransportName);
+    peer->setTransportName(peerTransportName);
 
 }
 
@@ -636,31 +649,40 @@ NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
                                      const struct GNUNET_ATS_Information *ats,
                                      uint32_t ats_count)
 {
-  const char* key = GNUNET_i2s_full (&address->peer);
-  QString peerId(key);
+    const char* key = GNUNET_i2s_full (&address->peer);
+    QString peerId(key);
 
 
 
-  if(!theApp->models()->networkModel())
-    return;
+    if(!theApp->models()->networkModel()){
+        qWarning() << "Recivied a peerATSstatus without network Model";
+        return;
+    }
 
-  Peer *peer = theApp->models()->networkModel()->getPeer(peerId);
+    Peer *peer = theApp->models()->networkModel()->getPeer(peerId);
 
-  if (NULL == peer)
-    return;
+    if (NULL == peer)
+    {
+        qWarning() << "Recivied a peerATSstatus, but the peer do not exist : " << peerId;
+        return;
+    }
 
 
-  //TODO:: See what ATS can give to us
-  /*
+    //TODO:: See what ATS can give to us
+
     GNUNET_ATS_Information * atsinfo = new GNUNET_ATS_Information[ats_count];
-    for(unsigned int i = 0 ; i < ats_count ; i++)
+    for(unsigned int i = 0 ; i < ats_count ; i++){
+
         memcpy(&atsinfo[i], &ats[i], sizeof(GNUNET_ATS_Information));
-    */
+        qWarning() << QString("ATS - Type : %1 , Value: %2 ").arg( GNUNET_ATS_print_property_type(ntohl(atsinfo[i].type))).arg(atsinfo[i].value);
 
-  unsigned int bandIn = (unsigned int)ntohl(bandwidth_in.value__);
-  unsigned int bandOut = (unsigned int)ntohl(bandwidth_out.value__);
+    }
 
-  peer->setATSInfo(bandIn,bandOut);
+
+    unsigned int bandIn = (unsigned int)ntohl(bandwidth_in.value__);
+    unsigned int bandOut = (unsigned int)ntohl(bandwidth_out.value__);
+
+    peer->setATSInfo(bandIn,bandOut);
 }
 
 
@@ -676,54 +698,54 @@ NetworkManager::newPeerAddress ( const struct GNUNET_PeerIdentity *peer,
                                  const struct GNUNET_HELLO_Address *address)
 {
 
-  struct GNUNET_CRYPTO_HashAsciiEncoded enc;
+    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
 
 
-  if (NULL == address) {
-      qWarning() << tr("Null address at newPeerAddress");
-      notifyDisconnect(peer);
-      return;
+    if (NULL == address) {
+        qWarning() << tr("Null address at newPeerAddress");
+        notifyDisconnect(peer);
+        return;
     }
 
-  if(!theApp->models()->networkModel())
+    if(!theApp->models()->networkModel())
     {
-      qDebug() << tr("Peer got a new address, but the model was not created");
-      return;
+        qDebug() << tr("Peer got a new address, but the model was not created");
+        return;
     }
 
 
-  const char* key = GNUNET_i2s_full (&address->peer);
-  QString peerIdStr(key);
+    const char* key = GNUNET_i2s_full (&address->peer);
+    QString peerIdStr(key);
 
 
-  Peer *peerp = theApp->models()->networkModel()->getPeer(peerIdStr);
+    Peer *peerp = theApp->models()->networkModel()->getPeer(peerIdStr);
 
-  if(peerp == NULL)
+    if(peerp == NULL)
     {
-      qWarning() << QString("Recieve an address for a peer that is not on our list. Peer %1").arg(peerIdStr);
-      return;
+        qWarning() << QString("Recieve an address for a peer that is not on our list. Peer %1").arg(peerIdStr);
+        return;
     }
 
 
-  //Set as a connected peer
-  notifyConnect(peer);
+    //Set as a connected peer
+    notifyConnect(peer);
 
-  if (NULL != peerp->m_tos)
-    GNUNET_TRANSPORT_address_to_string_cancel (peerp->m_tos);
-  peerp->m_gotAddress = GNUNET_NO;
+    if (NULL != peerp->m_tos)
+        GNUNET_TRANSPORT_address_to_string_cancel (peerp->m_tos);
+    peerp->m_gotAddress = GNUNET_NO;
 
 
-  //Create the conteiner to aggregate the peerid and the callback.
-  PeerAddressStringConversionConteiner* conteiner = new PeerAddressStringConversionConteiner;
+    //Create the conteiner to aggregate the peerid and the callback.
+    PeerAddressStringConversionConteiner* conteiner = new PeerAddressStringConversionConteiner;
 
-  conteiner->id = peerIdStr;
-  conteiner->networkInstance = this;
+    conteiner->id = peerIdStr;
+    conteiner->networkInstance = this;
 
-  peerp->m_tos =
-      GNUNET_TRANSPORT_address_to_string (theApp->gnunet()->config(), address,
-                                          GNUNET_NO,
-                                          GNUNET_TIME_UNIT_FOREVER_REL,
-                                          peerAddressStringConvertCallback, conteiner);
+    peerp->m_tos =
+            GNUNET_TRANSPORT_address_to_string (theApp->gnunet()->config(), address,
+                                                GNUNET_NO,
+                                                GNUNET_TIME_UNIT_FOREVER_REL,
+                                                peerAddressStringConvertCallback, conteiner);
 
 }
 
@@ -737,36 +759,36 @@ void
 NetworkManager::peerNewAddressString (QString id, const char *address)
 {
 
-  if(!theApp->models()->networkModel())
-    return;
+    if(!theApp->models()->networkModel())
+        return;
 
 
-  Peer *peer = theApp->models()->networkModel()->getPeer(id);
+    Peer *peer = theApp->models()->networkModel()->getPeer(id);
 
-  QString hostname;
+    QString hostname;
 
-  if(peer == NULL)
+    if(peer == NULL)
     {
-      qWarning() << tr("Got a result for a peer address string that dont exist on our map !");
-      return;
+        qWarning() << tr("Got a result for a peer address string that dont exist on our map !");
+        return;
     }
 
 
-  if (NULL == address) {
-      /* error */
-      if (GNUNET_NO == peer->m_gotAddress)
+    if (NULL == address) {
+        /* error */
+        if (GNUNET_NO == peer->m_gotAddress)
         {
-          hostname =  "<no address>";
-          peer->setHostname(hostname);
+            hostname =  "<no address>";
+            peer->setHostname(hostname);
         }
 
-      peer->m_tos = NULL;
+        peer->m_tos = NULL;
     }
-  else
+    else
     {
-      hostname = (char *)address;
-      peer->m_gotAddress = GNUNET_YES;
-      peer->setHostname(hostname);
+        hostname = (char *)address;
+        peer->m_gotAddress = GNUNET_YES;
+        peer->setHostname(hostname);
     }
 
 
@@ -785,12 +807,12 @@ void NetworkManager::checkNseMessage (struct GNUNET_TIME_Absolute timestamp,
                                       double estimate, double std_dev)
 {
 
-  setEstimatedNodes(pow(2,estimate));
-  QString msg;
-  msg = "Estimated number of nodes %1";
-  msg= msg.arg(m_numEstimateNodes);
-  qDebug() << msg;
-  //gDebug(msg);
+    setEstimatedNodes(pow(2,estimate));
+    QString msg;
+    msg = "Estimated number of nodes %1";
+    msg= msg.arg(m_numEstimateNodes);
+    qDebug() << msg;
+    //gDebug(msg);
 }
 
 
@@ -798,14 +820,14 @@ void NetworkManager::checkNseMessage (struct GNUNET_TIME_Absolute timestamp,
 void NetworkManager::getGlobalBandwidth()
 {
 
-  Bandwidth_Info_Struct* band = theApp->models()->networkModel()->getTotalBandwidth();
+    Bandwidth_Info_Struct* band = theApp->models()->networkModel()->getTotalBandwidth();
 
-  m_incomingBand = band->incoming;
-  m_outgoingBand = band->outgoing;
+    m_incomingBand = band->incoming;
+    m_outgoingBand = band->outgoing;
 
-  m_nextBandwidthRetrive = QTime::currentTime().addSecs(3);
+    m_nextBandwidthRetrive = QTime::currentTime().addSecs(3);
 
-  delete band;
+    delete band;
 
 
 

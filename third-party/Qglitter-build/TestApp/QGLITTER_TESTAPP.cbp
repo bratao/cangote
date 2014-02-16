@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="QGLITTER_TESTAPP" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\QGlitter\;CMake Files\QtSDK\;CMake Files\QtSDK\Qt32-5.2\;CMake Files\QtSDK\Qt32-5.2\lib\;CMake Files\QtSDK\Qt32-5.2\lib\cmake\;CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\;CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\;CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\;CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\;CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\;CMake Files\QGlitterTool\;CMake Files\TestApp\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="TestApp">
+         <Option output="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/bin/TestApp.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/bin" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DQT_WIDGETS_LIB" />
+            <Add option="-DQT_GUI_LIB" />
+            <Add option="-DQT_CORE_LIB" />
+            <Add option="-DQT_NETWORK_LIB" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtANGLE" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtCore" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtGui" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtNetwork" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtWidgets" />
+            <Add directory="C:/QtSDK/Qt32-5.2/mkspecs/win32-g++" />
+            <Add directory="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter" />
+            <Add directory="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include/c++/4.8.2" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include/c++/4.8.2/backward" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include/c++/4.8.2/i686-w64-mingw32" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/include" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 TestApp" />
+            <CompileFile command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="TestApp/fast">
+         <Option output="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/bin/TestApp.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/bin" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DQT_WIDGETS_LIB" />
+            <Add option="-DQT_GUI_LIB" />
+            <Add option="-DQT_CORE_LIB" />
+            <Add option="-DQT_NETWORK_LIB" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtANGLE" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtCore" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtGui" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtNetwork" />
+            <Add directory="C:/QtSDK/Qt32-5.2/include/QtWidgets" />
+            <Add directory="C:/QtSDK/Qt32-5.2/mkspecs/win32-g++" />
+            <Add directory="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter" />
+            <Add directory="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include/c++/4.8.2" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include/c++/4.8.2/backward" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/../../../../include/c++/4.8.2/i686-w64-mingw32" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/include" />
+            <Add directory="c:\sbuild\mingw\bin\../lib/gcc/i686-w64-mingw32/4.8.2/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 TestApp/fast" />
+            <CompileFile command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/sbuild/mingw/bin/mingw32-make.exe -f &quot;E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter-build/TestApp/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp/App.cpp">
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp/App.h">
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp/Resources.qrc">
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\QGlitter\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitter/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\QGlitter\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMngPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWindowsIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMngPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWindowsIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMngPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWindowsIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMngPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWindowsIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMngPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWindowsIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QMngPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5Gui_QWindowsIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QNativeWifiEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QNativeWifiEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QNativeWifiEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QNativeWifiEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QNativeWifiEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Network/Qt5Network_QNativeWifiEnginePlugin.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Network\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QtSDK/Qt32-5.2/lib/cmake/Qt5Xml/Qt5XmlConfig.cmake">
+          <Option virtualFolder="CMake Files\QtSDK\Qt32-5.2\lib\cmake\Qt5Xml\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitterTool/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\QGlitterTool\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/QGlitterTool/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\QGlitterTool\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\TestApp\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp/Resources.qrc">
+          <Option virtualFolder="CMake Files\TestApp\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\TestApp\" />
+      </Unit>
+      <Unit filename="E:/Projetos/Meus Projetos/Cangote/Software/Qt Cangote/cangote/third-party/Qglitter/TestApp/Resources.qrc">
+          <Option virtualFolder="CMake Files\TestApp\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>
