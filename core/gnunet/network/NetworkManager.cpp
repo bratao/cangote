@@ -169,29 +169,14 @@ void NetworkManager::ATSstatusChangeCallback (void *cls,
 /**
  * Static Callback called when a peer get a address.
  */
-void NetworkManager::peerAddressCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
-                                          const struct GNUNET_HELLO_Address *address)
+int NetworkManager::peerAddressCallback (void *cls, const struct GNUNET_HELLO_Address *address,
+                                          struct GNUNET_TIME_Absolute expiration)
 {
-    NetworkManager* networkInstance = (NetworkManager*)cls;
-    Q_ASSERT(networkInstance);
+    Peer* peer = (Peer*)cls;
+    Q_ASSERT(peer);
 
-
-    networkInstance->newPeerAddress(peer,address);
-}
-
-/**
- * Static Callback called when a peer get a address in a hostname string format
- */
-void NetworkManager::peerAddressStringConvertCallback (void *cls, const char *address)
-{
-    PeerAddressStringConversionConteiner* peersinfoConteiner = (PeerAddressStringConversionConteiner*)cls;
-    Q_ASSERT(peersinfoConteiner);
-
-
-    peersinfoConteiner->networkInstance->peerNewAddressString(peersinfoConteiner->id,address);
-
-    //FIXME:: I need to delete this conteiner ! Doing here will crash !
-    //delete peersinfoConteiner;
+    peer->addAddress(address, expiration);
+    return GNUNET_OK;
 }
 
 
@@ -307,24 +292,24 @@ void NetworkManager::start(struct GNUNET_CONFIGURATION_Handle *config)
 
     //Monitor peer for connected transports
     m_peerMonitoring = GNUNET_TRANSPORT_monitor_peers (config,
-                      NULL,
-                      GNUNET_NO,
-                      GNUNET_TIME_UNIT_FOREVER_REL,
-                      &transport_peer_cb,
-                      NULL);
+                                                       NULL,
+                                                       GNUNET_NO,
+                                                       GNUNET_TIME_UNIT_FOREVER_REL,
+                                                       &transportPeerChangeCallback,
+                                                       NULL);
 
     //Monitor peer for validated transports
     m_peerTransportValidation = GNUNET_TRANSPORT_monitor_validation_entries (config,
-                               NULL,
-                               GNUNET_NO,
-                               GNUNET_TIME_UNIT_FOREVER_REL,
-                               &validation_monitor_cb,
-                               NULL);
+                                                                             NULL,
+                                                                             GNUNET_NO,
+                                                                             GNUNET_TIME_UNIT_FOREVER_REL,
+                                                                             &validationMonitorCallback,
+                                                                             NULL);
 
     //Connect to core to receive all income and outcome messages ( for bandwidth calculation)
     m_core = GNUNET_CORE_connect (m_config, this, NULL,
-                         notifyConnectCallback, notifyDisconnectCallback,
-                         incomeMsgCallback, GNUNET_YES, outcomeMsgCallback, GNUNET_YES, NULL);
+                                  notifyConnectCallback, notifyDisconnectCallback,
+                                  incomeMsgCallback, GNUNET_YES, outcomeMsgCallback, GNUNET_YES, NULL);
 
     //Inicialize NSE
     struct GNUNET_NSE_Handle *nse;
@@ -455,7 +440,7 @@ NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
         //Call peerinfo iterate to get my own hello, to create my share-link.
         GNUNET_PEERINFO_iterate (m_peerInfo, false, peerIdent,
                                  GNUNET_TIME_relative_multiply (GNUNET_TIME_UNIT_SECONDS, 10),
-                                &peerinfoProcessorCallback, this);
+                                 &peerinfoProcessorCallback, this);
         return;
     }
 
@@ -465,13 +450,6 @@ NetworkManager::notifyConnect(const struct GNUNET_PeerIdentity *peerIdent)
     //If peer do not exist, create it.
     if(peer == NULL)
         peer = theApp->models()->networkModel()->addNewPeer(peerIdent,peerIdStr);
-
-
-    //TODO :: Cancel the request
-    if(!peer->m_peerActiveAddressCallback)
-        peer->m_peerActiveAddressCallback = GNUNET_TRANSPORT_peer_get_active_addresses (m_config, peerIdent, GNUNET_NO,
-                                                                                        GNUNET_TIME_UNIT_FOREVER_REL,
-                                                                                        &gotActiveAddressCallback, this);
 
 
     //Just set as connected if the previous status was disconnected
@@ -515,6 +493,140 @@ NetworkManager::notifyDisconnect(const struct GNUNET_PeerIdentity *peerIdent)
 }
 
 
+/**
+ * Function to call with information about a peer
+ *
+ * @param cts closure
+ * @param peer peer this update is about,
+ *      NULL if this is the final last callback for a iteration operation
+ * @param address address, NULL for disconnect notification in monitor mode
+ * @param state current state this peer is in
+ * @param state_timeout timeout for the current state of the peer
+ */
+
+void
+NetworkManager::transportPeerChangeCallback (void *cts,
+                                             const struct GNUNET_PeerIdentity *peer,
+                                             const struct GNUNET_HELLO_Address *address,
+                                             enum GNUNET_TRANSPORT_PeerState state,
+                                             struct GNUNET_TIME_Absolute state_timeout)
+{
+}
+
+void
+NetworkManager::transportPeerChange (const struct GNUNET_PeerIdentity *peer,
+                                     const struct GNUNET_HELLO_Address *address,
+                                     enum GNUNET_TRANSPORT_PeerState state,
+                                     struct GNUNET_TIME_Absolute state_timeout)
+{
+    /*
+  struct PeerInfo *info;
+  GtkTreeIter iter;
+  gboolean con;
+  const char *tos;
+  struct PeerAddress *pa;
+
+  info = get_peer_info (peer);
+  info->state = state;
+  info->state_timeout = state_timeout;
+  con = (GNUNET_YES == GNUNET_TRANSPORT_is_connected (state));
+  get_iter_from_rr (info->rr, &iter);
+  tos = GNUNET_STRINGS_absolute_time_to_string (state_timeout);
+  gtk_tree_store_set (ts, &iter,
+                      PEERINFO_MC_NEIGHBOUR_CONNECTED_STATUS, con,
+                      PEERINFO_MC_NEIGHBOUR_CONNECTIVITY_TIMEOUT_AS_STRING, con ? tos : NULL,
+                      PEERINFO_MC_NEIGHBOUR_CONNECTIVITY_LED, (con ? led_green : led_red),
+                      PEERINFO_MC_NEIGHBOUR_STATE_AS_STRING, GNUNET_TRANSPORT_ps2s (state),
+                      PEERINFO_MC_NEIGHBOUR_STATE_TIMEOUT_AS_STRING, tos,
+                      -1);
+  for (pa = info->pa_head; NULL != pa; pa = pa->next)
+  {
+    get_iter_from_rr (pa->rr, &iter);
+    gtk_tree_store_set (ts, &iter,
+                        PEERINFO_MC_NEIGHBOUR_CONNECTED_STATUS, FALSE,
+                        PEERINFO_MC_NEIGHBOUR_CONNECTIVITY_TIMEOUT_AS_STRING, NULL,
+                        PEERINFO_MC_NEIGHBOUR_CONNECTIVITY_LED, led_red,
+                        PEERINFO_MC_NEIGHBOUR_STATE_AS_STRING, NULL,
+                        PEERINFO_MC_NEIGHBOUR_STATE_TIMEOUT_AS_STRING, NULL,
+                        -1);
+  }
+  if (NULL == address)
+    return;
+  pa = get_address (info, address);
+  get_iter_from_rr (pa->rr, &iter);
+  gtk_tree_store_set (ts, &iter,
+                      PEERINFO_MC_NEIGHBOUR_CONNECTED_STATUS, con,
+                      PEERINFO_MC_NEIGHBOUR_CONNECTIVITY_TIMEOUT_AS_STRING, con ? tos : NULL,
+                      PEERINFO_MC_NEIGHBOUR_CONNECTIVITY_LED, (con ? led_green : led_red),
+                      PEERINFO_MC_NEIGHBOUR_STATE_AS_STRING, GNUNET_TRANSPORT_ps2s (state),
+                      PEERINFO_MC_NEIGHBOUR_STATE_TIMEOUT_AS_STRING, tos,
+                      -1);*/
+}
+
+
+/**
+ * Function to call with validation information about a peer
+ *
+ * @param cts closure
+ * @param peer peer this update is about,
+ *      NULL if this is the final last callback for a iteration operation
+ * @param address address, NULL for disconnect notification in monitor mode
+ * @param valid_until when does this address expire
+ * @param next_validation time of the next validation operation
+ *
+ */
+
+void
+NetworkManager::validationMonitorCallback (void *cls,
+                                           const struct GNUNET_PeerIdentity *peer,
+                                           const struct GNUNET_HELLO_Address *address,
+                                           struct GNUNET_TIME_Absolute last_validation,
+                                           struct GNUNET_TIME_Absolute valid_until,
+                                           struct GNUNET_TIME_Absolute next_validation,
+                                           enum GNUNET_TRANSPORT_ValidationState state)
+{
+}
+void
+NetworkManager::validationMonitor (const struct GNUNET_PeerIdentity *peer,
+                                   const struct GNUNET_HELLO_Address *address,
+                                   struct GNUNET_TIME_Absolute valid_until,
+                                   struct GNUNET_TIME_Absolute next_validation)
+{
+    /*struct PeerInfo *info;
+  struct PeerAddress *pa;
+  GtkTreeIter iter;
+  const char *tos;
+  gboolean valid;
+
+  GNUNET_assert (NULL != peer);
+  info = get_peer_info (peer);
+  if (NULL == address)
+  {
+    // disconnect, mark all as down
+    for (pa = info->pa_head; NULL != pa; pa = pa->next)
+    {
+      get_iter_from_rr (pa->rr, &iter);
+      gtk_tree_store_set (ts, &iter,
+                          PEERINFO_MC_VALIDATION_IS_VALID, FALSE,
+                          PEERINFO_MC_VALIDATION_TIMEOUT_AS_STRING, NULL,
+                          PEERINFO_MC_VALIDATION_STATE_LED, NULL,
+                          -1);
+    }
+    return;
+  }
+  valid = GNUNET_TIME_absolute_get_remaining (valid_until).rel_value_us > 0;
+  pa = get_address (info, address);
+  get_iter_from_rr (pa->rr, &iter);
+  tos = GNUNET_STRINGS_absolute_time_to_string (valid_until);
+  gtk_tree_store_set (ts, &iter,
+                      PEERINFO_MC_VALIDATION_IS_VALID, valid,
+                      PEERINFO_MC_VALIDATION_TIMEOUT_AS_STRING, tos,
+                      PEERINFO_MC_VALIDATION_STATE_LED, (valid ? led_green : led_red),
+                      -1);
+
+  */
+}
+
 
 
 
@@ -557,6 +669,7 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
             return;
         }
 
+        //Save my hello URL
         char *uri = GNUNET_HELLO_compose_uri(hello, &m_gnunetTransportPlugins->GPI_plugins_find);
         setMyHelloStr(QString(uri));
         return;
@@ -565,6 +678,7 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
 
     Peer* newPeer = NULL;
 
+    //See if peer already exists.If not, create a new one.
     if(!theApp->models()->networkModel()->contains(peerIdStr)) {
         newPeer = theApp->models()->networkModel()->addNewPeer(peer, peerIdStr);
     } else {
@@ -574,14 +688,11 @@ void NetworkManager::peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
     Q_ASSERT(newPeer);
 
 
-    //Get The address
-    if(newPeer->m_palc == NULL) {
-        newPeer->m_palc = GNUNET_TRANSPORT_peer_get_active_addresses ((const GNUNET_CONFIGURATION_Handle*)theApp->gnunet()->config(), peer,
-                                                                      GNUNET_NO,
-                                                                      GNUNET_TIME_UNIT_FOREVER_REL,
-                                                                      peerAddressCallback, this);
-    }
 
+    if(hello){
+        GNUNET_HELLO_iterate_addresses (hello, GNUNET_NO,
+                                    &peerAddressCallback, newPeer);
+    }
 
 }
 
@@ -678,6 +789,7 @@ NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
 
     }
 
+    delete[] atsinfo;
 
     unsigned int bandIn = (unsigned int)ntohl(bandwidth_in.value__);
     unsigned int bandOut = (unsigned int)ntohl(bandwidth_out.value__);
@@ -686,113 +798,6 @@ NetworkManager::peerATSstatusChange (const struct GNUNET_HELLO_Address *address,
 }
 
 
-
-/**
- * Function to call with a binary format of an address
- *
- * @param peer peer the update is about
- * @param address NULL on disconnect, otherwise 0-terminated printable UTF-8 string
- */
-void
-NetworkManager::newPeerAddress ( const struct GNUNET_PeerIdentity *peer,
-                                 const struct GNUNET_HELLO_Address *address)
-{
-
-    struct GNUNET_CRYPTO_HashAsciiEncoded enc;
-
-
-    if (NULL == address) {
-        qWarning() << tr("Null address at newPeerAddress");
-        notifyDisconnect(peer);
-        return;
-    }
-
-    if(!theApp->models()->networkModel())
-    {
-        qDebug() << tr("Peer got a new address, but the model was not created");
-        return;
-    }
-
-
-    const char* key = GNUNET_i2s_full (&address->peer);
-    QString peerIdStr(key);
-
-
-    Peer *peerp = theApp->models()->networkModel()->getPeer(peerIdStr);
-
-    if(peerp == NULL)
-    {
-        qWarning() << QString("Recieve an address for a peer that is not on our list. Peer %1").arg(peerIdStr);
-        return;
-    }
-
-
-    //Set as a connected peer
-    notifyConnect(peer);
-
-    if (NULL != peerp->m_tos)
-        GNUNET_TRANSPORT_address_to_string_cancel (peerp->m_tos);
-    peerp->m_gotAddress = GNUNET_NO;
-
-
-    //Create the conteiner to aggregate the peerid and the callback.
-    PeerAddressStringConversionConteiner* conteiner = new PeerAddressStringConversionConteiner;
-
-    conteiner->id = peerIdStr;
-    conteiner->networkInstance = this;
-
-    peerp->m_tos =
-            GNUNET_TRANSPORT_address_to_string (theApp->gnunet()->config(), address,
-                                                GNUNET_NO,
-                                                GNUNET_TIME_UNIT_FOREVER_REL,
-                                                peerAddressStringConvertCallback, conteiner);
-
-}
-
-/**
- * Function to call with the text format of an address
- *
- * @param id , the ID of the peer that got updated
- * @param address address as a string, NULL on error
- */
-void
-NetworkManager::peerNewAddressString (QString id, const char *address)
-{
-
-    if(!theApp->models()->networkModel())
-        return;
-
-
-    Peer *peer = theApp->models()->networkModel()->getPeer(id);
-
-    QString hostname;
-
-    if(peer == NULL)
-    {
-        qWarning() << tr("Got a result for a peer address string that dont exist on our map !");
-        return;
-    }
-
-
-    if (NULL == address) {
-        /* error */
-        if (GNUNET_NO == peer->m_gotAddress)
-        {
-            hostname =  "<no address>";
-            peer->setHostname(hostname);
-        }
-
-        peer->m_tos = NULL;
-    }
-    else
-    {
-        hostname = (char *)address;
-        peer->m_gotAddress = GNUNET_YES;
-        peer->setHostname(hostname);
-    }
-
-
-}
 
 /**
  * Callback to notify that the network size estimate is updated.

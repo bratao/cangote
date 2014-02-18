@@ -27,6 +27,7 @@
 
 #include "peer.h"
 #include "service.h"
+#include "core/gnunet/gnunet_includes.h"
 
 
 struct Bandwidth_Info_Struct{
@@ -145,10 +146,20 @@ private:
                                          const struct GNUNET_ATS_Information *m_ats,
                                          uint32_t ats_count);
 
-    static void peerAddressCallback (void *cls, const struct GNUNET_PeerIdentity *peer,
-                                     const struct GNUNET_HELLO_Address *address);
-
-    static void peerAddressStringConvertCallback (void *cls, const char *address);
+    static int peerAddressCallback(void *cls, const struct GNUNET_HELLO_Address *address,
+                                     struct GNUNET_TIME_Absolute expiration);
+    static void transportPeerChangeCallback(void *cts,
+                                            const struct GNUNET_PeerIdentity *peer,
+                                            const struct GNUNET_HELLO_Address *address,
+                                            enum GNUNET_TRANSPORT_PeerState state,
+                                            struct GNUNET_TIME_Absolute state_timeout);
+    static void validationMonitorCallback(void *cls,
+                                          const struct GNUNET_PeerIdentity *peer,
+                                          const struct GNUNET_HELLO_Address *address,
+                                          struct GNUNET_TIME_Absolute last_validation,
+                                          struct GNUNET_TIME_Absolute valid_until,
+                                          struct GNUNET_TIME_Absolute next_validation,
+                                          enum GNUNET_TRANSPORT_ValidationState state);
 
 public:
 
@@ -156,6 +167,15 @@ public:
 
     void start(struct GNUNET_CONFIGURATION_Handle *config);
 
+    void transportPeerChange(const struct GNUNET_PeerIdentity *peer,
+                             const struct GNUNET_HELLO_Address *address,
+                             GNUNET_TRANSPORT_PeerState state,
+                             struct GNUNET_TIME_Absolute state_timeout);
+
+    void validationMonitor(const struct GNUNET_PeerIdentity *peer,
+                           const struct GNUNET_HELLO_Address *address,
+                           struct GNUNET_TIME_Absolute valid_until,
+                           struct GNUNET_TIME_Absolute next_validation);
 private:
 
     void peerinfoProcessor(const struct GNUNET_PeerIdentity *peer,
@@ -168,8 +188,6 @@ private:
                               const struct GNUNET_ATS_Information *m_ats,
                               uint32_t ats_count);
 
-    void       newPeerAddress (const struct GNUNET_PeerIdentity *peer,
-                               const struct GNUNET_HELLO_Address *address);
     void       peerNewAddressString (QString id, const char *address);
 
     void checkNseMessage(GNUNET_TIME_Absolute timestamp, double estimate, double std_dev);
@@ -209,7 +227,7 @@ private:
     /**
      * Handle to monitor core connectivity.
      */
-    static struct GNUNET_CORE_Handle *m_core;
+    struct GNUNET_CORE_Handle *m_core;
 
     /**
      * Handle to ATS service.
@@ -228,12 +246,12 @@ private:
     /**
      * Monitoring transport neighbours
      */
-    static struct GNUNET_TRANSPORT_PeerMonitoringContext *m_peerMonitoring;
+    struct GNUNET_TRANSPORT_PeerMonitoringContext *m_peerMonitoring;
 
     /**
      * Monitoring transport validation operations.
      */
-    static struct GNUNET_TRANSPORT_ValidationMonitoringContext *m_peerTransportValidation;
+    struct GNUNET_TRANSPORT_ValidationMonitoringContext *m_peerTransportValidation;
 
 
 

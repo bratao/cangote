@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QVector>
 #include "peerbandwidth.h"
 
 
@@ -31,6 +32,16 @@ class NetworkPeersModel;
 class QTimer;
 class Peer : public QObject
 {
+
+
+    typedef struct PeerAddress{
+        QString address;
+        QString strAddress;
+        QString transport;
+        QString expiration;
+        Peer*  parent;//Just used in the callback
+    }PeerAddress;
+
     Q_OBJECT
     Q_PROPERTY(QString id READ getId WRITE setId)
     Q_PROPERTY(QString transportName READ getTransportName WRITE setTransportName)
@@ -120,17 +131,17 @@ public:
     struct GNUNET_TRANSPORT_PeerIterateContext * m_peerActiveAddressCallback;
 
     /**
-     * Handle to an active lookup for addresses of this peer, or NULL.
-     */
-    struct GNUNET_TRANSPORT_PeerIterateContext *m_palc;
-
-    /**
      * Handle for address to string conversion.
      */
     struct GNUNET_TRANSPORT_AddressToStringContext *m_tos;
 
     int m_gotAddress;
 
+    void addAddress(const struct GNUNET_HELLO_Address *address, struct GNUNET_TIME_Absolute expiration);
+
+    static void peerAddressStringConvertCallback (void *cls, const char *address);
+
+    void peerNewAddressString(PeerAddress *peerAdd, const char *address);
 private:
 
     QString m_id;
@@ -150,6 +161,8 @@ private:
     QTimer *m_timer;
 
     QTime m_lastUpdated;
+
+    QVector<PeerAddress*> m_addresses;
 
 
 

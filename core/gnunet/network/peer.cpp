@@ -20,7 +20,10 @@
 
 
 #include "peer.h"
-//#include "core/cangote.h"
+#include "core/cangotecore.h"
+#include "cangote.h"
+#include "core/gnunet/gnunet.h"
+#include "core/gnunet/gnunet_includes.h"
 #include "models/NetworkPeersModel.h"
 #include <QTimer>
 #include <QTime>
@@ -42,7 +45,7 @@ Peer::Peer(const struct GNUNET_PeerIdentity *peerIdent, QString id, QObject *par
     m_atsBandwidthOut = 0;
     m_gotAddress = false;
     m_tos = NULL;
-    m_palc = NULL;
+
 
 
     m_bandwidthIncoming = new PeerBandwidth();
@@ -154,3 +157,94 @@ float Peer::getOutgoingBandwidth()
     return band;
 }
 
+/**
+ * @brief Peer::addAddress
+ * @param address
+ * @param expiration
+ */
+void Peer::addAddress(const struct GNUNET_HELLO_Address *address,
+                      struct GNUNET_TIME_Absolute expiration)
+{
+    if (NULL == address) {
+        qWarning() << tr("NULL address on Peer");
+        setConnected(false);
+        return;
+    }
+
+    setConnected(true);
+
+
+    char * str = (char *)malloc(address->address_length);
+    memcpy(str,address->address,address->address_length);
+
+
+    PeerAddress* newAddress = new PeerAddress;
+    newAddress->transport = QString(address->transport_name);
+    newAddress->address = QString(str);
+    newAddress->parent = this;
+
+    m_addresses.append(newAddress);
+
+
+    delete str;
+
+
+    //Cancel if already have a address to string  going on.
+    if (NULL != m_tos)
+        GNUNET_TRANSPORT_address_to_string_cancel (m_tos);
+    m_gotAddress = GNUNET_NO;
+
+    m_tos = GNUNET_TRANSPORT_address_to_string (theApp->gnunet()->config(), address,
+                                                GNUNET_NO,
+                                                GNUNET_TIME_UNIT_FOREVER_REL,
+                                                peerAddressStringConvertCallback, newAddress);
+}
+
+
+
+/**
+ * Static Callback called when a peer get a address in a hostname string format
+ */
+void Peer::peerAddressStringConvertCallback (void *cls, const char *address)
+{
+    PeerAddress* peerAdd = (PeerAddress*)cls;
+    Q_ASSERT(peerAdd);
+
+
+    peerAdd->parent->peerNewAddressString(peerAdd, address);
+
+
+}
+
+/**
+ * Function to call with the text format of an address
+ *
+ * @param id , the ID of the peer that got updated
+ * @param address address as a string, NULL on error
+ */
+void
+Peer::peerNewAddressString (PeerAddress* peerAdd, const char *address)
+{
+
+    QString qAddress;
+    if (NULL == address) {
+        /* error */
+        if (GNUNET_NO == m_gotAddress)
+        {
+            qAddress = "<no address>";
+            setHostname(qAddress);
+        }
+        m_tos = NULL;
+    }
+    else
+    {
+        m_gotAddress = GNUNET_YES;
+        qAddress = (char *)address;
+        peerAdd->strAddress = qAddress;
+        setHostname(qAddress);
+    }
+
+
+
+
+}
